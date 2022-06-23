@@ -7,7 +7,7 @@
 class Emailer
 {
   constructor({ 
-    headsetID,
+    trackingNumber,
     status,
     name,
     email, 
@@ -18,7 +18,7 @@ class Emailer
     designspecialistemail,
     designspecialistemaillink, 
   }) {
-    this.headsetID = headsetID ? headsetID : `1000001`;
+    this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
     this.status = status ? status : STATUS.checkedOut;
     this.name = name ? name : `Your Name`;
     this.email = email ? email : `jacobsprojectsupport@berkeley.edu`;
@@ -34,7 +34,7 @@ class Emailer
 
     this.message = new CreateMessage({
       name : this.name, 
-      headsetID : this.headsetID,
+      trackingNumber : this.trackingNumber,
       checkedOutDate : this.checkedOutDate,
       returnedDate : this.returnedDate, 
       dueDate : this.dueDate,
@@ -91,7 +91,7 @@ class Emailer
 const _testEmailer = () => {
   Object.values(STATUS).forEach(async (status) => {
     await new Emailer({
-      headsetID : `1000001`,
+      trackingNumber : `1000001`,
       checkedOutDate : new Date(),
       returnedDate : new Date(),
       email : "codyglen@berkeley.edu",

@@ -15,7 +15,7 @@ class CreateMessage
 {
   constructor({
     name : name, 
-    headsetID : headsetID,
+    trackingNumber : trackingNumber,
     checkedOutDate : checkedOutDate,
     returnedDate : returnedDate,
     dueDate : dueDate, 
@@ -23,7 +23,7 @@ class CreateMessage
     designspecialistemaillink : designspecialistemaillink,
   }){
     this.name = name ? name : `Student Name`;
-    this.headsetID = headsetID ? headsetID : `1000001`;
+    this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
     this.checkedOutDate = checkedOutDate instanceof Date ? checkedOutDate.toDateString() : new Date().toDateString();
     this.returnedDate = returnedDate instanceof Date ? returnedDate.toDateString() : new Date().toDateString();
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
@@ -40,7 +40,7 @@ class CreateMessage
   get checkedOutMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for checking out fabrication tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
-      message += `These tools <b><i>ID: ${this.headsetID}</i></b> have been issued.<br/>`;
+      message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been issued.<br/>`;
       message += `Please return them <b>ON or BEFORE ${this.dueDate}.</b><br/>`;
       message += `Items can be returned here:<br/><br/>`;
       message += `<b>Drop-off Location:<br/>`;
@@ -56,7 +56,7 @@ class CreateMessage
   get returnedMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for returning our tools on ${this.returnedDate}.<br />`;
-      message += `These tools <b><i>ID: ${this.headsetID}</i></b> have been returned.<br/>`;
+      message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been returned.<br/>`;
       message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/>`;
       message += `</p>`;
       message += `<p>Best,<br />Jacobs Hall Staff</p>`;
@@ -65,7 +65,7 @@ class CreateMessage
   get overdueMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for checking out tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
-      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.headsetID}</i> were due back on ${this.returnedDate}, and are now OVERDUE.</b></font><br/>`;
+      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.returnedDate}, and are now OVERDUE.</b></font><br/>`;
       message += `<font style="color:#FF0000";><b>Please return these tools IMMEDIATELY.</b></font><br/>`;
       message += `Items can be returned here:<br/><br/>`;
       message += `<b>Drop-off Location:<br/>`;
@@ -91,7 +91,7 @@ const _testMessages = async () => {
   console.time(`Execution Timer`);
   const message = new CreateMessage({
     name : `Stew Dent`, 
-    headsetID : `1000001`,
+    trackingNumber : `1000001`,
     checkedOutDate : new Date(),
     returnedDate : new Date(), 
     designspecialist : `Mike Spec`,

@@ -7,7 +7,7 @@ const PickupByBarcode = () => {
   const writer = new WriteLogger();
   const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
   let progress = OTHERSHEETS.Scanner.getRange(4,2);
-  progress.setValue(`Searching for Oculus Headset ID #${number}.......`);
+  progress.setValue(`Searching for Tracker ID #${number}.......`);
   if (number == null || number == "") {
     progress.setValue(`No Headset ID Number provided! Select the yellow cell, scan, then press enter to make sure the cell's value has been changed.`);
     return;
@@ -29,7 +29,7 @@ const PickupByBarcode = () => {
 
       try {
         new Emailer({
-          headsetID : data.tracking,
+          trackingNumber : data.tracking,
           checkedOutDate : data.checkedOut,
           returnedDate : data.dateReturned, 
           email : data.studentEmail,
@@ -82,7 +82,7 @@ const CheckOutByBarcode = () => {
 
       try {
         new Emailer({
-          headsetID : data.tracking,
+          trackingNumber : data.tracking,
           checkedOutDate : data.dateCheckedOut,
           returnedDate : data.dateReturned, 
           email : data.studentEmail,
@@ -364,6 +364,7 @@ const BULKMakeBarcodes = () => {
 
 /**
  * -----------------------------------------------------------------------------------------------------------------
+ * @NOTIMPLEMENTED
  * Make a new Barcode for a new row : TRIGGER
  * @param {number} row
  * @returns {null}

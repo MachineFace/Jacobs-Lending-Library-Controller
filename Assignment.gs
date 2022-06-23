@@ -66,15 +66,15 @@ class AssignUserABasket
     }
     // try {
     //   new Emailer({
-    //     headsetID : assignment,
+    //     trackingNumber : assignment,
     //     checkedOutDate : now,
     //     dueDate : returnDate,  
     //     email : this.email,
     //     status : STATUS.checkedOut,
     //     name : this.name,
     //     designspecialist : this.issuer,
-    //     designspecialistemail : DSInfo(`Cody`).email,
-    //     designspecialistemaillink : DSInfo(`Cody`).emailLink, 
+    //     designspecialistemail : DSInfo(this.issuer).email,
+    //     designspecialistemaillink : DSInfo(this.issuer).emailLink, 
     //   })
     // } catch(err) {
     //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
@@ -104,7 +104,7 @@ class AssignUserABasket
     }
     // try {
     //   new Emailer({
-    //     headsetID : headsetID,
+    //     trackingNumber : headsetID,
     //     checkedOutDate : new Date(),
     //     dueDate : returnDate,  
     //     email : incomingEmail,
