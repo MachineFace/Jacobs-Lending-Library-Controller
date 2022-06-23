@@ -27,7 +27,7 @@ class RecordTaker
     this.WriteRecord();
   }
   WriteRecord() {
-    const text = [ this.trackerNumber, this.date, this.issuer, this.name, this.email, this.basket, this.notes, ];
+    const text = [ this.trackerNumber, this.date, this.issuer, this.name, this.email, JSON.stringify(this.basket), this.notes, ];
     OTHERSHEETS.Record.appendRow(text);
     console.warn(`${this.trackerNumber} has been checked Out on ${this.date} by ${this.name}`);
   }

@@ -48,6 +48,7 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
       SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
       MakeNewBarcode(this.row);
+      new InventoryManager({basket : this.basket}).CheckOutBasket();
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
     }
@@ -58,6 +59,7 @@ class AssignUserABasket
         issuer : this.issuer,
         name : this.name,
         email : this.email,
+        basket : this.basket,
         notes : this.notes,
       });
       PrintTurnaround(this.row);

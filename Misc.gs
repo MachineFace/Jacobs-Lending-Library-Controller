@@ -225,21 +225,21 @@ const SetValidationBasedOnAvailability = () => {
 const SetConditionalFormatting = () => {
   let rules = [
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied(`=$A2="${STATUS.checkedIn}"`)
+      .whenFormulaSatisfied(`=$B2="${STATUS.checkedIn}"`)
       .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
       .setBackground(COLORS.green_light)
-      .setFontColor(COLORS.green)
+      .setFontColor(COLORS.green_dark)
       .build()
     ,
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied(`=$A2="${STATUS.checkedOut}"`)
+      .whenFormulaSatisfied(`=$B2="${STATUS.checkedOut}"`)
       .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
       .setBackground(COLORS.orange_light)
       .setFontColor(COLORS.orange)
       .build()
     ,
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied(`=$A2="${STATUS.overdue}"`)
+      .whenFormulaSatisfied(`=$B2="${STATUS.overdue}"`)
       .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
       .setBackground(COLORS.red_light)
       .setFontColor(COLORS.red)
