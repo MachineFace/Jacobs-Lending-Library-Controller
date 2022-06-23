@@ -17,6 +17,7 @@
         }
       }
       window.addEventListener('load', preventFormSubmit);
+      const writer = new WriteLogger()
 
       const handleClearForm = () => {
         document.getElementById("name").innerHTML = ``;
@@ -32,7 +33,9 @@
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student...`, ui.ButtonSet.OK);
       }
 
-      const handleFailure = () => {
+      const handleFailure = (e) => {
+        console.error(e.message);
+        writer.Error(e.message);
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
       }
@@ -44,7 +47,7 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withFailureHandler(handleFailure)
+          .withFailureHandler(e => handleFailure(e))
           .withSuccessHandler(handleSuccess)
           .ProcessForm(formObject);
         google.script.run
