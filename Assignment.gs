@@ -8,6 +8,7 @@ class AssignUserABasket
     name,
     email,
     basket,
+    notes,
   }) { 
     this.trackerNumber = 1000001;
     this.date = new Date().toDateString();
@@ -16,7 +17,7 @@ class AssignUserABasket
     this.name = name ? name : `Unknown Name`;
     this.email = email ? email : `Unknown Email`;
     this.basket = basket ? basket : `No Basket`;
-
+    this.notes = notes ? notes : `No Notes...`
     this.Assign();
   }
 
@@ -41,9 +42,11 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, this.email);
       SetByHeader(SHEETS.Main, HEADERNAMES.checkedOutBy, this.row, this.issuer);
       SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, now.toDateString());
+      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
       SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, JSON.stringify(this.basket));
       SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate.toDateString());
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
+      SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
       MakeNewBarcode(this.row);
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
@@ -55,11 +58,9 @@ class AssignUserABasket
         issuer : this.issuer,
         name : this.name,
         email : this.email,
+        notes : this.notes,
       });
       PrintTurnaround(this.row);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate.toDateString());
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
     } catch (err) {
       console.error(`${err}, Whoops: Couldn't write record for some reason...`);
     }

@@ -11,27 +11,25 @@ const ShowSidebar = async () => {
 }
 
 const ProcessForm = (formObject) => {
-  let name = ``, email = ``, staff = ``, basket = []; 
+  let name = ``, email = ``, staff = ``, basket = [], notes = ``; 
   Object.entries(formObject).forEach( pair => {
     console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
     if(pair[0] == `name`) name = pair[1] ? pair[1] : `Unknown Name`;
     if(pair[0] == `email`) email = pair[1] ? pair[1] : `Unknown Email`;
     if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
+    if(pair[0] == `notes`) notes = pair[1] ? pair[1] : `Notes`;
     else if(pair[1] == `true`) basket.push(pair[0])
   })
   console.info(`Name: ${name}, Email: ${email}, Staff: ${staff}, Basket: ${basket}`);
-
+  const assignment = new AssignUserABasket({
+    name : name,
+    email : email,
+    issuer : staff,
+    basket : basket,
+    notes : notes,
+  })
   let thisRow = SHEETS.Main.getLastRow() + 1;
   console.warn(`Row: ${thisRow}`);
-  // SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, 1000000 + thisRow);
-  // SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
-  // SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, Object.values(formObject))
-  // SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, Object.values(formObject));
-  // MakeNewBarcode(thisRow);
-
-  // let formBlob = formObject.myFile;
-  // let driveFile = DriveApp.createFile(formBlob);
-  // return driveFile.getUrl();
 }
 
 
