@@ -1,0 +1,54 @@
+
+
+const ShowSidebar = async () => {
+  const ui = SpreadsheetApp.getUi();
+  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
+  let template = HtmlService.createTemplateFromFile('sidebar')
+  template.items = inventorysheet.getRange(2, 1, inventorysheet.getLastRow() -1, inventorysheet.getLastColumn()).getValues();
+  template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  let html = HtmlService.createHtmlOutput(template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).getBlob().setName(`VR Hardware Menu`)).setWidth(400)
+  ui.showSidebar(html);
+}
+
+const ProcessForm = (formObject) => {
+  let name = ``, email = ``, staff = ``, basket = []; 
+  Object.entries(formObject).forEach( pair => {
+    console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
+    if(pair[0] == `name`) name = pair[1] ? pair[1] : `Unknown Name`;
+    if(pair[0] == `email`) email = pair[1] ? pair[1] : `Unknown Email`;
+    if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
+    else if(pair[1] == `true`) basket.push(pair[0])
+  })
+  console.info(`Name: ${name}, Email: ${email}, Staff: ${staff}, Basket: ${basket}`);
+
+  let thisRow = SHEETS.Main.getLastRow() + 1;
+  console.warn(`Row: ${thisRow}`);
+  // SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, 1000000 + thisRow);
+  // SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
+  // SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, Object.values(formObject))
+  // SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, Object.values(formObject));
+  // MakeNewBarcode(thisRow);
+
+  // let formBlob = formObject.myFile;
+  // let driveFile = DriveApp.createFile(formBlob);
+  // return driveFile.getUrl();
+}
+
+
+
+/** 
+ * @NOTIMPLEMENTED
+const ShowModal = async () => {
+  const ui = SpreadsheetApp.getUi();
+  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
+  let template = HtmlService.createTemplateFromFile('sidebar')
+  template.items = inventorysheet.getRange(2, 1, inventorysheet.getLastRow() -1, inventorysheet.getLastColumn()).getValues();
+  template.ds = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`StaffList`).getRange(2, 1, 9, 1).getValues();
+  template.ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`StaffList`).getRange(12, 1, 15, 1).getValues();
+  let html = HtmlService.createHtmlOutput(template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).getBlob().setName(`VR Hardware Menu`)).setWidth(800).setHeight(600)
+  ui.showModalDialog(html, `VR Hardware Menu`);
+}
+*/
+
+
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <base target="_top">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+
+      const preventFormSubmit = () => {
+        let forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', event => {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      const handleClearForm = () => {
+        document.getElementById("name").innerHTML = ``;
+        document.getElementById("email").innerHTML = ``;
+        document.getElementById(`staff`).innerHTML = ``;
+        for(let i = 0; i < items.length; i++) {
+          document.getElementById("items").innerHTML = ``;
+        }
+      }
+
+      const handleAlert = () => {
+        const ui = SpreadsheetApp.getUi();
+        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student...`, ui.ButtonSet.OK);
+      }
+
+      const handleFailure = () => {
+        const ui = SpreadsheetApp.getUi();
+        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
+      }
+
+      const handleSuccess = () => {
+        const ui = SpreadsheetApp.getUi();
+        ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
+      }
+
+      const handleFormSubmit = (formObject) => {
+        google.script.run
+          .withFailureHandler(handleFailure)
+          .withSuccessHandler(handleSuccess)
+          .ProcessForm(formObject);
+        google.script.run
+          .withSuccessHandler(handleClearForm);
+        // google.script.host.close()
+      }
+
+    </script>
+  </head>
+  <body>
+    <div class="shopping-cart">
+      <form onsubmit="handleFormSubmit(this)">
+        <!-- Title -->
+        <h5 style="padding-left:1em">Student Info</h5>
+
+        <!-- Name -->
+        <div class="input-field" style="padding-left:1em; padding-right:1em">
+          <input placeholder="Name" id="name" type="text" class="validate" name="name">
+        </div>
+
+        <!-- Email -->
+        <div class="input-field" style="padding-left:1em; padding-right:1em">
+          <input placeholder="Email" id="email" type="text" class="validate" name="email">
+        </div>
+
+        <!-- Checked Out By -->
+        <div class="input-field" style="padding:1em; padding-right:1em">
+          <select class="browser-default" name="staff">
+            <option value="" disabled selected>Choose Yourself</option>
+            <? staff.forEach(person => { ?>
+              <option id="staff" name="staff" value=<?=person?>><span> <?= person ?> </span></option>
+            <? }); ?>
+          </select>
+        </div>
+
+        <!-- Basket Title -->
+        <h5 style="padding-left:1em; padding-right:1em;">Checkout Basket</h5>
+
+        <!-- Products -->
+        <ul class="collection" name="items">
+          <? for(let i = 0; i < items.length; i++) { ?>
+            <li class="collection-item">
+              <? let itemname = items[i][1]; ?>
+              <label key=i>
+                <input id="item" type="checkbox" class="filled-in" name=<?=itemname?> value=true><span><?= itemname ?></span></input>
+              </label>
+            </li>
+          <? } ?>
+        </ul>
+
+        <button onclick="handleAlert" class="btn waves-effect waves-light" style="padding:1em" type="submit" value="submit">Assign Basket to Student</button>
+      </form>
+      
+    </div>
+  </body>
+</html>
+
+
