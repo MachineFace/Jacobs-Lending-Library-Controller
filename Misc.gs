@@ -201,18 +201,20 @@ const MakeFilename = (name) => `${name}-${Utilities.formatDate(new Date(), "PST"
 
 
 /**
+ * @NOTIMPLEMENTED
  * Assign only available headsets to column. 
  * @TRIGGERED
- */
+ *
 const SetValidationBasedOnAvailability = () => {
-  let headsets = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.tracking);
+  let trackingNumbers = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.tracking);
   let statuses = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status);
-  let filtered = headsets.filter((headset, index) => { 
-    if(statuses[index] == STATUS.checkedIn) return headset;
+  let filtered = trackingNumbers.filter((trackingNumber, index) => { 
+    if(statuses[index] == STATUS.checkedIn) return trackingNumber;
   });
   const rule = SpreadsheetApp.newDataValidation().requireValueInList(filtered);
   SHEETS.Submissions.getRange(2, 1, SHEETS.Submissions.getLastRow(), 1).setDataValidation(rule);
 }
+*/
 
 
 

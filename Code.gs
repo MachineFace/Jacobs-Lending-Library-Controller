@@ -42,8 +42,6 @@ const onChange = async (e) => {
   const basket = GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) : ``;
   const notes = GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) : `No Notes`;
 
-  const dsInfo = DSInfo(issuer);
-
   // Logic
   try {
     switch(status) {
@@ -60,7 +58,7 @@ const onChange = async (e) => {
         });
         PrintTurnaround(thisRow);
         break;
-      case STATUS.checkedIn:
+      case STATUS.checkedOut:
         writer.Warning(`Tracking Number ${trackingNum} has been checked out by ${issuer} to ${student} on ${dateCheckedOut}`);
         SetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
         SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, ``);
@@ -70,12 +68,7 @@ const onChange = async (e) => {
     }
   } catch(err) {
     console.error(`${err}, Whoops: Couldn't set variables for some reason...`);
-  } 
-
-
-
-  SetValidationBasedOnAvailability();
-  
+  }   
 
 }
 
