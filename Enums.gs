@@ -138,6 +138,7 @@ const OTHERSHEETS = {
   Logger : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Logger`),
   Metrics : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Metrics`),
   Record : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`CheckOut Record`),
+  Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
 }
 
 const DRIVEFOLDERS = {

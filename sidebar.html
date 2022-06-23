@@ -40,7 +40,7 @@
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
       }
 
-      const handleSuccess = (e) => {
+      const handleSuccess = () => {
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
       }
@@ -48,7 +48,7 @@
       const handleFormSubmit = (formObject) => {
         google.script.run
           .withFailureHandler(e => handleFailure(e))
-          .withSuccessHandler(e => handleSuccess(e))
+          .withSuccessHandler(handleSuccess)
           .ProcessForm(formObject);
         google.script.run
           .withSuccessHandler(handleClearForm);

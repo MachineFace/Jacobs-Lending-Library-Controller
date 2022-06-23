@@ -200,7 +200,7 @@ const CheckOverdueTimes = () => {
 }
 
 /**
- * Check for overdue headsets and email
+ * Check for overdue items and email
  * @TRIGGERED once a week
  */
 const CheckOverdueTimesAndEmail = () => {
