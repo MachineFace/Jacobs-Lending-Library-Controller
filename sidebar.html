@@ -44,7 +44,10 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withFailureHandler(handleFailure)
+          .withFailureHandler(e => {
+            console.error(e.message);
+            ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK)
+          })
           .withSuccessHandler(handleSuccess)
           .ProcessForm(formObject);
         google.script.run
