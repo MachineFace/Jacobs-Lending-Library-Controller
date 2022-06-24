@@ -98,7 +98,7 @@ const CheckOutByBarcode = () => {
           issuer : data.checkedOutBy,
           name : data.name,
           email : data.studentEmail,
-          serial : data.serialNumber,
+          basket : data.basket,
           notes : data.notes,
         });
       } catch(err) {
@@ -115,48 +115,6 @@ const CheckOutByBarcode = () => {
 } 
 
 
-/**
- * -----------------------------------------------------------------------------------------------------------------
- * Generate a QR code from some data. Feed it a url.
- * @param {string} url
- * @pararm {string} number
- * @return
- */
-class QRCodeGenerator {
-  constructor({ url : url, }) {
-    this.url = url ? url : `jps.jacobshall.org/`;
-    this.GenerateQRCode();
-  }
-
-  GenerateQRCode(){
-    // console.info(`URL : ${this.url}`);
-    const loc = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${this.url}`;  // API call
-    const params = {
-        "method" : "GET",
-        "headers" : { "Authorization" : "Basic" },
-        "contentType" : "application/json",
-        followRedirects : true,
-        muteHttpExceptions : true
-    };
-
-    let qrCode;
-    const html = UrlFetchApp.fetch(loc, params);
-    // console.info(`Response Code : ${html.getResponseCode()}`);
-    if (html.getResponseCode() == 200) {
-      const target = DRIVEFOLDERS.barcodeTarget;
-      qrCode = target.createFile(Utilities.newBlob(html.getContent()).setName(this.MakeFilename(`QRCode`)))
-    }
-    else console.error('Failed to GET QRCode');
-
-    console.info(`QRCode Created ---> ${qrCode?.getUrl()}`);
-    return qrCode;
-  }
-
-  MakeFilename (name) {
-    return `${name}-${Utilities.formatDate(new Date(), "PST", "yyyyMMddHHmmss").toString()}`;
-  }
-}
-const _testQRGenerator = () => new QRCodeGenerator({url : `https://bcourses.berkeley.edu/courses/1353091/pages/woodshop` });
 
 /**
  * -----------------------------------------------------------------------------------------------------------------
@@ -247,119 +205,6 @@ class BarcodeGenerator {
 const _testBarcode = () => console.info(new BarcodeGenerator({number : `012394871`}));
 
 
-/**
- * -----------------------------------------------------------------------------------------------------------------
- * Generate a QR code from some data. Feed it a url.
- * https://goqr.me/api/doc/create-qr-code/
- * @param {string} url
- * @pararm {string} number
- * @return
- */
-class OpenQRGenerator {
-  constructor(
-    { url : url,
-      size : size,
-    }) {
-    this.url = url ? url : 'jps.jacobshall.org/';
-    this.size = size ? size : `80x80`; // MAX: 1000x1000
-  }
-
-  async GenerateQRCode(){
-    console.info(`URL : ${this.url}`);
-    const loc = `https://api.qrserver.com/v1/create-qr-code/?size=${this.size}&data=${this.url}`;  //API call
-    const postParams = {
-      "method" : "GET",
-      "headers" : { "Authorization" : "Basic" },
-      "contentType" : "application/json",
-      followRedirects : true,
-      muteHttpExceptions : true
-    };
-
-    let qrCode;
-    const html = UrlFetchApp.fetch(loc, postParams);
-    // console.info(`Response Code : ${RESPONSECODES[html.getResponseCode()]}`);
-    if (html.getResponseCode() == 200) {
-      const target = DRIVEFOLDERS.barcodeTarget;
-      qrCode = target.createFile(Utilities.newBlob(html.getContent()).setName(this.MakeFilename(`QRCode`)));
-    }
-    else console.error(`Failed to GET QRCode`);
-
-    console.info(`QRCODE CREATED ---> ${qrCode?.getUrl()}`);
-    return await qrCode;
-  }
-
-  async CreatePrintableDoc() {
-    const folder = DRIVEFOLDERS.ticketTarget; // Ticket Folder
-    const doc = DocumentApp.create(this.MakeFilename('QRCode')); // Make Document
-    let body = doc.getBody();
-    let docId = doc.getId();
-    let url = doc.getUrl();
-
-    const qr = new this.GenerateQRCode();
-
-    // Append Document with Info
-    if (doc != undefined || doc != null || doc != NaN) {
-      let header = doc
-        .addHeader()
-        .appendTable([[`img1`]])
-        .setAttributes({
-          [DocumentApp.Attribute.BORDER_WIDTH]: 0,
-          [DocumentApp.Attribute.BORDER_COLOR]: `#ffffff`,
-        });
-      this.ReplaceTextToImage(header, `img1`, qr);
-
-      // Remove File from root and Add that file to a specific folder
-      try {
-        const docFile = DriveApp.getFileById(docId);
-        DriveApp.removeFile(docFile);
-        folder.next().addFile(docFile);
-        folder.next().addFile(barcode);
-      } catch (err) {
-        console.error(`Whoops : ${err}`);
-      }
-
-
-      // Set permissions to 'anyone can edit' for that file
-      let file = DriveApp.getFileById(docId);
-      file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.EDIT); //set sharing
-    }
-    //Return Document to use later
-    console.info(`QRCODE DOC CREATED ---> ${doc?.getUrl()}`);
-    return doc;
-  };
-
-  MakeFilename (name) {
-    return `${name}-${Utilities.formatDate(new Date(), "PST", "yyyyMMddHHmmss").toString()}`;
-  }
-
-}
-const _testOpenQRGenerator = () => {
-  const data = {url : `https://bcourses.berkeley.edu/courses/1353091/pages/woodshop`, size : `1000x1000`};
-  const doc = new OpenQRGenerator(data).CreatePrintableDoc();
-  console.info(doc);
-}
-
-
-
-
-/**
- * -----------------------------------------------------------------------------------------------------------------
- * Method for Creating Initial Barcodes in Bulk
- * @NOTIMPLEMENTED
- */
-/*
-const BULKMakeBarcodes = () => {
-  for(let i = 2; i < 42; i++) {
-    // const number = (1000000 + i - 1).toString();
-    // SetByHeader(SHEETS.Main, HEADERNAMES.tracking, i, number);
-    // console.warn(`Number : ${number}`);
-    const num = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i);
-    const b = new BarcodeGenerator({ number : num.toString() });
-    const url = b.url.toString();
-    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, i, url);
-  }
-}
-*/
 
 
 /**

@@ -119,9 +119,9 @@ const HEADERNAMES = {
   checkedOutBy : `Checked Out By`,	
   dateCheckedOut : `Date Checked Out`,	
   dateReturned : `Date Returned`,
-  barcode : `Barcode`,	
+  barcode : `Barcode`,
+  ticket : `Ticket`,	
   itemBasket : `Item Basket`,	
-  serialNumber : `Manufacturer Serial Number`,
   notes : `Notes`,
   checkedOutCount : `Number of Times Checked Out`,
   dueDate : `Due Date`,
@@ -145,6 +145,17 @@ const DRIVEFOLDERS = {
   barcodeTarget : DriveApp.getFolderById(`1jGfdwx4GwiMegVySKj28YW4XH_neI2Oz`),
 }
 
+
+
+const PAGESIZES = {
+  letter: {width: 612.283, height: 790.866},
+  tabloid: {width: 790.866,height: 1224.57},
+  statement: {width: 396.85, height: 612.283},
+  a3: {width: 841.89, height: 1190.55},
+  a4: {width: 595.276, height: 841.89},
+  a5: {width: 419.528, height: 595.276},
+  custom: {width: 204.000, height: 566.000},
+}
 
 
 

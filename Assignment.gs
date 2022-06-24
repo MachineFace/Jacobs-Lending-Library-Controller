@@ -47,7 +47,7 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate.toDateString());
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
       SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
-      MakeNewBarcode(this.row);
+      // MakeNewBarcode(this.row);
       new InventoryManager({basket : this.basket}).CheckOutBasket();
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
@@ -65,6 +65,23 @@ class AssignUserABasket
       PrintTurnaround(this.row);
     } catch (err) {
       console.error(`${err}, Whoops: Couldn't write record for some reason...`);
+    }
+    try {
+        let ticket = new Ticket({
+          trackingNumber : trackingNumber,
+          status : STATUS.checkedOut, 
+          name : this.name, 
+          email : this.email, 
+          issuer : this.issuer,
+          checkedOutDate : now, 
+          basket : this.basket,
+          notes : this.notes,
+          dueDate : new TimeConverter().ReturnDate(new Date()),
+        });
+        SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+        SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode)
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
     }
     // try {
     //   new Emailer({
