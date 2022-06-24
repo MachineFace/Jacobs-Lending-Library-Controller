@@ -21,7 +21,7 @@ const ProcessForm = (formObject) => {
     else if(pair[1] == `true`) basket.push(pair[0])
   })
   console.info(`Name: ${name}, Email: ${email}, Staff: ${staff}, Basket: ${basket}`);
-  const assignment = new AssignUserABasket({
+  new AssignUserABasket({
     name : name,
     email : email,
     issuer : staff,
@@ -29,7 +29,8 @@ const ProcessForm = (formObject) => {
     notes : notes,
   })
   let thisRow = SHEETS.Main.getLastRow() + 1;
-  console.warn(`Row: ${thisRow}`);
+  console.warn(`Form processed to row: ${thisRow}`);
+
 }
 
 

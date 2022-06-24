@@ -17,15 +17,16 @@
         }
       }
       window.addEventListener('load', preventFormSubmit);
-      const writer = new WriteLogger()
 
       const handleClearForm = () => {
+        console.info(`Clearing form now....`);
         document.getElementById("name").innerHTML = ``;
         document.getElementById("email").innerHTML = ``;
         document.getElementById(`staff`).innerHTML = ``;
         for(let i = 0; i < items.length; i++) {
           document.getElementById("items").innerHTML = ``;
         }
+        console.info(`Form cleared....`);
       }
 
       const handleAlert = () => {
@@ -35,7 +36,6 @@
 
       const handleFailure = (e) => {
         console.error(e.message);
-        writer.Error(e.message);
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
       }
@@ -47,11 +47,8 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withFailureHandler(e => handleFailure(e))
-          .withSuccessHandler(handleSuccess)
+          .withSuccessHandler(handleClearForm)
           .ProcessForm(formObject);
-        google.script.run
-          .withSuccessHandler(handleClearForm);
         // google.script.host.close()
       }
 
@@ -104,7 +101,7 @@
           <label for="notes" style="padding-left:1em; padding-right:1em">Notes</label>
         </div>
 
-        <button onclick="handleAlert" class="btn waves-effect waves-light" style="padding:1em" type="submit" value="submit">Assign Basket to Student</button>
+        <button class="btn waves-effect waves-light" style="padding:1em" type="submit" value="submit">Assign Basket to Student</button>
       </form>
       
     </div>
