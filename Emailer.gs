@@ -15,8 +15,6 @@ class Emailer
     returnedDate,
     dueDate, 
     designspecialist,
-    designspecialistemail,
-    designspecialistemaillink, 
   }) {
     this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
     this.status = status ? status : STATUS.checkedOut;
@@ -29,8 +27,8 @@ class Emailer
 
     this.supportAlias = GmailApp.getAliases()[0];
     this.designspecialist = designspecialist ? designspecialist : `Staff`;
-    this.designspecialistemail = designspecialistemail ? designspecialistemail : `jacobsprojectsupport@berkeley.edu`;
-    this.designspecialistemaillink = designspecialistemaillink ? designspecialistemaillink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
+    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
+    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
 
     this.message = new CreateMessage({
       name : this.name, 
@@ -97,9 +95,7 @@ const _testEmailer = () => {
       email : "codyglen@berkeley.edu",
       status : status,
       name : `Dingus Dongus`,
-      designspecialist : `Cody Glen`,
-      designspecialistemail : `codyglen@berkeley.edu`,
-      designspecialistemaillink : `<a href="mailto:codyglen@berkeley.edu">codyglen@berkeley.edu</a>`, 
+      designspecialist : `Cody`,
     })
   })
 }

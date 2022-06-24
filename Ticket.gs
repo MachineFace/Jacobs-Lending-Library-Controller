@@ -27,7 +27,6 @@ class Ticket
     this.notes = notes ? notes : ``;
     this.dueDate = dueDate instanceof Date ? dueDate.toDateString() : new Date().toDateString();
     this.ticketName = `JacobsLendingLibraryTicket-${this.trackingNumber}`;
-    this.CreateTicket();
     this.barcode;
     this.url = ``;
   }
@@ -46,73 +45,71 @@ class Ticket
     const doc = DocumentApp.create(this.ticketName); // Make Document
     let body = doc.getBody();
     let docId = doc.getId();
-    let url = doc.getUrl();
     
     const barcode = new BarcodeGenerator({ number : this.trackingNumber.toString() }).GenerateBarCode();
     this.barcode = barcode;
     // Append Document with Info
-    if (doc != undefined || doc != null || doc != NaN) {
-      body
-        .setPageWidth(PAGESIZES.custom.width)
-        .setPageHeight(PAGESIZES.custom.height)
-        .setMarginTop(2)
-        .setMarginBottom(2)
-        .setMarginLeft(2)
-        .setMarginRight(2);
+    body
+      .setPageWidth(PAGESIZES.custom.width)
+      .setPageHeight(PAGESIZES.custom.height)
+      .setMarginTop(2)
+      .setMarginBottom(2)
+      .setMarginLeft(2)
+      .setMarginRight(2);
 
-      body.insertImage(0, barcode)
-        .setWidth(260)
-        .setHeight(100);
-      body.insertHorizontalRule(1);
+    body.insertImage(0, barcode)
+      .setWidth(260)
+      .setHeight(100);
+    body.insertHorizontalRule(1);
 
-      body.insertParagraph(2, "Email: " + this.email.toString())
-        .setHeading(DocumentApp.ParagraphHeading.HEADING1)
-        .setAttributes({
-          [DocumentApp.Attribute.FONT_SIZE]: 13,
-          [DocumentApp.Attribute.BOLD]: true,
-          [DocumentApp.Attribute.LINE_SPACING]: 1,
-        });
-      body.insertParagraph(3, "Due Date: " + this.dueDate.toString())
-        .setHeading(DocumentApp.ParagraphHeading.HEADING2)
-        .setAttributes({
-          [DocumentApp.Attribute.FONT_SIZE]: 9,
-          [DocumentApp.Attribute.BOLD]: true,
-          [DocumentApp.Attribute.LINE_SPACING]: 1,
-        });
+    body.insertParagraph(2, "Email: " + this.email.toString())
+      .setHeading(DocumentApp.ParagraphHeading.HEADING1)
+      .setAttributes({
+        [DocumentApp.Attribute.FONT_SIZE]: 13,
+        [DocumentApp.Attribute.BOLD]: true,
+        [DocumentApp.Attribute.LINE_SPACING]: 1,
+      });
+    body.insertParagraph(3, "Due Date: " + this.dueDate.toString())
+      .setHeading(DocumentApp.ParagraphHeading.HEADING2)
+      .setAttributes({
+        [DocumentApp.Attribute.FONT_SIZE]: 9,
+        [DocumentApp.Attribute.BOLD]: true,
+        [DocumentApp.Attribute.LINE_SPACING]: 1,
+      });
 
-      // Create a two-dimensional array containing the cell contents.
-      body.appendTable([
-          ["Tracking Number:", this.trackingNumber.toString()],
-          ["Date Checked Out", this.checkedOutDate.toString()],
-          ["DUE DATE:", this.dueDate.toString()],
-          ["Issuer:", this.issuer],
-          ["Student Email:", this.email.toString()],
-          ["Basket Items: ", JSON.stringify(this.basket).toString()],
-          ["Notes:", this.notes],
-        ])
-        .setAttributes({
-          [DocumentApp.Attribute.FONT_SIZE]: 6,
-          [DocumentApp.Attribute.LINE_SPACING]: 1,
-          [DocumentApp.Attribute.BORDER_WIDTH]: 0.5,
-        });      
+    // Create a two-dimensional array containing the cell contents.
+    body.appendTable([
+        ["Tracking Number:", this.trackingNumber.toString()],
+        ["Date Checked Out", this.checkedOutDate.toString()],
+        ["DUE DATE:", this.dueDate.toString()],
+        ["Issuer:", this.issuer],
+        ["Student Email:", this.email.toString()],
+        ["Basket Items: ", JSON.stringify(this.basket).toString()],
+        ["Notes:", this.notes],
+      ])
+      .setAttributes({
+        [DocumentApp.Attribute.FONT_SIZE]: 6,
+        [DocumentApp.Attribute.LINE_SPACING]: 1,
+        [DocumentApp.Attribute.BORDER_WIDTH]: 0.5,
+      });      
 
-      // Remove File from root and Add that file to a specific folder
-      try {
-        while(folder.hasNext()){
-          const docFile = DriveApp.getFileById(docId);
-          DriveApp.removeFile(docFile);
-          folder.next().addFile(docFile);
-          folder.next().addFile(barcode);
-        }
-      } catch (err) {
-        console.error(`Whoops : ${err}`);
+    // Remove File from root and Add that file to a specific folder
+    try {
+      while(folder.hasNext()){
+        const docFile = DriveApp.getFileById(docId);
+        DriveApp.removeFile(docFile);
+        folder.next().addFile(docFile);
+        folder.next().addFile(barcode);
       }
-
-
-      // Set permissions to 'anyone can edit' for that file
-      let file = DriveApp.getFileById(docId);
-      file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.EDIT); //set sharing
+    } catch (err) {
+      console.error(`Whoops : ${err}`);
     }
+
+
+    // Set permissions to 'anyone can edit' for that file
+    let file = DriveApp.getFileById(docId);
+    file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.EDIT); //set sharing
+    
     // Return Document to use later
     console.info(`DOC ----> ${doc?.getUrl()?.toString()}`)
     this.url = doc?.getUrl()?.toString();
@@ -131,7 +128,7 @@ const _testTicket = () => {
     basket : ["Tiny mitre saw/mitre box","Hot Glue Gun (+2 full glue sticks)","Breadboard","Sandpaper (one square each of 80, 220, 400)","Roomba","Scissors","Exacto (+3 new blades)"],
     notes : `Notes go here.... `,
     dueDate : new TimeConverter().ReturnDate(new Date()),
-  });
+  }).CreateTicket();
 }
 
 

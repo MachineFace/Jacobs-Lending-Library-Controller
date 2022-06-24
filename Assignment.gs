@@ -10,7 +10,7 @@ class AssignUserABasket
     basket,
     notes,
   }) { 
-    this.trackerNumber = 1000001;
+    this.trackingNumber = 1000001;
     this.date = new Date().toDateString();
     this.row = SHEETS.Main.getLastRow() + 1;
     this.issuer = issuer ? issuer : `Cody`;
@@ -33,10 +33,11 @@ class AssignUserABasket
     const returnDate = new Date(t.ReturnDate(now));
     const remainingDays = t.Duration(returnDate, now);
     console.info(`Assigning Basket to: ${this.name}`);
-    let trackingNumber = this._MakeTrackingNumber();
+    this.trackingNumber = this._MakeTrackingNumber();
+    let ticket, url, barcodeurl;
   try {
       // trackingNum,	status,	name,	email,	issuer,	date checked out,	date returned,	barcode, basket, notes,	checkoutcount,	due date,	countdown to overdue,																		
-      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, trackingNumber);
+      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
       SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
       SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, this.name);
       SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, this.email);
@@ -47,14 +48,17 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate.toDateString());
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
       SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
-      // MakeNewBarcode(this.row);
-      new InventoryManager({basket : this.basket}).CheckOutBasket();
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
     }
     try {
+      new InventoryManager({basket : this.basket}).CheckOutBasket();
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
+    }
+    try {
       new RecordTaker({
-        trackerNumber : trackingNumber,
+        trackingNumber : this.trackingNumber,
         date : now,
         issuer : this.issuer,
         name : this.name,
@@ -67,37 +71,40 @@ class AssignUserABasket
       console.error(`${err}, Whoops: Couldn't write record for some reason...`);
     }
     try {
-        let ticket = new Ticket({
-          trackingNumber : trackingNumber,
-          status : STATUS.checkedOut, 
-          name : this.name, 
-          email : this.email, 
-          issuer : this.issuer,
-          checkedOutDate : now, 
-          basket : this.basket,
-          notes : this.notes,
-          dueDate : new TimeConverter().ReturnDate(new Date()),
-        });
-        SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-        SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode)
+      ticket = new Ticket({
+        trackingNumber : this.trackingNumber,
+        status : STATUS.checkedOut, 
+        name : this.name, 
+        email : this.email, 
+        issuer : this.issuer,
+        checkedOutDate : now, 
+        basket : this.basket,
+        notes : this.notes,
+        dueDate : new TimeConverter().ReturnDate(new Date()),
+      });
+      ticket.CreateTicket();
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
     }
-    // try {
-    //   new Emailer({
-    //     trackingNumber : assignment,
-    //     checkedOutDate : now,
-    //     dueDate : returnDate,  
-    //     email : this.email,
-    //     status : STATUS.checkedOut,
-    //     name : this.name,
-    //     designspecialist : this.issuer,
-    //     designspecialistemail : DSInfo(this.issuer).email,
-    //     designspecialistemaillink : DSInfo(this.issuer).emailLink, 
-    //   })
-    // } catch(err) {
-    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    // }
+    try {
+      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
+    }
+    try {
+      new Emailer({
+        trackingNumber : this.trackingNumber,
+        checkedOutDate : now,
+        dueDate : returnDate,  
+        email : this.email,
+        status : STATUS.checkedOut,
+        name : this.name,
+        designspecialist : this.issuer, 
+      })
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    }
   }
 
   Unassign() {
@@ -112,7 +119,7 @@ class AssignUserABasket
     SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
     try {
       new RecordTaker({
-        trackerNumber : headsetID,
+        trackingNumber : this.trackingNumber,
         date : new Date(),
         issuer : `Cody`,
         name : `Headset Unassigned`,
@@ -130,8 +137,6 @@ class AssignUserABasket
     //     status : STATUS.checkedOut,
     //     name : incomingName,
     //     designspecialist : `Cody`,
-    //     designspecialistemail : DSInfo(`Cody`).email,
-    //     designspecialistemaillink : DSInfo(`Cody`).emailLink, 
     //   })
     // } catch(err) {
     //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);

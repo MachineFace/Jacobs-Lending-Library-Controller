@@ -36,8 +36,6 @@ const PickupByBarcode = () => {
           status : data.status,
           name : data.name,
           designspecialist : data.checkedOutBy,
-          designspecialistemail : `codyglen@berkeley.edu`,
-          designspecialistemaillink : `<a href="mailto:codyglen@berkeley.edu">codyglen@berkeley.edu</a>`, 
         })
       } catch(err) {
         console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
@@ -89,8 +87,6 @@ const CheckOutByBarcode = () => {
           status : data.status,
           name : data.name,
           designspecialist : data.checkedOutBy,
-          designspecialistemail : `codyglen@berkeley.edu`,
-          designspecialistemaillink : `<a href="mailto:codyglen@berkeley.edu">codyglen@berkeley.edu</a>`, 
         })
         new RecordTaker({
           trackerNumber : data.tracking,
@@ -126,7 +122,6 @@ class BarcodeGenerator {
   constructor({ number : number, }) {
     this.number = number ? number : Math.floor(Math.random() * 100000).toFixed();
     this.url;
-    this.GenerateBarCode();
   }
 
   GenerateBarCode() {
@@ -202,7 +197,7 @@ class BarcodeGenerator {
   }
   
 }
-const _testBarcode = () => console.info(new BarcodeGenerator({number : `012394871`}));
+const _testBarcode = () => new BarcodeGenerator({number : `012394871`}).GenerateBarCode();
 
 
 

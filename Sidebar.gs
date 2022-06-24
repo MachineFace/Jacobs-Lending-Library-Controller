@@ -14,7 +14,7 @@ const ProcessForm = (formObject) => {
   let name = ``, email = ``, staff = ``, basket = [], notes = ``; 
   Object.entries(formObject).forEach( pair => {
     console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
-    if(pair[0] == `name`) name = pair[1] ? pair[1] : `Unknown Name`;
+    if(pair[0] == `name`) name = pair[1] ? TitleCase(pair[1]) : `Unknown Name`;
     if(pair[0] == `email`) email = pair[1] ? pair[1] : `Unknown Email`;
     if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
     if(pair[0] == `notes`) notes = pair[1] ? pair[1] : `Notes`;
