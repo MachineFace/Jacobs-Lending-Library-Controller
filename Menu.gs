@@ -1,3 +1,5 @@
+const serviceName = `Jacobs Lending Library Bot`
+
 
 /**
  * -----------------------------------------------------------------------------------------------------------------
@@ -11,8 +13,8 @@ const PopupCountCheckedOut = async () => {
     if(key == STATUS.checkedOut) checkedOut = value;
   });
   ui.alert(
-    `Jacobs VR Hardware Tracker`, 
-    `Currently Checked Out Headsets: ${checkedOut}`, 
+    serviceName, 
+    `Currently Checked Out Baskets: ${checkedOut}`, 
     ui.ButtonSet.OK_CANCEL
   );
 }
@@ -24,8 +26,8 @@ const PopupCountCheckedIn = async () => {
     if(key == STATUS.checkedIn) checkedIn = value;
   });
   let prompt = ui.alert(
-    `Jacobs VR Hardware Tracker`, 
-    `Currently Checked In Headsets: ${checkedIn}`, 
+    serviceName, 
+    `Currently Checked In Baskets: ${checkedIn}`, 
     ui.ButtonSet.OK_CANCEL
   );
 }
@@ -37,8 +39,8 @@ const PopupCountOverdue = async () => {
     if(key == STATUS.overdue) overdue = value;
   });
   ui.alert(
-    `Jacobs VR Hardware Tracker`, 
-    `Currently Checked Out Headsets: ${checkedOut}`, 
+    serviceName, 
+    `Currently Checked Out Baskets: ${checkedOut}`, 
     ui.ButtonSet.OK_CANCEL
   );
 }
@@ -59,12 +61,11 @@ const CountStatuses = () => {
 const BuildHTMLHELP = () => {
   let items = [
     `Note : All status changes trigger an email to the student. USE with CAUTION.`,
-    `Assign yourself as the DS / SS and fill in the email and student name.`,
-    `Change the status to 'Checked Out' when you're ready to check out the hardware.`,
-    `The 'Checked Out' Date will automatically set itself.`,
-    `Change the status to 'Checked In' if the student is returning hardware.`,
-    `The 'Returned' Date will automatically set itself.`,
-    `Please do not change the hardware ID for the headsets.`,
+    `On the sidebar: Fill in the student name / email and assign yourself as the DS / SS.`,
+    `Check any items the student will be checking out.`,
+    `Add notes if needed.`,
+    `Click: "Assign Basket To Student"`,
+    `A new line will be added to the "Main" tab and the student will be emailed.`,
     `See Cody or Chris for additional help + protips.`,
   ];
   let html = '<h2 style="text-align:center"><b> HELP MENU </b></h2>';
@@ -85,7 +86,7 @@ const BuildHTMLHELP = () => {
 };
 const PopupHelp = () => {
   let ui = SpreadsheetApp.getUi();
-  let title = "Jacobs VR Hardware Tracker HELP";
+  let title = `${serviceName} HELP`;
   let htmlOutput = HtmlService.createHtmlOutput(BuildHTMLHELP())
     .setWidth(640)
     .setHeight(480);
@@ -96,7 +97,7 @@ const PopupMetrics = () => {
   let ui = SpreadsheetApp.getUi();
   Metrics();
   ui.alert(
-    `Jacobs VR Hardware Tracker`, 
+    serviceName, 
     `Recomputed Statistics`, 
     ui.ButtonSet.OK
   );
@@ -107,7 +108,7 @@ const PopupCalcTurnaround = async () => {
   let thisRow = SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
   let name = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
   ui.alert(
-    `Jacobs VR Hardware Tracker`, 
+    serviceName, 
     `Recalculated ${name}'s Turnaround Time.`, 
     ui.ButtonSet.OK,
   );

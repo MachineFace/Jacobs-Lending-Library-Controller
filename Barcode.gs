@@ -7,108 +7,47 @@ const PickupByBarcode = () => {
   const writer = new WriteLogger();
   const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
   let progress = OTHERSHEETS.Scanner.getRange(4,2);
-  progress.setValue(`Searching for Tracker ID #${number}.......`);
+  progress.setValue(`Searching for Tracking ID #${number}.......`);
   if (number == null || number == "") {
-    progress.setValue(`No Headset ID Number provided! Select the yellow cell, scan, then press enter to make sure the cell's value has been changed.`);
+    progress.setValue(`No Tracking ID Number provided! Select the yellow cell, scan, then press enter to make sure the cell's value has been changed.`);
     return;
   }
-  Object.values(SHEETS).forEach(sheet => {
-    const textFinder = sheet.createTextFinder(number);
-    const searchFind = textFinder.findNext();
-    if (searchFind != null) {
-      searchRow = searchFind.getRow();
 
-      // change status to picked up
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
-      const date = new Date().toDateString();
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
-      progress.setValue(`Headset ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
-      writer.Info(`Headset ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
+  const textFinder = SHEETS.Main.createTextFinder(number);
+  const searchFind = textFinder.findNext();
+  if (searchFind != null) {
+    searchRow = searchFind.getRow();
 
-      let data = GetRowData(sheet, searchRow);
+    // change status to picked up
+    SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
+    const date = new Date().toDateString();
+    SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
+    progress.setValue(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
+    // writer.Info(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
 
-      try {
-        new Emailer({
-          trackingNumber : data.tracking,
-          checkedOutDate : data.checkedOut,
-          returnedDate : data.dateReturned, 
-          email : data.studentEmail,
-          status : data.status,
-          name : data.name,
-          designspecialist : data.checkedOutBy,
-        })
-      } catch(err) {
-        console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-      }
-      return;
+    let data = GetRowData(SHEETS.Main, searchRow);
+
+    try {
+      new Emailer({
+        trackingNumber : data.tracking,
+        checkedOutDate : data.checkedOut,
+        returnedDate : data.dateReturned, 
+        email : data.studentEmail,
+        status : data.status,
+        name : data.name,
+        designspecialist : data.checkedOutBy,
+      })
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
     }
-    else {
-      progress.setValue('Headset ID not found. Try again.');
-    }
-  });
-} 
-
-/**
- * For use with barcode scanner.
- * Searches for job number found in cell B2 of SearchByBarCode sheet and changes status to 'Checked Out'
- */
-const CheckOutByBarcode = () => {
-  const writer = new WriteLogger();
-  const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
-  let progress = OTHERSHEETS.Scanner.getRange(4,2);
-  progress.setValue(`Searching for Oculus Headset ID #${number}.......`);
-  if (number == null || number == "") {
-    progress.setValue(`No Headset ID Number provided! Select the yellow cell, scan, then press enter to make sure the cell's value has been changed.`);
     return;
   }
-  Object.values(SHEETS).forEach(sheet => {
-    const textFinder = sheet.createTextFinder(number);
-    const searchFind = textFinder.findNext();
-    if (searchFind != null) {
-      searchRow = searchFind.getRow();
-      
-      // change status to checked out
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedOut);
-      const date = new Date().toDateString();
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, searchRow, date);
-      const count = GetByHeader(SHEETS.Main, HEADERNAMES.checkedOutCount, searchRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.checkedOutCount, searchRow) : 0;
-      SetByHeader(SHEETS.Main, HEADERNAMES.checkedOutCount, searchRow, count + 1)
-      progress.setValue(`Headset ID #${number} marked as ${STATUS.checkedOut}. Row: ${searchRow}`);
-      writer.Info(`Headset ID #${number} marked as ${STATUS.checkedOut}. Row: ${searchRow}`);
+  else {
+    progress.setValue('Tracking ID not found. Try again.');
+  }
 
-      const data = GetRowData(sheet, searchRow);
-
-      try {
-        new Emailer({
-          trackingNumber : data.tracking,
-          checkedOutDate : data.dateCheckedOut,
-          returnedDate : data.dateReturned, 
-          email : data.studentEmail,
-          status : data.status,
-          name : data.name,
-          designspecialist : data.checkedOutBy,
-        })
-        new RecordTaker({
-          trackerNumber : data.tracking,
-          date : data.dateCheckedOut,
-          issuer : data.checkedOutBy,
-          name : data.name,
-          email : data.studentEmail,
-          basket : data.basket,
-          notes : data.notes,
-        });
-      } catch(err) {
-        console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-      }
-
-
-      return;
-    }
-    else {
-      progress.setValue('Headset ID not found. Try again.');
-    }
-  });
 } 
+
 
 
 

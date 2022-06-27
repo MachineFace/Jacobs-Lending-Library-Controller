@@ -23,7 +23,8 @@ class AssignUserABasket
 
   _MakeTrackingNumber () {
     const prevRow = SHEETS.Main.getLastRow();
-    const prevTrackingNumber = Number.parseInt(GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow));
+    const prevNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) instanceof Number ? GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) : 1000001;
+    const prevTrackingNumber = Number.parseInt(prevNum);
     return prevTrackingNumber + 1;
   }
 
@@ -35,7 +36,7 @@ class AssignUserABasket
     console.info(`Assigning Basket to: ${this.name}`);
     this.trackingNumber = this._MakeTrackingNumber();
     let ticket, url, barcodeurl;
-  try {
+    try {
       // trackingNum,	status,	name,	email,	issuer,	date checked out,	date returned,	barcode, basket, notes,	checkoutcount,	due date,	countdown to overdue,																		
       SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
       SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
@@ -92,19 +93,20 @@ class AssignUserABasket
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
     }
-    try {
-      new Emailer({
-        trackingNumber : this.trackingNumber,
-        checkedOutDate : now,
-        dueDate : returnDate,  
-        email : this.email,
-        status : STATUS.checkedOut,
-        name : this.name,
-        designspecialist : this.issuer, 
-      })
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    }
+    // Ready to go:
+    // try {
+    //   new Emailer({
+    //     trackingNumber : this.trackingNumber,
+    //     checkedOutDate : now,
+    //     dueDate : returnDate,  
+    //     email : this.email,
+    //     status : STATUS.checkedOut,
+    //     name : this.name,
+    //     designspecialist : this.issuer, 
+    //   })
+    // } catch(err) {
+    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    // }
   }
 
   Unassign() {
@@ -141,7 +143,7 @@ class AssignUserABasket
     // } catch(err) {
     //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
     // }
-    console.warn(`Headset ID: ${headsetID} has been unassigned...`);
+    console.warn(`Tracking ID: ${headsetID} has been unassigned...`);
   }
   
 }

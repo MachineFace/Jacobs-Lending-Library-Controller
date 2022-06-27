@@ -18,15 +18,41 @@
       }
       window.addEventListener('load', preventFormSubmit);
 
-      const handleClearForm = () => {
+      const handleValidateEmail = () => {
+        let unsanitaryInput = document.getElementById("email").innerHTML;
+        let test = ValidateEmail(unsanitaryInput);
+        if(test == true) return unsanitaryInput;
+        else document.getElementById("email").innerHTML = `Bad Email`
+      }
+
+      const handleClearForm = (form) => {
         console.info(`Clearing form now....`);
-        document.getElementById("name").innerHTML = ``;
-        document.getElementById("email").innerHTML = ``;
-        document.getElementById(`staff`).innerHTML = ``;
-        for(let i = 0; i < items.length; i++) {
-          document.getElementById("items").innerHTML = ``;
+        // clearing inputs
+        let inputs = form.getElementsByTagName('input');
+        for (let i = 0; i < inputs.length; i++) {
+          switch (inputs[i].type) {
+            case 'text':
+                inputs[i].value = '';
+                break;
+            case 'radio':
+            case 'checkbox':
+                inputs[i].checked = false;   
+          }
+        }
+
+        // clearing selects
+        let selects = form.getElementsByTagName('select');
+        for (let i = 0; i < selects.length; i++) {
+          selects[i].selectedIndex = 0;
+        }
+
+        // clearing textarea
+        let text = form.getElementsByTagName('textarea');
+        for (let i = 0; i < text.length; i++) {
+          text[i].innerHTML= '';
         }
         console.info(`Form cleared....`);
+        return false;
       }
 
       const handleAlert = () => {
@@ -47,8 +73,10 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withSuccessHandler(handleClearForm)
+          // .withSuccessHandler(handleClearForm)
           .ProcessForm(formObject);
+        google.script.run
+          .handleClearForm(formObject);
         // google.script.host.close()
       }
 
@@ -62,17 +90,17 @@
 
         <!-- Name -->
         <div class="input-field" style="padding-left:1em; padding-right:1em">
-          <input placeholder="Name" id="name" type="text" class="validate" name="name">
+          <input required placeholder="Name" id="name" type="text" class="validate" name="name">
         </div>
 
         <!-- Email -->
         <div class="input-field" style="padding-left:1em; padding-right:1em">
-          <input placeholder="Email" id="email" type="email" class="validate" name="email">
+          <input required placeholder="Email" id="email" type="email" class="validate" name="email" pattern="^[a-zA-Z0-9+_.-]+@[berkeley.edu]+$" title="Must be a '@berkeley.edu' email.">
         </div>
 
         <!-- Checked Out By -->
         <div class="input-field" style="padding:1em; padding-right:1em">
-          <select class="browser-default" name="staff">
+          <select class="browser-default" name="staff" required>
             <option value="" disabled selected>Choose Yourself</option>
             <? staff.forEach(person => { ?>
               <option id="staff" name="staff" value=<?=person?>><span> <?= person ?> </span></option>

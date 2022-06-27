@@ -18,9 +18,10 @@ class InventoryManager
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
+      if(row < 2) row = 2;
       let itemCount = GetByHeader(this.sheet, `Count`, row);
       SetByHeader(this.sheet, `Count`, row, itemCount - 1);
-      console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount -1}`)
+      // console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount -1}`)
     });
     console.warn(`Checkout Complete`);
   }
@@ -31,9 +32,10 @@ class InventoryManager
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
+      if(row < 2) row = 2;
       let itemCount = GetByHeader(this.sheet, `Count`, row);
       SetByHeader(this.sheet, `Count`, row, itemCount + 1);
-      console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount +1}`)
+      // console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount +1}`)
     });
     console.warn(`CheckIn Complete`);
   }
