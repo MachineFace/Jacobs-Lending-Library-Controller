@@ -73,7 +73,7 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withSuccessHandler(handleFormSuccess)
+          // .withSuccessHandler(handleClearForm)
           .ProcessForm(formObject);
         google.script.run
           .handleClearForm(formObject);
