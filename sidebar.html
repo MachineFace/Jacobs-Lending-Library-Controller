@@ -113,14 +113,14 @@
 
         <!-- Products -->
         <ul class="collection" name="items">
-          <? for(let i = 0; i < items.length; i++) { ?>
+          <? console.info(items) ?>
+          <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
-              <? let itemname = items[i][1]; ?>
-              <label key=i>
-                <input id="item" type="checkbox" class="filled-in" name=<?=itemname?> value=true><span><?= itemname ?></span></input>
+              <label key=<?=index?>>
+                <input id="item" type="checkbox" class="filled-in" value=true name=<?=item?>><span><?= item ?></span></input>
               </label>
             </li>
-          <? } ?>
+          <? }); ?>
         </ul>
 
         <!-- Notes -->

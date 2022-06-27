@@ -4,6 +4,7 @@ const ShowSidebar = async () => {
   const ui = SpreadsheetApp.getUi();
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
   let template = HtmlService.createTemplateFromFile('sidebar')
+  let items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
