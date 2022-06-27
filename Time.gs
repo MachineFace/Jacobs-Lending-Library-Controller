@@ -164,6 +164,7 @@ class TimeConverter
 const UpdateTimeToOverdue = () => {
   const t = new TimeConverter();
   let dueDates = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
+  console.warn(`Checking and updating Overdue times....`)
   dueDates.forEach((dueDate, index) => {
     if(dueDate) {
       console.log(`Index: ${index + 2}, ${dueDate}`);
@@ -172,6 +173,7 @@ const UpdateTimeToOverdue = () => {
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, remainingTime);
     }
   });
+  console.warn(`All countdowns updated.....`)
 }
 
 

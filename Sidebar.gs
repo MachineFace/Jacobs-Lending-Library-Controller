@@ -4,9 +4,15 @@ const ShowSidebar = async () => {
   const ui = SpreadsheetApp.getUi();
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
   let template = HtmlService.createTemplateFromFile('sidebar')
-  template.items = inventorysheet.getRange(2, 1, inventorysheet.getLastRow() -1, inventorysheet.getLastColumn()).getValues();
+  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
-  let html = HtmlService.createHtmlOutput(template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME).getBlob().setName(`Jacobs Lending Library Menu`)).setWidth(400)
+  let html = HtmlService
+    .createHtmlOutput(
+      template.evaluate()
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+        .getBlob()
+        .setName(`Jacobs Lending Library Menu`)
+      ).setWidth(400)
   ui.showSidebar(html);
 }
 
