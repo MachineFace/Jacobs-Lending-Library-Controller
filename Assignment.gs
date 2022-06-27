@@ -4,11 +4,11 @@
 class AssignUserABasket
 {
   constructor({
-    issuer,
-    name,
-    email,
-    basket,
-    notes,
+    issuer = `Cody`,
+    name = `Unknown Name`,
+    email = `Unknown Email`,
+    basket = [],
+    notes = `No Notes....`,
   }) { 
     this.trackingNumber = 1000001;
     this.date = new Date().toDateString();
@@ -37,20 +37,17 @@ class AssignUserABasket
     this.trackingNumber = this._MakeTrackingNumber();
     let ticket, url, barcodeurl;
     try {
-      // trackingNum,	status,	name,	email,	issuer,	date checked out,	date returned,	barcode, basket, notes,	checkoutcount,	due date,	countdown to overdue,																		
-      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
-      SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, this.name);
-      SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, this.email);
-      SetByHeader(SHEETS.Main, HEADERNAMES.checkedOutBy, this.row, this.issuer);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, now.toDateString());
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, JSON.stringify(this.basket));
-      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate.toDateString());
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
-      SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
+      // tracking, status, name, email, issuer,	datecheckedout, datereturned, ticket, barcode, basket, notes, duedate, countdown							
+      const text = [ this.trackingNumber, STATUS.checkedOut, this.name, this.email, this.issuer, now.toDateString(), ``, ``, ``, JSON.stringify(this.basket), this.notes, returnDate.toDateString(), remainingDays ];
+      SHEETS.Main.appendRow(text);
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
+    }
+    try {
+      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
     }
     try {
       new InventoryManager({basket : this.basket}).CheckOutBasket();
@@ -87,12 +84,7 @@ class AssignUserABasket
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
     }
-    try {
-      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
-    }
+    
     // Ready to go:
     // try {
     //   new Emailer({
