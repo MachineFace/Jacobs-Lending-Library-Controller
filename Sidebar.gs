@@ -15,10 +15,6 @@ const ShowSidebar = async () => {
       ).setWidth(400)
   ui.showSidebar(html);
 }
-const handleFormSuccess = () => {
-  const ui = SpreadsheetApp.getUi();
-  ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
-}
 
 const ProcessForm = (formObject) => {
   let name = ``, email = ``, staff = ``, basket = [], notes = ``; 
