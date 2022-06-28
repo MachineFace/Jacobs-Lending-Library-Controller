@@ -27,8 +27,9 @@ class CreateMessage
     this.checkedOutDate = checkedOutDate instanceof Date ? checkedOutDate.toDateString() : new Date().toDateString();
     this.returnedDate = returnedDate instanceof Date ? returnedDate.toDateString() : new Date().toDateString();
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
-    this.designspecialist = designspecialist ? designspecialist : `Design Specialist`;
-    this.designspecialistemaillink = designspecialistemaillink ? designspecialistemaillink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
+    this.designspecialist = designspecialist ? designspecialist : `Staff`;
+    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
+    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
   }
   get defaultMessage() {
     let message = `<p>Hi ${this.name},</p>`;
@@ -94,8 +95,7 @@ const _testMessages = async () => {
     trackingNumber : `1000001`,
     checkedOutDate : new Date(),
     returnedDate : new Date(), 
-    designspecialist : `Mike Spec`,
-    designspecialistemaillink : `LinkyLink`
+    designspecialist : `Cody`,
   })
 
   console.warn(`DEFAULT ---> ${message.defaultMessage}`);

@@ -1,4 +1,4 @@
-const serviceName = `Jacobs Lending Library Bot`
+
 
 
 /**
@@ -13,7 +13,7 @@ const PopupCountCheckedOut = async () => {
     if(key == STATUS.checkedOut) checkedOut = value;
   });
   ui.alert(
-    serviceName, 
+    ServiceName, 
     `Currently Checked Out Baskets: ${checkedOut}`, 
     ui.ButtonSet.OK_CANCEL
   );
@@ -26,7 +26,7 @@ const PopupCountCheckedIn = async () => {
     if(key == STATUS.checkedIn) checkedIn = value;
   });
   let prompt = ui.alert(
-    serviceName, 
+    ServiceName, 
     `Currently Checked In Baskets: ${checkedIn}`, 
     ui.ButtonSet.OK_CANCEL
   );
@@ -39,8 +39,8 @@ const PopupCountOverdue = async () => {
     if(key == STATUS.overdue) overdue = value;
   });
   ui.alert(
-    serviceName, 
-    `Currently Checked Out Baskets: ${checkedOut}`, 
+    ServiceName, 
+    `Currently Checked Out Baskets: ${overdue}`, 
     ui.ButtonSet.OK_CANCEL
   );
 }
@@ -66,27 +66,28 @@ const BuildHTMLHELP = () => {
     `Add notes if needed.`,
     `Click: "Assign Basket To Student"`,
     `A new line will be added to the "Main" tab and the student will be emailed.`,
+    `When the student returns the items, mark their tracking number as "Checked-In."`,
     `See Cody or Chris for additional help + protips.`,
   ];
-  let html = '<h2 style="text-align:center"><b> HELP MENU </b></h2>';
-  html += '<h3 style="font-family:Roboto">How to Use JPS : </h3>';
-  html += "<hr>";
-  html += "<p>" + items[0] + "</p>";
-  html += '<ol style="font-family:Roboto font-size:10">';
+  let html = `<h2 style="text-align:center"><b> HELP MENU </b></h2>`;
+  html += `<h3 style="font-family:Roboto">How to Use ${ServiceName} : </h3>`;
+  html += `<hr>`;
+  html += `<p>${items[0]}</p>`;
+  html += `<ol style="font-family:Roboto font-size:10">`;
   items.forEach((item, index) => {
     if (index > 0 && index < items.length - 1) {
-      html += "<li>" + item + "</li>";
+      html += `<li>${item}</li>`;
     }
   });
-  html += "</ol>";
-  html += "<p>" + items[items.length - 1] + "</p>";
+  html += `</ol>`;
+  html += `<p>${items[items.length - 1]}</p>`;
 
   console.info(html);
   return html;
 };
 const PopupHelp = () => {
   let ui = SpreadsheetApp.getUi();
-  let title = `${serviceName} HELP`;
+  let title = `${ServiceName} HELP`;
   let htmlOutput = HtmlService.createHtmlOutput(BuildHTMLHELP())
     .setWidth(640)
     .setHeight(480);
@@ -97,7 +98,7 @@ const PopupMetrics = () => {
   let ui = SpreadsheetApp.getUi();
   Metrics();
   ui.alert(
-    serviceName, 
+    ServiceName, 
     `Recomputed Statistics`, 
     ui.ButtonSet.OK
   );
@@ -108,7 +109,7 @@ const PopupCalcTurnaround = async () => {
   let thisRow = SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
   let name = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
   ui.alert(
-    serviceName, 
+    ServiceName, 
     `Recalculated ${name}'s Turnaround Time.`, 
     ui.ButtonSet.OK,
   );
@@ -121,7 +122,7 @@ const PopupCalcTurnaround = async () => {
  */
 const BarMenu = () => {
   SpreadsheetApp.getUi()
-    .createMenu("Jacobs LendingBot")
+    .createMenu(ServiceName)
     .addItem(`SideBar`, `ShowSidebar`)
     .addItem("Go to Scanner Page", "OpenBarcodeTab")
     .addSeparator()

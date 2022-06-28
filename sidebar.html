@@ -73,7 +73,7 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          // .withSuccessHandler(handleClearForm)
+          .withSuccessHandler(handleClearForm)
           .ProcessForm(formObject);
         google.script.run
           .handleClearForm(formObject);
@@ -113,7 +113,6 @@
 
         <!-- Products -->
         <ul class="collection" name="items">
-          <? console.info(items) ?>
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
               <label key=<?=index?>>
@@ -128,9 +127,13 @@
           <textarea id="notes" class="materialize-textarea" name="notes"></textarea>
           <label for="notes" style="padding-left:1em; padding-right:1em">Notes</label>
         </div>
-
-        <button class="btn waves-effect waves-light" style="padding:1em" type="submit" value="submit">Assign Basket to Student</button>
+        <div style="padding-left:1em">
+          <button class="btn waves-effect waves-light" type="submit" value="submit">Assign Basket to Student</button>
+        </div>
       </form>
+      <br/>
+      <br/>
+      <br/>
       
     </div>
   </body>

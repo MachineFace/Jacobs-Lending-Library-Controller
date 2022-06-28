@@ -72,7 +72,7 @@ class Ticket
     body.insertParagraph(3, "Due Date: " + this.dueDate.toString())
       .setHeading(DocumentApp.ParagraphHeading.HEADING2)
       .setAttributes({
-        [DocumentApp.Attribute.FONT_SIZE]: 9,
+        [DocumentApp.Attribute.FONT_SIZE]: 13,
         [DocumentApp.Attribute.BOLD]: true,
         [DocumentApp.Attribute.LINE_SPACING]: 1,
       });

@@ -7,12 +7,12 @@
 class Emailer
 {
   constructor({ 
-    trackingNumber,
-    status,
-    name,
-    email, 
-    checkedOutDate,
-    returnedDate,
+    trackingNumber = `1000001`,
+    status = STATUS.checkedOut,
+    name = `Your Name`,
+    email = `Your Email`, 
+    checkedOutDate = new Date().toDateString(),
+    returnedDate = new Date().toDateString(),
     dueDate, 
     designspecialist,
   }) {
@@ -37,7 +37,6 @@ class Emailer
       returnedDate : this.returnedDate, 
       dueDate : this.dueDate,
       designspecialist : this.designspecialist,
-      designspecialistemaillink : this.designspecialistemaillink,
     });
     this.SendEmail();
   }

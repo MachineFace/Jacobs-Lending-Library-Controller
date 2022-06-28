@@ -8,7 +8,7 @@ class AssignUserABasket
     name = `Unknown Name`,
     email = `Unknown Email`,
     basket = [],
-    notes = `No Notes....`,
+    notes = `Note: Item was checked out in good quality.`,
   }) { 
     this.trackingNumber = 1000001;
     this.date = new Date().toDateString();
@@ -17,15 +17,15 @@ class AssignUserABasket
     this.name = name ? name : `Unknown Name`;
     this.email = email ? email : `Unknown Email`;
     this.basket = basket ? basket : `No Basket`;
-    this.notes = notes ? notes : `No Notes...`
+    this.notes = notes ? notes : `Note: Item was checked out in good quality.`
     this.Assign();
   }
 
   _MakeTrackingNumber () {
     const prevRow = SHEETS.Main.getLastRow();
-    const prevNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) instanceof Number ? GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) : 1000001;
-    const prevTrackingNumber = Number.parseInt(prevNum);
-    return prevTrackingNumber + 1;
+    const prevNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) : 1000001;
+    const prevTrackingNumber = Number.parseInt(prevNum) + 1;
+    return prevTrackingNumber;
   }
 
   Assign() {
@@ -42,6 +42,22 @@ class AssignUserABasket
       SHEETS.Main.appendRow(text);
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
+    }
+    try {
+      ticket = new Ticket({
+        trackingNumber : this.trackingNumber,
+        status : STATUS.checkedOut, 
+        name : this.name, 
+        email : this.email, 
+        issuer : this.issuer,
+        checkedOutDate : now, 
+        basket : this.basket,
+        notes : this.notes,
+        dueDate : new TimeConverter().ReturnDate(new Date()),
+      });
+      ticket.CreateTicket();
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
     }
     try {
       SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
@@ -67,22 +83,6 @@ class AssignUserABasket
       PrintTurnaround(this.row);
     } catch (err) {
       console.error(`${err}, Whoops: Couldn't write record for some reason...`);
-    }
-    try {
-      ticket = new Ticket({
-        trackingNumber : this.trackingNumber,
-        status : STATUS.checkedOut, 
-        name : this.name, 
-        email : this.email, 
-        issuer : this.issuer,
-        checkedOutDate : now, 
-        basket : this.basket,
-        notes : this.notes,
-        dueDate : new TimeConverter().ReturnDate(new Date()),
-      });
-      ticket.CreateTicket();
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
     }
     
     // Ready to go:

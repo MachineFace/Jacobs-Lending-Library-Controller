@@ -12,7 +12,7 @@ const ShowSidebar = async () => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`Jacobs Lending Library Menu`)
+        .setName(`${ServiceName} Menu`)
       ).setWidth(400)
   ui.showSidebar(html);
 }

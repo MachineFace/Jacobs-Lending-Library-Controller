@@ -2,7 +2,8 @@
  * -----------------------------------------------------------------------------------------------------------------
  * Code Enumerations
  */
-
+const ServiceName = `🤖 Jacobs LendingBot`;
+const ServiceNameNoIcon = `Jacobs LendingBot`;
 const CheckoutLength = 14; // How many days a student can hold a headset
 const PickupHours = `Monday - Friday: 11am - 1pm & 4pm - 6pm.`;
 
