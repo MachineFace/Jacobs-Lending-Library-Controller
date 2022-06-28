@@ -4,7 +4,7 @@ const EditFromSelected = async () => {
   let thisRow = thisSheet.getActiveRange().getRow();
 
   // is this the correct sheet
-  if sheetname != "Form Responses") {
+  if (sheetname != "Form Responses") {
     Browser.msgBox(
       `Incorrect Sheet Active`,
       `Please select from the correct sheet (eg. Laser Cutter or Fablight). Select one cell in the row and a ticket will be created.`,
@@ -16,8 +16,8 @@ const EditFromSelected = async () => {
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
 
-  const status = rowData.name;
-  const status = rowData.studentEmail;
+  const name = rowData.name;
+  const studentEmail = rowData.studentEmail;
   
 
 
