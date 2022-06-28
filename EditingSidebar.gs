@@ -16,23 +16,29 @@ const EditFromSelected = async () => {
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
 
-  // Needs new Enums?
+  // Needs new Enums for form responses tab?
+
   // const name = rowData.name;
   // const timestamp = rowData.timestamp;
   // const studentEmail = rowData.studentEmail;
-  // const studentId = rowData.studentEmail;
-  // const affiliation = rowData.studentEmail;
+  // const studentId = rowData.studentId;
+  // const affiliation = rowData.affiliation;
   // const itemBasket = rowData.itemBasket;
   
-
-
+  // Pass rowData to ShowEditingSidebar
+  ShowEditingSidebar(rowData);
 }
 
-const ShowEditingSidebar = async () => {
+const ShowEditingSidebar = async (rowData) => {
   const ui = SpreadsheetApp.getUi();
+  // const name = rowData.name;
+  // const studentEmail = rowData.studentEmail;
+  // const studentId = rowData.studentEmail;
+  // const itemBasket = rowData.itemBasket;
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
-  let template = HtmlService.createTemplateFromFile('editingsidebar')
-  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
+  let template = HtmlService.createTemplateFromFile('editingsidebar');
+  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  template.checkedItems = rowData.itemBasket;
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
