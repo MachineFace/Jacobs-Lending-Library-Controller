@@ -16,8 +16,13 @@ const EditFromSelected = async () => {
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
 
-  const name = rowData.name;
-  const studentEmail = rowData.studentEmail;
+  // Needs new Enums?
+  // const name = rowData.name;
+  // const timestamp = rowData.timestamp;
+  // const studentEmail = rowData.studentEmail;
+  // const studentId = rowData.studentEmail;
+  // const affiliation = rowData.studentEmail;
+  // const itemBasket = rowData.itemBasket;
   
 
 
