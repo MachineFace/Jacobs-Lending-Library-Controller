@@ -3,7 +3,7 @@
  * For use with barcode scanner.
  * Searches for job number found in cell B2 of SearchByBarCode sheet and changes status to 'Checked In'
  */
-const PickupByBarcode = () => {
+const ReturnByBarcode = () => {
   const writer = new WriteLogger();
   const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
   let progress = OTHERSHEETS.Scanner.getRange(4,2);

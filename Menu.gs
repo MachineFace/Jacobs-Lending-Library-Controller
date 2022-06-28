@@ -55,6 +55,20 @@ const CountStatuses = () => {
   return count;
 }
 
+const PopupReturnByBarcode = async () => {
+  let ui = await SpreadsheetApp.getUi();
+  let result = ui.prompt(
+    ServiceName,
+    'Please enter the Tracking ID Number:',
+    ui.ButtonSet.OK_CANCEL
+  );
+  let button = result.getSelectedButton();
+  let trackingNumber = result.getResponseText();
+  if (button == ui.Button.OK) ui.alert(`Tracker Number is : ${trackingNumber}`);
+  else if (button == ui.Button.CANCEL) ui.alert('I didn\'t get your name.');
+  else if (button == ui.Button.CLOSE) ui.alert('You closed the dialog.');
+}
+
 /**
  * Builds HTML file for the modal pop-up from the help list.
  */
@@ -124,13 +138,14 @@ const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
     .addItem(`SideBar`, `ShowSidebar`)
-    .addItem("Go to Scanner Page", "OpenBarcodeTab")
+    .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
+    .addItem(`Return Items`, `PopupReturnByBarcode`)
     .addSeparator()
-    .addItem("Count Currently Checked Out", "PopupCountCheckedOut")
+    .addItem(`Count Currently Checked Out`, `PopupCountCheckedOut`)
     .addItem(`Count Currently Checked In`, `PopupCountCheckedIn`)
     .addItem(`Count Currently Overdue!`, `PopupCountOverdue`)
     .addSeparator()
-    .addItem("Help", "PopupHelp")
+    .addItem(`Help`, `PopupHelp`)
     .addSeparator()
     .addItem(`Recompute Metrics`, `PopupMetrics`)
     .addItem(`Calculate Selected Person's Turnaround Time`, `PopupCalcTurnaround`)
