@@ -138,7 +138,7 @@ const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
     .addItem(`SideBar`, `ShowSidebar`)
-    .addItem(`Editing Selected Submission`, `EditFromSelected`)
+    .addItem(`Edit Selected Submission`, `EditFromSelected`)
     .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
     .addItem(`Return Items`, `PopupReturnByBarcode`)
     .addSeparator()
