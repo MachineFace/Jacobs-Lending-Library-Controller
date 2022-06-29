@@ -138,6 +138,7 @@ const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
     .addItem(`SideBar`, `ShowSidebar`)
+    .addItem(`Editing Selected Submission`, `EditFromSelected`)
     .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
     .addItem(`Return Items`, `PopupReturnByBarcode`)
     .addSeparator()
@@ -150,8 +151,7 @@ const BarMenu = () => {
     .addItem(`Recompute Metrics`, `PopupMetrics`)
     .addItem(`Calculate Selected Person's Turnaround Time`, `PopupCalcTurnaround`)
     .addToUi();
-};
-
+}; 
 
 
 /**
