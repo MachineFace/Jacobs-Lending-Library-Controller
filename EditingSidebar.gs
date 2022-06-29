@@ -17,7 +17,27 @@ const EditFromSelected = async () => {
   const rowData = GetRowData(thisSheet, thisRow);
   
   // Pass rowData to ShowEditingSidebar
-  ShowEditingSidebar(rowData);
+  const ui = SpreadsheetApp.getUi();
+  const name = rowData.name;
+  const studentEmail = rowData.studentEmail;
+  const studentId = rowData.studentId;
+  const itemBasket = rowData.itemBasketitemsBasket.split(', ');
+  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
+  let template = HtmlService.createTemplateFromFile('editingsidebar');
+  template.name = name;
+  template.studentEmail = studentEmail;
+  template.studentId = studentId;
+  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  template.checkedItems = itemBasket;
+  template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  let html = HtmlService
+    .createHtmlOutput(
+      template.evaluate()
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+        .getBlob()
+        .setName(`${ServiceName} Menu`)
+      ).setWidth(400)
+  ui.showSidebar(html);
 }
 
 const ShowEditingSidebar = async (rowData) => {

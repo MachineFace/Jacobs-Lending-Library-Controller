@@ -90,12 +90,12 @@
 
         <!-- Name -->
         <div class="input-field" style="padding-left:1em; padding-right:1em">
-          <input required placeholder="Name" id="name" type="text" class="validate" name="name">
+          <input required value=<?=name?> id="name" type="text" class="validate" name="name">
         </div>
 
         <!-- Email -->
         <div class="input-field" style="padding-left:1em; padding-right:1em">
-          <input required placeholder="Email" id="email" type="email" class="validate" name="email" pattern="^[a-zA-Z0-9+_.-]+@[berkeley.edu]+$" title="Must be a '@berkeley.edu' email.">
+          <input required value=<?=studentEmail?> id="email" type="email" class="validate" name="email" pattern="^[a-zA-Z0-9+_.-]+@[berkeley.edu]+$" title="Must be a '@berkeley.edu' email.">
         </div>
 
         <!-- Checked Out By -->
@@ -116,12 +116,12 @@
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
               <label key=<?=index?>>
-                <input id="item" type="checkbox" class="filled-in" 
+                <input id="item" type="checkbox" class="filled-in" value=true name=<?=item?>
                   <? for (i=0;i<checkedItems.length;i++) { 
-                    if (checkedItems[i] == item) } ?>
+                    if (checkedItems[i] == item) { ?>
                       checked=true
-                    <? } ?>
-                  } ?> value=true name=<?=item?>><span><?= item ?></span></input>
+                    <? } } ?>
+                  } ?> <span><?= item ?></span></input>
               </label>
             </li>
           <? }); ?>
