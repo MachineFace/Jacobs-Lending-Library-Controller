@@ -15,15 +15,6 @@ const EditFromSelected = async () => {
 
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
-
-  // Needs new Enums for form responses tab?
-
-  // const name = rowData.name;
-  // const timestamp = rowData.timestamp;
-  // const studentEmail = rowData.studentEmail;
-  // const studentId = rowData.studentId;
-  // const affiliation = rowData.affiliation;
-  // const itemBasket = rowData.itemBasket;
   
   // Pass rowData to ShowEditingSidebar
   ShowEditingSidebar(rowData);
@@ -33,7 +24,7 @@ const ShowEditingSidebar = async (rowData) => {
   const ui = SpreadsheetApp.getUi();
   const name = rowData.name;
   const studentEmail = rowData.studentEmail;
-  const studentId = rowData.studentEmail;
+  const studentId = rowData.studentId;
   const itemBasket = rowData.itemBasket;
   const items = itemsBasket.split(', ')
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
