@@ -7,7 +7,7 @@ const EditFromSelected = async () => {
   if (sheetname != "Form Responses") {
     Browser.msgBox(
       `Incorrect Sheet Active`,
-      `Please select from the correct sheet (eg. Laser Cutter or Fablight). Select one cell in the row and a ticket will be created.`,
+      `Please select from the correct sheet (eg. Form Responses). Select one cell in the row and a ticket will be created.`,
       Browser.Buttons.OK
     );
     return;
@@ -65,9 +65,3 @@ const ProcessEditForm = (formObject) => {
   console.warn(`Form processed to row: ${thisRow}`);
 
 }
-
-
-
-
-
-
