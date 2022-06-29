@@ -116,7 +116,12 @@
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
               <label key=<?=index?>>
-                <input id="item" type="checkbox" class="filled-in" value=true name=<?=item?>><span><?= item ?></span></input>
+                <input id="item" type="checkbox" class="filled-in" 
+                  <? for (i=0;i<checkedItems.length;i++) { 
+                    if (checkedItems[i] == item) } ?>
+                      checked=true
+                    <? } ?>
+                  } ?> value=true name=<?=item?>><span><?= item ?></span></input>
               </label>
             </li>
           <? }); ?>
