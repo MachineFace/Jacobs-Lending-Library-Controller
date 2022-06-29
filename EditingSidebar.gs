@@ -31,14 +31,16 @@ const EditFromSelected = async () => {
 
 const ShowEditingSidebar = async (rowData) => {
   const ui = SpreadsheetApp.getUi();
-  // const name = rowData.name;
-  // const studentEmail = rowData.studentEmail;
-  // const studentId = rowData.studentEmail;
-  // const itemBasket = rowData.itemBasket;
+  const name = rowData.name;
+  const studentEmail = rowData.studentEmail;
+  const studentId = rowData.studentEmail;
+  const itemBasket = rowData.itemBasket;
+  const items = itemsBasket.split(', ')
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
-  template.checkedItems = rowData.itemBasket;
+  //array of the items that should be checked
+  template.checkedItems = items;
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
