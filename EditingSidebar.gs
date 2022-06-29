@@ -4,14 +4,14 @@ const EditFromSelected = async () => {
   let thisRow = thisSheet.getActiveRange().getRow();
 
   // is this the correct sheet
-  if (sheetname != "Form Responses") {
-    Browser.msgBox(
-      `Incorrect Sheet Active`,
-      `Please select from the correct sheet (eg. Form Responses). Select one cell in the row and a ticket will be created.`,
-      Browser.Buttons.OK
-    );
-    return;
-  }
+  // if (sheetname != "Form Responses") {
+  //   Browser.msgBox(
+  //     `Incorrect Sheet Active`,
+  //     `Please select from the correct sheet (eg. Form Responses). Select one cell in the row and a ticket will be created.`,
+  //     Browser.Buttons.OK
+  //   );
+  //   return;
+  // }
 
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
