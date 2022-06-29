@@ -25,13 +25,14 @@ const ShowEditingSidebar = async (rowData) => {
   const name = rowData.name;
   const studentEmail = rowData.studentEmail;
   const studentId = rowData.studentId;
-  const itemBasket = rowData.itemBasket;
-  const items = itemsBasket.split(', ')
+  const itemBasket = rowData.itemBasketitemsBasket.split(', ');
   const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
   let template = HtmlService.createTemplateFromFile('editingsidebar');
+  template.name = name;
+  template.studentEmail = studentEmail;
+  template.studentId = studentId;
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
-  //array of the items that should be checked
-  template.checkedItems = items;
+  template.checkedItems = itemBasket;
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
