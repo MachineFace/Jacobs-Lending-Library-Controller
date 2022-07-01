@@ -44,7 +44,7 @@ const _testRecordTaker = async () => {
     await new RecordTaker({
       trackerNumber : GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i + 5),
       date : GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, i + 5),
-      issuer : GetByHeader(SHEETS.Main, HEADERNAMES.checkedOutBy, i + 5),
+      issuer : GetByHeader(SHEETS.Main, HEADERNAMES.issuer, i + 5),
       name : GetByHeader(SHEETS.Main, HEADERNAMES.name, i + 5),
       email : GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, i + 5),
       basket : GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, i + 5),

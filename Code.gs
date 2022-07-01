@@ -25,7 +25,7 @@ const onSubmission = async (e) => {
   }
 
   // Parse variables
-  let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : GetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow);
+  let name = e.namedValues[`What is your name?`][0] ? TitleCase(e.namedValues[`What is your name?`][0]) : `Unknown Name`;
   SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, name);
   let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
   let sid = e.namedValues[`What is your Student ID Number?`][0] ? e.namedValues[`What is your Student ID Number?`][0] : `Unknown SID`;
@@ -128,7 +128,7 @@ const onChange = async (e) => {
   const now = new Date();
   const trackingNum = GetByHeader(thisSheet, HEADERNAMES.tracking, thisRow);
   const status = GetByHeader(thisSheet, HEADERNAMES.status, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.status, thisRow) : STATUS.checkedIn;
-  const issuer = GetByHeader(thisSheet, HEADERNAMES.checkedOutBy, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.checkedOutBy, thisRow) : `Cody`;
+  const issuer = GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) : `Cody`;
   const student = GetByHeader(thisSheet, HEADERNAMES.name, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.name, thisRow) : `Student Name`;
   const email = GetByHeader(thisSheet, HEADERNAMES.studentEmail, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.studentEmail, thisRow) : `Unknown Email`;
   const dateCheckedOut = GetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow) : now.toDateString();

@@ -151,7 +151,7 @@ const FixMissingTickets = () => {
       const status = GetByHeader(SHEETS.Main, HEADERNAMES.status, this.row);
       const name = GetByHeader(SHEETS.Main, HEADERNAMES.name, this.row);
       const email = GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row);
-      const issuer = GetByHeader(SHEETS.Main, HEADERNAMES.checkedOutBy, this.row);
+      const issuer = GetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row);
       const checkedOutDate = GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row);
       const basket = GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row);
       const dueDate = GetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row);

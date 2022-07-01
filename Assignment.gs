@@ -106,7 +106,7 @@ class AssignUserABasket
     SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedIn);
     SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, ``);
     SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.checkedOutBy, this.row, ``);
+    SetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row, ``);
     SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, ``);
     SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, ``);
     SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, ``);

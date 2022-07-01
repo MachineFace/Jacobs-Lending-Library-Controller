@@ -115,16 +115,15 @@ const STATUS = {
 
 const HEADERNAMES = {
   timestamp : `Timestamp`,	
-	studentEmail : `Email Address`,	
-	name : `What is your name?`,	
-	studentId : `What is your Student ID Number?`,	
-	affiliation : `What is your affiliation to the Jacobs Institute?`,	
-	itemBasket : `Please select the tools you would like to check out.`,	
+  studentEmail : `Email Address`,	
+  issuer : `Issuer`,	
+  name : `What is your name?`,	
+  studentId : `What is your Student ID Number?`,	
+  affiliation : `What is your affiliation to the Jacobs Institute?`,	
+  itemBasket : `Please select the tools you would like to check out.`,	
   tracking : `Tracking Number`,	
   status : `Status`,
-  name : `Checked Out To`,
 
-  checkedOutBy : `Checked Out By`,	
   dateCheckedOut : `Date Checked Out`,	
   dateReturned : `Date Returned`,
   barcode : `Barcode`,
