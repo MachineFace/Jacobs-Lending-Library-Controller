@@ -1,28 +1,27 @@
 const EditFromSelected = async () => {
+  const ui = SpreadsheetApp.getUi();
   let thisSheet = SpreadsheetApp.getActiveSheet();
-  let sheetname = thisSheet.getName();
   let thisRow = thisSheet.getActiveRange().getRow();
 
-  // is this the correct sheet
-  // if (sheetname != "Form Responses") {
-  //   Browser.msgBox(
-  //     `Incorrect Sheet Active`,
-  //     `Please select from the correct sheet (eg. Form Responses). Select one cell in the row and a ticket will be created.`,
-  //     Browser.Buttons.OK
-  //   );
-  //   return;
-  // }
+  // Is this the correct sheet?
+  if (thisSheet.getSheetName() != OTHERSHEETS.FormResponses.getSheetName()) {
+    Browser.msgBox(
+      `Incorrect Sheet Active`,
+      `Please select 'Form Responses'. Select one cell in the row and an editing sidebar will pop up.`,
+      Browser.Buttons.OK
+    );
+    return;
+  }
 
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
-  
+  console.warn(rowData)
+
   // Pass rowData to ShowEditingSidebar
-  const ui = SpreadsheetApp.getUi();
-  const name = rowData.name;
-  const studentEmail = rowData.studentEmail;
-  const studentId = rowData.studentId;
-  const itemBasket = rowData.itemBasketitemsBasket.split(', ');
-  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
+  const name = rowData?.name;
+  const studentEmail = rowData?.studentEmail;
+  const studentId = rowData?.studentId;
+  const itemBasket = rowData?.itemBasket?.split(', ');
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.name = name;
   template.studentEmail = studentEmail;
@@ -46,7 +45,6 @@ const ShowEditingSidebar = async (rowData) => {
   const studentEmail = rowData.studentEmail;
   const studentId = rowData.studentId;
   const itemBasket = rowData.itemBasketitemsBasket.split(', ');
-  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.name = name;
   template.studentEmail = studentEmail;
