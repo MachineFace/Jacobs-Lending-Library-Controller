@@ -27,32 +27,7 @@
 
       const handleClearForm = (form) => {
         console.info(`Clearing form now....`);
-        // clearing inputs
-        let inputs = form.getElementsByTagName('input');
-        for (let i = 0; i < inputs.length; i++) {
-          switch (inputs[i].type) {
-            case 'text':
-                inputs[i].value = '';
-                break;
-            case 'radio':
-            case 'checkbox':
-                inputs[i].checked = false;   
-          }
-        }
-
-        // clearing selects
-        let selects = form.getElementsByTagName('select');
-        for (let i = 0; i < selects.length; i++) {
-          selects[i].selectedIndex = 0;
-        }
-
-        // clearing textarea
-        let text = form.getElementsByTagName('textarea');
-        for (let i = 0; i < text.length; i++) {
-          text[i].innerHTML= '';
-        }
-        console.info(`Form cleared....`);
-        return false;
+        document.getElementById(`form`).reset();
       }
 
       const handleAlert = () => {
@@ -77,14 +52,21 @@
           .ProcessForm(formObject);
         google.script.run
           .handleClearForm(formObject);
-        // google.script.host.close()
+        google.script.host.close()
       }
 
     </script>
   </head>
   <body>
     <div class="shopping-cart">
-      <form onsubmit="handleFormSubmit(this)">
+      <form id="form" onsubmit="handleFormSubmit(this)">
+
+        <!-- Image -->
+        <div class="card-image">
+          <img src="https://drive.google.com/file/d/1vyRG8DOWYhYrAsReGjaibQ8s4mRAPz0B&export=download">
+        </div>
+        
+
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 

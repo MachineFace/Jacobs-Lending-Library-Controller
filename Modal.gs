@@ -1,10 +1,8 @@
 
 
-const ShowSidebar = async () => {
+const ShowModal = async () => {
   const ui = SpreadsheetApp.getUi();
-  const inventorysheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`);
-  let template = HtmlService.createTemplateFromFile('sidebar')
-  let items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  let template = HtmlService.createTemplateFromFile('modal')
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
@@ -13,8 +11,10 @@ const ShowSidebar = async () => {
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
         .setName(`${ServiceName} Menu`)
-      ).setWidth(400)
-  ui.showSidebar(html);
+      )
+      .setWidth(800)
+      .setHeight(600)
+  ui.showModalDialog(html, `${ServiceName}`);
 }
 
 const ProcessForm = (formObject) => {

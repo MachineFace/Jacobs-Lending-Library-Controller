@@ -137,7 +137,7 @@ const PopupCalcTurnaround = async () => {
 const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
-    .addItem(`SideBar`, `ShowSidebar`)
+    .addItem(`Manual Checkout`, `ShowModal`)
     .addItem(`Edit Selected Submission`, `EditFromSelected`)
     .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
     .addItem(`Return Items`, `PopupReturnByBarcode`)

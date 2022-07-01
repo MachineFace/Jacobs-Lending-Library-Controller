@@ -27,6 +27,7 @@
 
       const handleClearForm = (form) => {
         console.info(`Clearing form now....`);
+        document.getElementById(`form`).reset();
         // clearing inputs
         let inputs = form.getElementsByTagName('input');
         for (let i = 0; i < inputs.length; i++) {
@@ -84,7 +85,7 @@
   </head>
   <body>
     <div class="shopping-cart">
-      <form onsubmit="handleFormSubmit(this)">
+      <form id="form" onsubmit="handleFormSubmit(this)">
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 
@@ -117,7 +118,7 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <input id="item" type="checkbox" class="filled-in" value=true name=<?=item?>
-                  <? for (i=0;i<checkedItems.length;i++) { 
+                  <? for(i = 0; i < checkedItems.length; i++) { 
                     if (checkedItems[i] == item) { ?>
                       checked=true
                     <? } } ?>

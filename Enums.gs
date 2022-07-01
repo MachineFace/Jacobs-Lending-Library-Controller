@@ -113,19 +113,16 @@ const STATUS = {
 
 
 const HEADERNAMES = {
-	timestamp : `Timestamp`,	
-	studentEmail : `Email Address`,	
-	name : `What is your name?`,	
-	studentId : `What is your Student ID Number?`,	
-	affiliation : `What is your affiliation to the Jacobs Institute?`,	
-	itemBasket : `Please select the tools you would like to check out.`,	
   tracking : `Tracking Number`,	
-  status : `Status`,
+  status : `Checked Out / Returned`,
+  name : `Checked Out To`,
+  studentEmail : `Student Email`,
   checkedOutBy : `Checked Out By`,	
   dateCheckedOut : `Date Checked Out`,	
   dateReturned : `Date Returned`,
   barcode : `Barcode`,
   ticket : `Ticket`,	
+  itemBasket : `Item Basket`,	
   notes : `Notes`,
   checkedOutCount : `Number of Times Checked Out`,
   dueDate : `Due Date`,
@@ -166,6 +163,11 @@ const OTHERSHEETS = {
 
 const DRIVEFOLDERS = {
   barcodeTarget : DriveApp.getFolderById(`1jGfdwx4GwiMegVySKj28YW4XH_neI2Oz`),
+}
+
+const FORM = {
+  location : `1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`,
+  form : FormApp.openById(`1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`),
 }
 
 

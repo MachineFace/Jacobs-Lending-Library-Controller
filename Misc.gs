@@ -72,7 +72,7 @@ const GetRowData = (sheet, row) => {
   try {
     let headers = sheet.getRange(1, 1, 1, sheet.getMaxColumns()).getValues()[0];
     headers.forEach( (name, index) => {
-      headers[index] = Object.keys(HEADERNAMES).find(key => HEADERNAMES[key] === name);
+      headers[index] = Object.keys(FORMHEADERNAMES).find(key => FORMHEADERNAMES[key] === name);
     })
     let data = sheet.getRange(row, 1, 1, sheet.getMaxColumns()).getValues()[0];
     headers.forEach((header, index) => dict[header] = data[index]);
@@ -274,7 +274,6 @@ const TitleCase = (str) => {
 const ValidateEmail = (email) => {
   const regex = new RegExp(/^[a-zA-Z0-9+_.-]+@[berkeley.edu]+$/);
   let match = regex.test(email);
-  console.warn(match)
   return match;
 }
 
