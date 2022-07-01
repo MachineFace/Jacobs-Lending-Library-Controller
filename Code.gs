@@ -41,10 +41,16 @@ const onChange = async (e) => {
   const dueDate = GetByHeader(thisSheet, HEADERNAMES.dueDate, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dueDate, thisRow) : new Date(new TimeConverter().ReturnDate(dateCheckedOut)).toDateString();
   const basket = GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) : ``;
   const notes = GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) : `No Notes`;
-
+  const timestamp = GetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow) : `No timestamp`;
+  const affiliation = GetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow) : `Unknown Affiliation`;
+  const studentId = GetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow) : `No ID number`;
+  
   // Logic
   try {
     switch(status) {
+      case STATUS.requested:
+        writer.Warning(`Tracking Number ${trackingNum} requested by user ${student} on ${timestamp}.`);
+        break;
       case STATUS.checkedIn:
         writer.Warning(`Tracking Number ${trackingNum} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
         SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, now.toDateString());
