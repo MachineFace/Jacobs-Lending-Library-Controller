@@ -7,11 +7,11 @@
  * @param {Event} e
  */
 const onSubmission = async (e) => {
+  let lastRow = SHEETS.Main.getLastRow();
 
-  // Loop through to get last row and set status to received
+  // Loop through to get last row and set status to requested
   try {
-    var searchRange = SHEETS.Main.getRange(2, 4, sheet.getLastRow()).getValues(); //search timestamp rows for last row
-    var lastRow;
+    var searchRange = SHEETS.Main.getRange(2, 4, SHEETS.Main.getLastRow()).getValues(); //search timestamp rows for last row
     for (var i = 0; i < searchRange.length; i++) {
       if (searchRange[i][0].toString() == ``) {
         lastRow = i + 1;
@@ -26,13 +26,11 @@ const onSubmission = async (e) => {
 
   // Parse variables
   let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : GetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow);
+  SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, name);
   let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
-  let sid = e.namedValues[HEADERNAMES.sid][0] ? e.namedValues[HEADERNAMES.sid][0] : GetByHeader(SHEETS.Main, HEADERNAMES.sid, lastRow);
-  let studentType = e.namedValues[HEADERNAMES.afiliation][0] ? e.namedValues[HEADERNAMES.afiliation][0] : GetByHeader(SHEETS.Main, HEADERNAMES.afiliation, lastRow);
-  let projectname = e.namedValues[HEADERNAMES.projectName][0] ? e.namedValues[HEADERNAMES.projectName][0] : GetByHeader(SHEETS.Main, HEADERNAMES.projectName, lastRow);
+  let sid = e.namedValues[`What is your Student ID Number?`][0] ? e.namedValues[`What is your Student ID Number?`][0] : `Unknown SID`;
   let timestamp = e.namedValues[HEADERNAMES.timestamp][0];
-
-  let values = e.namedValues;
+  let basket = e.namedValues[`Please select the tools you would like to check out.`][0] ? e.namedValues[`Please select the tools you would like to check out.`][0] : [];
   
   // Set Requested Status
   let stat = GetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow);
@@ -44,6 +42,7 @@ const onSubmission = async (e) => {
   SetByHeader(SHEETS.Main, HEADERNAMES.tracking, lastRow, trackingNumber);
 
   // Create Ticket
+  let ticket;
   try {
     ticket = new Ticket({
       trackingNumber: trackingNumber,
@@ -58,8 +57,8 @@ const onSubmission = async (e) => {
     console.error( `${err}, Whoops: Couldn't create a ticket for some reason...` );
   }
   try {
-    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl());
+    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
+    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
   } catch (err) {
     console.error(
       `${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`

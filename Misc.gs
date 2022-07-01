@@ -225,6 +225,13 @@ const SetValidationBasedOnAvailability = () => {
 const SetConditionalFormatting = () => {
   let rules = [
     SpreadsheetApp.newConditionalFormatRule()
+      .whenFormulaSatisfied(`=$B2="${STATUS.requested}"`)
+      .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
+      .setBackground(COLORS.orange_light)
+      .setFontColor(COLORS.orange)
+      .build()
+    ,
+    SpreadsheetApp.newConditionalFormatRule()
       .whenFormulaSatisfied(`=$B2="${STATUS.checkedIn}"`)
       .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
       .setBackground(COLORS.green_light)
