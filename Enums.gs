@@ -143,7 +143,6 @@ const OTHERSHEETS = {
   Metrics : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Metrics`),
   Record : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`CheckOut Record`),
   Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
-  FormResponses : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Form Responses`),
 }
 
 const DRIVEFOLDERS = {
