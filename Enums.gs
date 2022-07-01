@@ -154,8 +154,7 @@ const DRIVEFOLDERS = {
 }
 
 const FORM = {
-  location : `1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`,
-  form : FormApp.openById(`1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`),
+  id : `17-Ll2AninOpRfapyNw6flEP2OlEQ0cYxfXAKlXcSbe0`,
   url : `https://docs.google.com/forms/d/e/1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA/viewform`,
 }
 
