@@ -1,10 +1,106 @@
+
+
 /**
- * -----------------------------------------------------------------------------------------------------------------
- * Main OnSubmit
+ * ----------------------------------------------------------------------------------------------------------------
+ * Trigger 1 - On Submission
+ * Reserved word: onFormSubmit() cannot be used here because it's reserved for simple triggers.
+ * @param {Event} e
  */
-const onSubmit = async (e) => {
+const onSubmission = async (e) => {
+
+  // Loop through to get last row and set status to received
+  try {
+    var searchRange = SHEETS.Main.getRange(2, 4, sheet.getLastRow()).getValues(); //search timestamp rows for last row
+    var lastRow;
+    for (var i = 0; i < searchRange.length; i++) {
+      if (searchRange[i][0].toString() == ``) {
+        lastRow = i + 1;
+        break;
+      }
+    }
+    SetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow, STATUS.requested);
+    console.info(`Set status to 'Requested'.`);
+  } catch (err) {
+    console.error(`${err}: Couldn't set status to 'Received'.`);
+  }
+
+  // Parse variables
+  let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : GetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow);
+  let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
+  let sid = e.namedValues[HEADERNAMES.sid][0] ? e.namedValues[HEADERNAMES.sid][0] : GetByHeader(SHEETS.Main, HEADERNAMES.sid, lastRow);
+  let studentType = e.namedValues[HEADERNAMES.afiliation][0] ? e.namedValues[HEADERNAMES.afiliation][0] : GetByHeader(SHEETS.Main, HEADERNAMES.afiliation, lastRow);
+  let projectname = e.namedValues[HEADERNAMES.projectName][0] ? e.namedValues[HEADERNAMES.projectName][0] : GetByHeader(SHEETS.Main, HEADERNAMES.projectName, lastRow);
+  let timestamp = e.namedValues[HEADERNAMES.timestamp][0];
+
+  let values = e.namedValues;
   
-}
+  // Set Requested Status
+  let stat = GetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow);
+  stat = stat ? stat : SetByHeader(SHEETS.Main, HEADERNAMES.status,  lastRow, STATUS.requested); 
+  console.info(`Status set to 'Requested'.`);
+  
+  // Create Tracking Number
+  const trackingNumber = MakeTrackingNumber();
+  SetByHeader(SHEETS.Main, HEADERNAMES.tracking, lastRow, trackingNumber);
+
+  // Create Ticket
+  try {
+    ticket = new Ticket({
+      trackingNumber: trackingNumber,
+      status: STATUS.requested,
+      name: name,
+      email: email,
+      basket: basket,
+      notes: notes,
+    });
+    ticket.CreateTicket();
+  } catch (err) {
+    console.error( `${err}, Whoops: Couldn't create a ticket for some reason...` );
+  }
+  try {
+    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl());
+  } catch (err) {
+    console.error(
+      `${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`
+    );
+  }
+
+  // Make a record
+  try {
+    new RecordTaker({
+      trackingNumber : trackingNumber,
+      date : new Date().toDateString(),
+      name : name,
+      email : email,
+      basket : basket,
+      notes : notes,
+    });
+  } catch (err) {
+    console.error(`${err}, Whoops: Couldn't write record for some reason...`);
+  }
+  
+  // Ready to go:
+  // try {
+  //   new Emailer({
+  //     trackingNumber : this.trackingNumber,
+  //     checkedOutDate : now,
+  //     dueDate : returnDate,  
+  //     email : this.email,
+  //     status : STATUS.checkedOut,
+  //     name : this.name,
+  //     designspecialist : this.issuer, 
+  //   })
+  // } catch(err) {
+  //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+  // }
+
+};
+
+/**
+ * =======================================================================================================================================================================
+ * =======================================================================================================================================================================
+ */
 
 
 /**

@@ -44,7 +44,7 @@ class Emailer
   SendEmail () {
     switch (this.status) {
       case STATUS.requested:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools requested`, "", {
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Requested`, "", {
           htmlBody: this.message.requestedMessage,
           from: this.supportAlias,
           cc: this.designspecialistemail,
