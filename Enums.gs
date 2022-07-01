@@ -106,6 +106,7 @@ const RESPONSECODES = {
 }
 
 const STATUS = {
+	requested : `Requested`,
   checkedOut : `Checked Out`,
   checkedIn : `Checked In`,
   overdue : `Overdue!`,
