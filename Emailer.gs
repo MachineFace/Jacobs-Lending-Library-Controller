@@ -43,6 +43,16 @@ class Emailer
 
   SendEmail () {
     switch (this.status) {
+      case STATUS.requested:
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools requested`, "", {
+          htmlBody: this.message.requestedMessage,
+          from: this.supportAlias,
+          cc: this.designspecialistemail,
+          bcc: "",
+          name: this.gmailName,
+        });
+        console.warn(`Student ${this.name} emailed ${this.status} message...`);
+        break;
       case STATUS.checkedOut:
         GmailApp.sendEmail(this.email, `${this.gmailName} : Headset Checked Out`, "", {
           htmlBody: this.message.checkedOutMessage,

@@ -38,6 +38,21 @@ class CreateMessage
       message += `<p>Best,<br />Jacobs Hall Staff</p>`;
     return message; 
   }
+  get requestedMessage() {
+    let message = `<p>Hi ${this.name},</p>`;
+      message += `<p>Thank you for requesting to check out fabrication tools with Jacobs Project Support.<br />`;
+      message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> can be picked up in person.<br/>`;
+      message += `<br/>`;
+      message += `<b>Pick-up Location:<br/>`;
+      message += `<a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby. <br/>`; 
+      message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
+      message += `<b>Pick-up Hours:<br/>`;
+      message += `${PickupHours}</b><br/><br/>`
+      message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/>`;
+      message += `</p>`;
+      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+    return message;
+  }
   get checkedOutMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for checking out fabrication tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
