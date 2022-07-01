@@ -106,7 +106,6 @@ const RESPONSECODES = {
 }
 
 const STATUS = {
-	requested : `Requested`,
   checkedOut : `Checked Out`,
   checkedIn : `Checked In`,
   overdue : `Overdue!`,
@@ -114,25 +113,40 @@ const STATUS = {
 
 
 const HEADERNAMES = {
-	timestamp : `Timestamp`,	
-	studentEmail : `Email Address`,	
-	name : `What is your name?`,	
-	studentId : `What is your Student ID Number?`,	
-	affiliation : `What is your affiliation to the Jacobs Institute?`,	
-	itemBasket : `Please select the tools you would like to check out.`,	
   tracking : `Tracking Number`,	
-  status : `Status`,
+  status : `Checked Out / Returned`,
+  name : `Checked Out To`,
+  studentEmail : `Student Email`,
   checkedOutBy : `Checked Out By`,	
   dateCheckedOut : `Date Checked Out`,	
   dateReturned : `Date Returned`,
   barcode : `Barcode`,
   ticket : `Ticket`,	
+  itemBasket : `Item Basket`,	
   notes : `Notes`,
   checkedOutCount : `Number of Times Checked Out`,
   dueDate : `Due Date`,
   remainingDays : `Days Remaining Until Overdue`,												
 };
 
+const FORMHEADERNAMES = {
+  tracking : `Timestamp`,	
+	studentEmail : `Email Address`,	
+	name : `What is your name?`,	
+	studentId : `What is your Student ID Number?`,	
+	affiliation : `What is your affiliation to the Jacobs Institute?`,	
+	itemBasket : `Please select the tools you would like to check out.`,	
+  // status : `Checked Out / Returned`,
+  // checkedOutBy : `Checked Out By`,	
+  // dateCheckedOut : `Date Checked Out`,	
+  // dateReturned : `Date Returned`,
+  // barcode : `Barcode`,
+  // ticket : `Ticket`,		
+  // notes : `Notes`,
+  // checkedOutCount : `Number of Times Checked Out`,
+  // dueDate : `Due Date`,
+  // remainingDays : `Days Remaining Until Overdue`,												
+};
 const SHEETS = {
   Main : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Main`),
 };
@@ -144,6 +158,7 @@ const OTHERSHEETS = {
   Metrics : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Metrics`),
   Record : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`CheckOut Record`),
   Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
+  FormResponses : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Form Responses`),
 }
 
 const DRIVEFOLDERS = {
@@ -153,6 +168,7 @@ const DRIVEFOLDERS = {
 const FORM = {
   location : `1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`,
   form : FormApp.openById(`1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA`),
+  url : `https://docs.google.com/forms/d/e/1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA/viewform`,
 }
 
 
