@@ -113,40 +113,25 @@ const STATUS = {
 
 
 const HEADERNAMES = {
+	timestamp : `Timestamp`,	
+	studentEmail : `Email Address`,	
+	name : `What is your name?`,	
+	studentId : `What is your Student ID Number?`,	
+	affiliation : `What is your affiliation to the Jacobs Institute?`,	
+	itemBasket : `Please select the tools you would like to check out.`,	
   tracking : `Tracking Number`,	
-  status : `Checked Out / Returned`,
-  name : `Checked Out To`,
-  studentEmail : `Student Email`,
+  status : `Status`,
   checkedOutBy : `Checked Out By`,	
   dateCheckedOut : `Date Checked Out`,	
   dateReturned : `Date Returned`,
   barcode : `Barcode`,
   ticket : `Ticket`,	
-  itemBasket : `Item Basket`,	
   notes : `Notes`,
   checkedOutCount : `Number of Times Checked Out`,
   dueDate : `Due Date`,
   remainingDays : `Days Remaining Until Overdue`,												
 };
 
-const FORMHEADERNAMES = {
-  tracking : `Timestamp`,	
-	studentEmail : `Email Address`,	
-	name : `What is your name?`,	
-	studentId : `What is your Student ID Number?`,	
-	affiliation : `What is your affiliation to the Jacobs Institute?`,	
-	itemBasket : `Please select the tools you would like to check out.`,	
-  // status : `Checked Out / Returned`,
-  // checkedOutBy : `Checked Out By`,	
-  // dateCheckedOut : `Date Checked Out`,	
-  // dateReturned : `Date Returned`,
-  // barcode : `Barcode`,
-  // ticket : `Ticket`,		
-  // notes : `Notes`,
-  // checkedOutCount : `Number of Times Checked Out`,
-  // dueDate : `Due Date`,
-  // remainingDays : `Days Remaining Until Overdue`,												
-};
 const SHEETS = {
   Main : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Main`),
 };
