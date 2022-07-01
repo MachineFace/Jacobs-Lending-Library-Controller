@@ -49,6 +49,9 @@ const onChange = async (e) => {
   // Logic
   try {
     switch(status) {
+      case STATUS.requested:
+        writer.Warning(`Tracking Number ${trackingNum} requested by user ${student} on ${timestamp}.`);
+        break;
       case STATUS.checkedIn:
         writer.Warning(`Tracking Number ${trackingNum} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
         SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, now.toDateString());
