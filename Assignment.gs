@@ -101,44 +101,6 @@ class AssignUserABasket
     //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
     // }
   }
-
-  Unassign() {
-    const headsetID = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row);
-    SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedIn);
-    SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
-    try {
-      new RecordTaker({
-        trackingNumber : this.trackingNumber,
-        date : new Date(),
-        issuer : `Cody`,
-        name : `Headset Unassigned`,
-        email : `Headset Unassigned`,
-      });
-    } catch (err) {
-      console.error(`${err}, Whoops: Couldn't write record for some reason...`);
-    }
-    // try {
-    //   new Emailer({
-    //     trackingNumber : headsetID,
-    //     checkedOutDate : new Date(),
-    //     dueDate : returnDate,  
-    //     email : incomingEmail,
-    //     status : STATUS.checkedOut,
-    //     name : incomingName,
-    //     remainingDays : ``,
-    //     designspecialist : `Cody`,
-    //   })
-    // } catch(err) {
-    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    // }
-    console.warn(`Tracking ID: ${headsetID} has been unassigned...`);
-  }
   
 }
 
