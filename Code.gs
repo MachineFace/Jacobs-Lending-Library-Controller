@@ -7,35 +7,33 @@
  * @param {Event} e
  */
 const onSubmission = async (e) => {
-  console.warn(`VALUES ---> ${e.namedValues}`);
+  console.warn(`VALUES ---> ${Object.entries(e.namedValues)}`);
   let lastRow = SHEETS.Main.getLastRow();
 
   // Loop through to get last row and set status to requested
   try {
-    var searchRange = SHEETS.Main.getRange(2, 4, SHEETS.Main.getLastRow()).getValues(); //search timestamp rows for last row
-    for (var i = 0; i < searchRange.length; i++) {
+    let searchRange = SHEETS.Main.getRange(2, 4, SHEETS.Main.getLastRow()).getValues(); //search timestamp rows for last row
+    for (let i = 0; i < searchRange.length; i++) {
       if (searchRange[i][0].toString() == ``) {
         lastRow = i + 1;
         break;
       }
     }
-    SetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow, STATUS.requested);
-    console.info(`Set status to 'Requested'.`);
   } catch (err) {
     console.error(`${err}: Couldn't set status to 'Received'.`);
   }
 
   // Parse variables
-  let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : `Unknown Name`;
+  const name = e.namedValues[HEADERNAMES.name] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : `Unknown Name`;
   SetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow, name);
-  let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
-  let sid = e.namedValues[HEADERNAMES.studentId][0] ? e.namedValues[HEADERNAMES.studentId][0] : `Unknown SID`;
-  let timestamp = e.namedValues[HEADERNAMES.timestamp][0];
-  let basket = e.namedValues[HEADERNAMES.itemBasket][0] ? e.namedValues[HEADERNAMES.itemBasket][0] : [];
+  const email = e.namedValues[HEADERNAMES.email] ? e.namedValues[HEADERNAMES.email][0] : `Unknown Email`;
+  const sid = e.namedValues[HEADERNAMES.studentId] ? e.namedValues[HEADERNAMES.studentId][0] : `Unknown SID`;
+  const timestamp = e.namedValues[HEADERNAMES.timestamp] ? e.namedValues[HEADERNAMES.timestamp][0] : ``;
+  const basket = e.namedValues[HEADERNAMES.itemBasket] ? e.namedValues[HEADERNAMES.itemBasket][0] : [];
   
   // Set Requested Status
-  let stat = GetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow);
-  stat = stat ? stat : SetByHeader(SHEETS.Main, HEADERNAMES.status,  lastRow, STATUS.requested); 
+  const status = STATUS.requested;
+  SetByHeader(SHEETS.Main, HEADERNAMES.status,  lastRow, status); 
   console.info(`Status set to 'Requested'.`);
   
   // Create Tracking Number
@@ -47,7 +45,7 @@ const onSubmission = async (e) => {
   try {
     ticket = new Ticket({
       trackingNumber: trackingNumber,
-      status: STATUS.requested,
+      status: status,
       name: name,
       email: email,
       basket: basket,
