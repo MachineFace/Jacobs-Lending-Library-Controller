@@ -35,6 +35,7 @@ const ReturnByBarcode = () => {
         email : data.studentEmail,
         status : data.status,
         name : data.name,
+        remainingDays : data.remainingDays,
         designspecialist : data.checkedOutBy,
       })
     } catch(err) {
