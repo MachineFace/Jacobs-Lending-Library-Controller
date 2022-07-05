@@ -223,6 +223,7 @@ const CheckOverdueTimesAndEmail = () => {
           email : data.studentEmail,
           status : STATUS.overdue,
           name : data.name,
+          remainingDays : data.remainingDays,
           designspecialist : data.checkedOutBy,
         })
       } catch(err) {

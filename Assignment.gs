@@ -4,11 +4,11 @@
 class AssignUserABasket
 {
   constructor({
-    issuer = `Cody`,
-    name = `Unknown Name`,
-    email = `Unknown Email`,
-    basket = [],
-    notes = `Note: Item was checked out in good quality.`,
+    issuer : issuer = `Cody`,
+    name : name = `Unknown Name`,
+    email : email = `Unknown Email`,
+    basket : basket = [],
+    notes : notes = `Note: Item was checked out in good quality.`,
   }) { 
     this.trackingNumber = 1000001;
     this.date = new Date().toDateString();
@@ -94,6 +94,7 @@ class AssignUserABasket
     //     email : this.email,
     //     status : STATUS.checkedOut,
     //     name : this.name,
+    //     remainingDays : remainingDays,
     //     designspecialist : this.issuer, 
     //   })
     // } catch(err) {
@@ -130,6 +131,7 @@ class AssignUserABasket
     //     email : incomingEmail,
     //     status : STATUS.checkedOut,
     //     name : incomingName,
+    //     remainingDays : ``,
     //     designspecialist : `Cody`,
     //   })
     // } catch(err) {

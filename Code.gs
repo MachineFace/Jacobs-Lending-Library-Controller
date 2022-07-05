@@ -88,6 +88,7 @@ const onSubmission = async (e) => {
   //     email : this.email,
   //     status : STATUS.checkedOut,
   //     name : this.name,
+  //     remainingDays : this.remainingDays,
   //     designspecialist : this.issuer, 
   //   })
   // } catch(err) {

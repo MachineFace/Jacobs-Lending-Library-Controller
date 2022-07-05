@@ -18,7 +18,8 @@ class CreateMessage
     trackingNumber : trackingNumber,
     checkedOutDate : checkedOutDate,
     returnedDate : returnedDate,
-    dueDate : dueDate, 
+    dueDate : dueDate,
+    remainingDays : remainingDays, 
     designspecialist : designspecialist, 
     designspecialistemaillink : designspecialistemaillink,
   }){
@@ -27,6 +28,7 @@ class CreateMessage
     this.checkedOutDate = checkedOutDate instanceof Date ? checkedOutDate.toDateString() : new Date().toDateString();
     this.returnedDate = returnedDate instanceof Date ? returnedDate.toDateString() : new Date().toDateString();
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
+    this.remainingDays = remainingDays ? remainingDays : `0 days`;
     this.designspecialist = designspecialist ? designspecialist : `Staff`;
     this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
     this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
@@ -81,7 +83,7 @@ class CreateMessage
   get overdueMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for checking out tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
-      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.returnedDate}, and are now OVERDUE.</b></font><br/>`;
+      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.returnedDate}, and are now (${this.remainingDays}) OVERDUE.</b></font><br/>`;
       message += `<font style="color:#FF0000";><b>Please return these tools IMMEDIATELY.</b></font><br/>`;
       message += `Items can be returned here:<br/><br/>`;
       message += `<b>Drop-off Location:<br/>`;
@@ -110,6 +112,7 @@ const _testMessages = async () => {
     trackingNumber : `1000001`,
     checkedOutDate : new Date(),
     returnedDate : new Date(), 
+    remainingDays : `10 days`,
     designspecialist : `Cody`,
   })
 

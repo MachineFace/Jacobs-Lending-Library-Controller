@@ -7,14 +7,15 @@
 class Emailer
 {
   constructor({ 
-    trackingNumber = `1000001`,
-    status = STATUS.checkedOut,
-    name = `Your Name`,
-    email = `Your Email`, 
-    checkedOutDate = new Date().toDateString(),
-    returnedDate = new Date().toDateString(),
-    dueDate, 
-    designspecialist,
+    trackingNumber : trackingNumber = `1000001`,
+    status : status = STATUS.checkedOut,
+    name : name = `Your Name`,
+    email : email = `Your Email`, 
+    checkedOutDate : checkedOutDate = new Date().toDateString(),
+    returnedDate : returnedDate = new Date().toDateString(),
+    remainingDays : remainingDays = `0 days`,
+    dueDate : dueDate, 
+    designspecialist : designspecialist,
   }) {
     this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
     this.status = status ? status : STATUS.checkedOut;
@@ -24,7 +25,7 @@ class Emailer
     this.checkedOutDate = checkedOutDate ? checkedOutDate.toDateString() : new Date().toDateString();
     this.returnedDate = returnedDate ? returnedDate.toDateString() : new Date().toDateString();
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
-
+    this.remainingDays = remainingDays ? remainingDays : `0 days`;
     this.supportAlias = GmailApp.getAliases()[0];
     this.designspecialist = designspecialist ? designspecialist : `Staff`;
     this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
@@ -34,7 +35,8 @@ class Emailer
       name : this.name, 
       trackingNumber : this.trackingNumber,
       checkedOutDate : this.checkedOutDate,
-      returnedDate : this.returnedDate, 
+      returnedDate : this.returnedDate,
+      remainingDays : this.remainingDays, 
       dueDate : this.dueDate,
       designspecialist : this.designspecialist,
     });
@@ -74,7 +76,7 @@ class Emailer
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.overdue:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Headset OVERDUE`, "", {
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Headset OVERDUE!!`, "", {
             htmlBody: this.message.overdueMessage,
             from: this.supportAlias,
             cc: this.designspecialistemail,
