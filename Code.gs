@@ -40,6 +40,10 @@ const onSubmission = async (e) => {
   const trackingNumber = MakeTrackingNumber();
   SetByHeader(SHEETS.Main, HEADERNAMES.tracking, lastRow, trackingNumber);
 
+  // Issuer
+  const issuer = `Staff`;
+  SetByHeader(SHEETS.Main, HEADERNAMES.issuer, lastRow, issuer);
+
   // Create Ticket
   let ticket;
   try {
@@ -71,7 +75,6 @@ const onSubmission = async (e) => {
       name : name,
       email : email,
       basket : basket,
-      notes : notes,
     });
   } catch (err) {
     console.error(`${err}, Whoops: Couldn't write record for some reason...`);
