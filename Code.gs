@@ -26,7 +26,7 @@ const onSubmission = async (e) => {
 
   // Parse variables
   let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : `Unknown Name`;
-  SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, name);
+  SetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow, name);
   let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
   let sid = e.namedValues[HEADERNAMES.studentId][0] ? e.namedValues[HEADERNAMES.studentId][0] : `Unknown SID`;
   let timestamp = e.namedValues[HEADERNAMES.timestamp][0];
