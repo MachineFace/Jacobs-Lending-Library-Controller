@@ -49,15 +49,16 @@ const onSubmission = async (e) => {
       name: name,
       email: email,
       basket: basket,
-      notes: notes,
     });
     ticket.CreateTicket();
   } catch (err) {
     console.error( `${err}, Whoops: Couldn't create a ticket for some reason...` );
   }
   try {
-    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
-    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
+    if(ticket) {
+      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
+      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
+    } else throw new Error(`Ticket Missing...`);
   } catch (err) {
     console.error( `${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...` );
   }
