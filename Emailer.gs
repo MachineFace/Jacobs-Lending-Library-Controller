@@ -56,7 +56,7 @@ class Emailer
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.checkedOut:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Headset Checked Out`, "", {
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Checked Out`, "", {
           htmlBody: this.message.checkedOutMessage,
           from: this.supportAlias,
           cc: this.designspecialistemail,
@@ -66,7 +66,7 @@ class Emailer
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.checkedIn:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Headset Returned`, "", {
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Returned`, "", {
             htmlBody: this.message.returnedMessage,
             from: this.supportAlias,
             cc: this.designspecialistemail,
@@ -76,7 +76,7 @@ class Emailer
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.overdue:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Headset OVERDUE!!`, "", {
+        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools OVERDUE!!`, "", {
             htmlBody: this.message.overdueMessage,
             from: this.supportAlias,
             cc: this.designspecialistemail,

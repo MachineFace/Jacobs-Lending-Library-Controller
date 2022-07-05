@@ -117,6 +117,7 @@ const _testMessages = async () => {
   })
 
   console.warn(`DEFAULT ---> ${message.defaultMessage}`);
+  console.warn(`REQUESTED ---> ${message.requestedMessage}`);
   console.warn(`CHECKED OUT ---> ${message.checkedOutMessage}`);
   console.warn(`RETURNED ---> ${message.returnedMessage}`);
   console.warn(`OVERDUE ---> ${message.overdueMessage}`);
