@@ -25,12 +25,12 @@ const onSubmission = async (e) => {
   }
 
   // Parse variables
-  let name = e.namedValues[`What is your name?`][0] ? TitleCase(e.namedValues[`What is your name?`][0]) : `Unknown Name`;
+  let name = e.namedValues[HEADERNAMES.name][0] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : `Unknown Name`;
   SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, name);
   let email = e.namedValues[HEADERNAMES.email][0] ? e.namedValues[HEADERNAMES.email][0] : GetByHeader(SHEETS.Main, HEADERNAMES.email, lastRow);
-  let sid = e.namedValues[`What is your Student ID Number?`][0] ? e.namedValues[`What is your Student ID Number?`][0] : `Unknown SID`;
+  let sid = e.namedValues[HEADERNAMES.studentId][0] ? e.namedValues[HEADERNAMES.studentId][0] : `Unknown SID`;
   let timestamp = e.namedValues[HEADERNAMES.timestamp][0];
-  let basket = e.namedValues[`Please select the tools you would like to check out.`][0] ? e.namedValues[`Please select the tools you would like to check out.`][0] : [];
+  let basket = e.namedValues[HEADERNAMES.itemBasket][0] ? e.namedValues[HEADERNAMES.itemBasket][0] : [];
   
   // Set Requested Status
   let stat = GetByHeader(SHEETS.Main, HEADERNAMES.status, lastRow);
@@ -60,9 +60,7 @@ const onSubmission = async (e) => {
     SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
     SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
   } catch (err) {
-    console.error(
-      `${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`
-    );
+    console.error( `${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...` );
   }
 
   // Make a record
