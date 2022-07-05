@@ -114,25 +114,23 @@ const STATUS = {
 
 
 const HEADERNAMES = {
-  timestamp : `Timestamp`,	
-  studentEmail : `Email Address`,	
-  issuer : `Issuer`,	
-  name : `What is your name?`,	
-  studentId : `What is your Student ID Number?`,	
-  affiliation : `What is your affiliation to the Jacobs Institute?`,	
-  itemBasket : `Please select the tools you would like to check out.`,	
-  tracking : `Tracking Number`,	
-  status : `Status`,
-
-  dateCheckedOut : `Date Checked Out`,	
-  dateReturned : `Date Returned`,
-  barcode : `Barcode`,
-  ticket : `Ticket`,	
-  itemBasket : `Item Basket`,	
-  notes : `Notes`,
-  checkedOutCount : `Number of Times Checked Out`,
-  dueDate : `Due Date`,
-  remainingDays : `Days Remaining Until Overdue`,												
+  tracking: `Tracking Number`,
+  status: `Status`,
+  issuer: `Issuer`,
+  timestamp: `Timestamp`,
+  studentEmail: `Email Address`,
+  name: `What is your name?`,
+  studentId: `What is your Student ID Number?`,
+  affiliation: `What is your affiliation to the Jacobs Institute?`,
+  itemBasket: `Please select the tools you would like to check out.`,
+  dateCheckedOut: `Date Checked Out`,
+  dateReturned: `Date Returned`,
+  ticket: `Ticket`,
+  barcode: `Barcode`,
+  notes: `Notes`,
+  dueDate: `Due Date`,
+  remainingDays: `Days Remaining Until Overdue`,
+  checkedOutCount: `Number of Times Checked Out`,
 };
 
 const SHEETS = {
