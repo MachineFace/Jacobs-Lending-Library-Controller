@@ -278,10 +278,9 @@ const TitleCase = (str) => {
  * @returns {number} trackingNumber
  */
 const MakeTrackingNumber = () => {
-  const prevRow = SHEETS.Main.getLastRow();
-  const prevNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) : 1000001;
-  const prevTrackingNumber = Number.parseInt(prevNum) + 1;
-  return prevTrackingNumber;
+  const prevRowNum = SHEETS.Main.getLastRow() - 1;
+  const trackingNumber = Number.parseInt(100000 + prevRowNum);
+  return trackingNumber;
 }
 
 /**

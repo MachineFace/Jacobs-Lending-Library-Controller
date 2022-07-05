@@ -44,6 +44,10 @@ const onSubmission = async (e) => {
   const issuer = `Staff`;
   SetByHeader(SHEETS.Main, HEADERNAMES.issuer, lastRow, issuer);
 
+  // Notes
+  const notes = `No notes yet...`;
+  SetByHeader(SHEETS.Main, HEADERNAMES.notes, lastRow, notes);
+
   // Create Ticket
   let ticket;
   try {
@@ -53,6 +57,7 @@ const onSubmission = async (e) => {
       name: name,
       email: email,
       basket: basket,
+      notes : notes,
     });
     ticket.CreateTicket();
   } catch (err) {
@@ -75,6 +80,7 @@ const onSubmission = async (e) => {
       name : name,
       email : email,
       basket : basket,
+      notes : notes,
     });
   } catch (err) {
     console.error(`${err}, Whoops: Couldn't write record for some reason...`);
