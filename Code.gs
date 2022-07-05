@@ -7,6 +7,7 @@
  * @param {Event} e
  */
 const onSubmission = async (e) => {
+  console.warn(`VALUES ---> ${e.namedValues}`);
   let lastRow = SHEETS.Main.getLastRow();
 
   // Loop through to get last row and set status to requested
