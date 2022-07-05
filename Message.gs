@@ -83,11 +83,7 @@ class CreateMessage
   get overdueMessage() {
     let message = `<p>Hi ${this.name},</p>`;
       message += `<p>Thank you for checking out tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
-<<<<<<< HEAD
-      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.returnedDate}, and are now (${this.remainingDays}) OVERDUE.</b></font><br/>`;
-=======
-      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.dueDate}, and are now OVERDUE.</b></font><br/>`;
->>>>>>> 02017798e33a1aa058e98dbe4bc0ca43355cbf84
+      message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.dueDate}, and are now (${this.remainingDays}) OVERDUE.</b></font><br/>`;
       message += `<font style="color:#FF0000";><b>Please return these tools IMMEDIATELY.</b></font><br/>`;
       message += `Items can be returned here:<br/><br/>`;
       message += `<b>Drop-off Location:<br/>`;
