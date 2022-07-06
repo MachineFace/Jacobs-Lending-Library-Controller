@@ -8,15 +8,15 @@
 class RecordTaker
 {
   constructor({
-    trackerNumber,
-    date,
-    issuer,
-    name,
-    email,
-    basket,
-    notes,
+    trackingNumber : trackingNumber = 10000001,
+    date : date = new Date(),
+    issuer : issuer = `Staff`,
+    name : name = `Unknown Name`,
+    email : email = `Unknown Email`,
+    basket : basket = [],
+    notes : notes = `No Notes`,
   }) { 
-    this.trackerNumber = trackerNumber ? trackerNumber : `1000001`;
+    this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
     this.date = date ? date : new Date().toDateString();
     this.issuer = issuer ? issuer : `Cody`;
     this.name = name ? name : `Unknown Name`;
@@ -27,9 +27,9 @@ class RecordTaker
     this.WriteRecord();
   }
   WriteRecord() {
-    const text = [ this.trackerNumber, this.date, this.issuer, this.name, this.email, JSON.stringify(this.basket), this.notes, ];
+    const text = [ this.trackingNumber, this.date, this.issuer, this.name, this.email, JSON.stringify(this.basket), this.notes, ];
     OTHERSHEETS.Record.appendRow(text);
-    // console.warn(`${this.trackerNumber} has been checked Out on ${this.date} by ${this.name}`);
+    // console.warn(`${this.trackingNumber} has been checked Out on ${this.date} by ${this.name}`);
   }
   
 }
@@ -42,7 +42,7 @@ const _testRecordTaker = async () => {
   console.time(`EXECUTION TIMER`);
   for (let i = 0; i < 5; i++) {
     await new RecordTaker({
-      trackerNumber : GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i + 5),
+      trackingNumber : GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i + 5),
       date : GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, i + 5),
       issuer : GetByHeader(SHEETS.Main, HEADERNAMES.issuer, i + 5),
       name : GetByHeader(SHEETS.Main, HEADERNAMES.name, i + 5),

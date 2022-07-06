@@ -158,12 +158,12 @@ const onChange = async (e) => {
         writer.Warning(`Tracking Number ${trackingNum} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
         SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, now.toDateString());
         new RecordTaker({
-          trackerNumber : trackingNum,
-          date : dateCheckedOut,
-          issuer : issuer,
-          name : student,
-          email : email,
-          notes : notes,
+          trackingNumber: trackingNum,
+          date: dateCheckedOut,
+          issuer: issuer,
+          name: student,
+          email: email,
+          notes: notes,
         });
         PrintTurnaround(thisRow);
         break;
