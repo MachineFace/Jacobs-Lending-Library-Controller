@@ -25,6 +25,7 @@ const EditFromSelected = async () => {
   const studentId = rowData?.studentId;
   const itemBasket = rowData?.itemBasket?.split(', ');
   let template = HtmlService.createTemplateFromFile('editingsidebar');
+  template.data = rowData;
   template.name = name;
   template.studentEmail = studentEmail;
   template.studentId = studentId;

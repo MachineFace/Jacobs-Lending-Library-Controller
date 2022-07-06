@@ -50,7 +50,8 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, this.basket);
       SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
       SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
+      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, returnDate);
+      SetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow, this.notes);
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
@@ -65,7 +66,7 @@ class AssignUserABasket
         checkedOutDate : now, 
         basket : this.basket,
         notes : this.notes,
-        dueDate : new TimeConverter().ReturnDate(new Date()),
+        dueDate : returnDate,
       });
       ticket.CreateTicket();
     } catch(err) {
@@ -119,7 +120,7 @@ class AssignUserABasket
     const returnDate = new Date();
     console.info(`Unassigning Basket from: ${this.name}`);
     try {
-      new InventoryManager({basket : this.basket}).CheckOutBasket();
+      new InventoryManager({basket : this.basket}).CheckInBasket();
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
     }
