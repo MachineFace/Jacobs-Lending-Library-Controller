@@ -118,11 +118,13 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
+                  <a class="waves-effect waves-light btn-small">-</a>
                   <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
                       <? } else ?> value="0" <? } ?> >
+                  <a class="waves-effect waves-light btn-small">+</a>
                   <span><?= item ?></span></input>
                 </div>
               </label>
