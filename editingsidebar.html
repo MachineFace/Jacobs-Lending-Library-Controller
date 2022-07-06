@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
     .count-btn{  
-      width:20px;  
-      height:20px;  
+      width:30px;  
+      height:30px;  
       font-size:12px; 
       background-color: #229c8f; 
     } </style>
@@ -125,13 +125,13 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <a class="count-btn" style="height: 20px; ">-</a>
+                  <a class="count-btn" >-</a>
                   <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;font-weight: bold;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
                       <? } else ?> value="0" <? } ?> >
-                  <a class="count-btn" style="height: 20px;">+</a>
+                  <a class="count-btn" >+</a>
                   <span><?= item ?></span></input>
                 </div>
               </label>
