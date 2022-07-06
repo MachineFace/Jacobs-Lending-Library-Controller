@@ -133,20 +133,22 @@ const onChange = async (e) => {
 
 
   // Get values OR defaults if it fucks up
+  const t = new TimeConverter();
   const now = new Date();
-  const trackingNum = GetByHeader(thisSheet, HEADERNAMES.tracking, thisRow);
-  const status = GetByHeader(thisSheet, HEADERNAMES.status, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.status, thisRow) : STATUS.checkedIn;
-  const issuer = GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) : `Cody`;
-  const student = GetByHeader(thisSheet, HEADERNAMES.name, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.name, thisRow) : `Student Name`;
-  const email = GetByHeader(thisSheet, HEADERNAMES.studentEmail, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.studentEmail, thisRow) : `Unknown Email`;
-  const dateCheckedOut = GetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow) : now.toDateString();
-  const returned = GetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow) : now.toDateString();
-  const dueDate = GetByHeader(thisSheet, HEADERNAMES.dueDate, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dueDate, thisRow) : new Date(new TimeConverter().ReturnDate(dateCheckedOut)).toDateString();
+  const trackingNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow);
+  const status = GetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.status, thisRow) : STATUS.checkedIn;
+  const issuer = GetByHeader(SHEETS.Main, HEADERNAMES.issuer, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) : `Cody`;
+  const student = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.name, thisRow) : `Student Name`;
+  const email = GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.studentEmail, thisRow) : `Unknown Email`;
+  const dateCheckedOut = GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow) : now.toDateString();
+  const returned = GetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow) : now.toDateString();
+  const dueDate = GetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.dueDate, thisRow) : new Date(new TimeConverter().ReturnDate(dateCheckedOut)).toDateString();
   const basket = GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow) : ``;
   const notes = GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow) : `No Notes`;
   const timestamp = GetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow) : `No timestamp`;
   const affiliation = GetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow) : `Unknown Affiliation`;
   const studentId = GetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow) : `No ID number`;
+  const remainingDays = t.Duration(dueDate, now);
   
   // Logic
   try {
@@ -156,7 +158,12 @@ const onChange = async (e) => {
         break;
       case STATUS.checkedIn:
         writer.Warning(`Tracking Number ${trackingNum} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
-        SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, now.toDateString());
+        SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
+        try {
+          new InventoryManager({ basket: basket }).CheckInBasket();
+        } catch (err) {
+          console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
+        }
         new RecordTaker({
           trackingNumber: trackingNum,
           date: dateCheckedOut,
@@ -164,15 +171,30 @@ const onChange = async (e) => {
           name: student,
           email: email,
           notes: notes,
+          basket : basket,
         });
         PrintTurnaround(thisRow);
         break;
       case STATUS.checkedOut:
         writer.Warning(`Tracking Number ${trackingNum} has been checked out by ${issuer} to ${student} on ${dateCheckedOut}`);
-        SetByHeader(thisSheet, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
-        SetByHeader(thisSheet, HEADERNAMES.dateReturned, thisRow, ``);
-        SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, new Date(new TimeConverter().ReturnDate(dateCheckedOut)).toDateString());
-        SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, ``);
+        SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
+        SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
+        SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
+        SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
+        try {
+          new InventoryManager({ basket: basket }).CheckOutBasket();
+        } catch (err) {
+          console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
+        }
+        new RecordTaker({
+          trackingNumber: trackingNum,
+          date: dateCheckedOut,
+          issuer: issuer,
+          name: student,
+          email: email,
+          notes: notes,
+          basket: basket,
+        });
         break;
     }
   } catch(err) {
