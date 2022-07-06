@@ -15,7 +15,8 @@ class InventoryManager
   CheckOutBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
     console.warn(`Checking out items from inventory: ${this.basket}`);
-    this.basket?.forEach(item => {
+    const b = [...this.basket];
+    b.forEach(item => {
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
@@ -30,7 +31,8 @@ class InventoryManager
   CheckInBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
     console.warn(`Checking in items to inventory: ${this.basket}`);
-    this.basket?.forEach(item => {
+    const b = [...this.basket];
+    b.forEach(item => {
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
