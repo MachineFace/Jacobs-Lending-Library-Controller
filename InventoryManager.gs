@@ -14,7 +14,8 @@ class InventoryManager
 
   CheckOutBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
-    this.basket.forEach(item => {
+    console.warn(`Checking out items from inventory: ${this.basket}`);
+    this.basket?.forEach(item => {
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
@@ -22,21 +23,20 @@ class InventoryManager
       let itemCount = GetByHeader(this.sheet, `Count`, row);
       if (itemCount <= 0) console.warn(`Out of inventory!`);
       else SetByHeader(this.sheet, `Count`, row, itemCount - 1);
-      // console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount -1}`)
     });
     console.warn(`Checkout Complete`);
   }
 
   CheckInBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
-    this.basket.forEach(item => {
+    console.warn(`Checking in items to inventory: ${this.basket}`);
+    this.basket?.forEach(item => {
       let row = 1;
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
       if(row < 2) row = 2;
       let itemCount = GetByHeader(this.sheet, `Count`, row);
       SetByHeader(this.sheet, `Count`, row, itemCount + 1);
-      // console.warn(`Updating inventory for ${item} on Row: ${row} from ${itemCount} to ${itemCount +1}`)
     });
     console.warn(`CheckIn Complete`);
   }
