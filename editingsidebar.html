@@ -93,9 +93,11 @@
       }
       
       const handleIncrement = (id, startVal) => {
+        startVal = parseInt(startVal, 10);
         document.getElementById(id).value = startVal + 1;
       }
       const handleDecrement = (id, startVal) => {
+        startVal = parseInt(startVal, 10);
         if (startVal > 0) document.getElementById(id).value = startVal - 1;
       }
     </script>
