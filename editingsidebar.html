@@ -92,6 +92,12 @@
         // google.script.host.close()
       }
       
+      const handleIncrement = (id, startVal) => {
+        document.getElementById(id).value = startVal + 1;
+      }
+      const handleDecrement = (id, startVal) => {
+        if (startVal > 0) document.getElementById(id).value = startVal - 1;
+      }
     </script>
   </head>
   <body>
@@ -129,8 +135,8 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <button class="count-btn" >-</button>
-                  <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;font-weight: bold;"
+                  <button class="count-btn" onclick="handleIncrement(item, document.getElementById(item).value)">-</button>
+                  <input id=<?=item?> type="text" name=<?=item+"text"?> style="width: 20px;font-weight: bold;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
