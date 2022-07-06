@@ -105,6 +105,20 @@ const RESPONSECODES = {
 	599 : `Network connect timeout error`,
 }
 
+const AFFILLIATION = {
+  researcher : `Researcher`,
+  desinvfaculty : `DES INV Faculty`,
+  faculty : `Jacobs-affiliated Course Faculty`,
+  mdes : `MDES Student`,
+  desinv : `DES INV Student`,
+  scholar : `Jacobs Engineering Design Scholar`,
+  catalyst : `Innovation Catalysts Grantee`,
+  staff : `Jacobs Staff (Including Work-studies)`,
+  students : `Students in Jacobs-affiliated courses (NON-DES INV)`,
+  club : `Club and/or Team`,
+  other : `Other: Berkeley Faculty, Berkeley Staff, and Students`,
+}
+
 const STATUS = {
   requested : `Requested`,
   checkedOut : `Checked Out`,
