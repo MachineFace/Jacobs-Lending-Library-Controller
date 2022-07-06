@@ -117,7 +117,7 @@
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
               <label key=<?=index?>>
-                <input id=id=<?=item + "text"?> type="text" name=<?=item+"text"?> <? document.getElementById(item).checked == false ? disabled : value="1" ?> ></input>
+                <input id=<?=item + "text"?> type="text" name=<?=item+"text"?> <? document.getElementById(item).checked == false ? disabled : value="1" ?> ></input>
                 <input id=<?=item?> type="checkbox" class="filled-in" value=true name=<?=item?>
                   <? for(i = 0; i < checkedItems.length; i++) { 
                     if (checkedItems[i] == item) { ?>
