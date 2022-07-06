@@ -6,7 +6,7 @@ const EditFromSelected = async () => {
   let thisRow = thisSheet.getActiveRange().getRow();
 
   // Is this the correct sheet?
-  if (thisSheet.getSheetName() != OTHERSHEETS.FormResponses.getSheetName()) {
+  if (thisSheet.getSheetName() != SHEETS.Main.getSheetName()) {
     Browser.msgBox(
       `Incorrect Sheet Active`,
       `Please select 'Form Responses'. Select one cell in the row and an editing sidebar will pop up.`,
