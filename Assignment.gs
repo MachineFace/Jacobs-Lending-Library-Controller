@@ -101,6 +101,47 @@ class AssignUserABasket
     //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
     // }
   }
+
+  Unassign() {
+    const t = new TimeConverter();
+    const returnDate = new Date();
+    console.info(`Unassigning Basket from: ${this.name}`);
+    try {
+      new InventoryManager({basket : this.basket}).CheckOutBasket();
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
+    }
+    try {
+      new RecordTaker({
+        trackingNumber : this.trackingNumber,
+        date : now,
+        issuer : this.issuer,
+        name : this.name,
+        email : this.email,
+        basket : this.basket,
+        notes : this.notes,
+      });
+      PrintTurnaround(this.row);
+    } catch (err) {
+      console.error(`${err}, Whoops: Couldn't write record for some reason...`);
+    }
+    
+    // Ready to go:
+    // try {
+    //   new Emailer({
+    //     trackingNumber : this.trackingNumber,
+    //     checkedOutDate : now,
+    //     dueDate : returnDate,  
+    //     email : this.email,
+    //     status : STATUS.checkedOut,
+    //     name : this.name,
+    //     remainingDays : remainingDays,
+    //     designspecialist : this.issuer, 
+    //   })
+    // } catch(err) {
+    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    // }
+  }
   
 }
 
