@@ -19,6 +19,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
 
+      // * Notes: 
+      // * This still has a few issues. It submits when pressing increment / decrement buttons. Not sure why. 
+      // * Also it submits a new order instead of editing the existing one
+
       const preventFormSubmit = () => {
         let forms = document.querySelectorAll('form');
         for (var i = 0; i < forms.length; i++) {
@@ -104,7 +108,7 @@
   </head>
   <body>
     <div class="shopping-cart">
-      <form id="form" >
+      <form id="form" onsubmit="handleFormSubmit(this)">
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 
@@ -157,7 +161,7 @@
           <label for="notes" style="padding-left:1em; padding-right:1em">Notes</label>
         </div>
         <div style="padding-left:1em">
-          <button class="btn waves-effect waves-light" type="submit" value="submit" onclick="handleFormSubmit(this)">Assign Basket to Student</button>
+          <button class="btn waves-effect waves-light" type="submit" value="submit">Assign Basket to Student</button>
         </div>
       </form>
       <br/>
