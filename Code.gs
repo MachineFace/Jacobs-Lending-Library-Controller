@@ -135,7 +135,7 @@ const onChange = async (e) => {
   // Get values OR defaults if it fucks up
   const t = new TimeConverter();
   const now = new Date();
-  const trackingNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow);
+  const trackingNumber = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow);
   const status = GetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.status, thisRow) : STATUS.checkedIn;
   const issuer = GetByHeader(SHEETS.Main, HEADERNAMES.issuer, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.issuer, thisRow) : `Cody`;
   const student = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow) ? GetByHeader(thisSheet, HEADERNAMES.name, thisRow) : `Student Name`;
@@ -154,10 +154,10 @@ const onChange = async (e) => {
   try {
     switch(status) {
       case STATUS.requested:
-        writer.Warning(`Tracking Number ${trackingNum} requested by user ${student} on ${timestamp}.`);
+        writer.Warning(`Tracking Number ${trackingNumber} requested by user ${student} on ${timestamp}.`);
         break;
       case STATUS.checkedIn:
-        writer.Warning(`Tracking Number ${trackingNum} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
+        writer.Warning(`Tracking Number ${trackingNumber} checked out by ${issuer} to ${student} on ${dateCheckedOut} has now been returned.`);
         SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
         try {
           new InventoryManager({ basket: basket }).CheckInBasket();
@@ -165,7 +165,7 @@ const onChange = async (e) => {
           console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
         }
         new RecordTaker({
-          trackingNumber: trackingNum,
+          trackingNumber: trackingNumber,
           date: dateCheckedOut,
           issuer: issuer,
           name: student,
@@ -176,7 +176,7 @@ const onChange = async (e) => {
         PrintTurnaround(thisRow);
         break;
       case STATUS.checkedOut:
-        writer.Warning(`Tracking Number ${trackingNum} has been checked out by ${issuer} to ${student} on ${dateCheckedOut}`);
+        writer.Warning(`Tracking Number ${trackingNumber} has been checked out by ${issuer} to ${student} on ${dateCheckedOut}`);
         SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
         SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
         SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
@@ -187,7 +187,7 @@ const onChange = async (e) => {
           console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
         }
         new RecordTaker({
-          trackingNumber: trackingNum,
+          trackingNumber: trackingNumber,
           date: dateCheckedOut,
           issuer: issuer,
           name: student,

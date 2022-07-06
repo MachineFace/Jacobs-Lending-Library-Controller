@@ -6,7 +6,7 @@
 class InventoryManager 
 {
   constructor({
-    basket : basket,
+    basket : basket = [],
   }) {
     this.basket = basket ? basket : [];
     this.sheet = OTHERSHEETS.Inventory;
