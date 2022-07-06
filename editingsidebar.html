@@ -5,6 +5,13 @@
     <base target="_top">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <style>
+    .count-btn{  
+      width:20px;  
+      height:20px;  
+      font-size:12px; 
+      background-color: #229c8f; 
+    } </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
 
@@ -118,13 +125,13 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <a class="waves-effect waves-light btn-small" style="height: 20px; vertical-align: super;">-</a>
+                  <a class="count-btn" style="height: 20px; ">-</a>
                   <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;font-weight: bold;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
                       <? } else ?> value="0" <? } ?> >
-                  <a class="waves-effect waves-light btn-small" style="height: 20px; vertical-align: super;">+</a>
+                  <a class="count-btn" style="height: 20px;">+</a>
                   <span><?= item ?></span></input>
                 </div>
               </label>
