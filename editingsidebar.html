@@ -117,7 +117,7 @@
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
               <label key=<?=index?>>
-                <div>
+                <span>
                   <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
@@ -129,8 +129,8 @@
                       if (checkedItems[i] == item) { ?>
                         checked=true
                       <? } } ?>
-                  } ?> </input><span><?= item ?></span>
-                </div>
+                  } ?> </input>
+                </span><span><?= item ?></span>
               </label>
             </li>
           <? }); ?>
