@@ -104,7 +104,7 @@
   </head>
   <body>
     <div class="shopping-cart">
-      <form id="form" onsubmit="handleFormSubmit(this)">
+      <form id="form" >
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 
@@ -157,7 +157,7 @@
           <label for="notes" style="padding-left:1em; padding-right:1em">Notes</label>
         </div>
         <div style="padding-left:1em">
-          <button class="btn waves-effect waves-light" type="submit" value="submit">Assign Basket to Student</button>
+          <button class="btn waves-effect waves-light" type="submit" value="submit" onclick="handleFormSubmit(this)">Assign Basket to Student</button>
         </div>
       </form>
       <br/>
