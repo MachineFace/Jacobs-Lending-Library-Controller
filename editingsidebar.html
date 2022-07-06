@@ -120,8 +120,8 @@
                 <input id=<?=item+"text"?> type="text" name=<?=item+"text"?> style="width: 20px;"
                 <? for(i = 0; i < checkedItems.length; i++) { 
                     if (checkedItems[i] == item) { ?>
-                      value="1"
-                    <? } else if (checkedItems[i] != item) { ?> disabled <? } } ?>
+                      value="1" disabled="false"
+                    <? }; if (checkedItems[i] != item) { ?> disabled="true" <? } } ?>
                   } ?>  </input>
                 <input id=<?=item?> type="checkbox" class="filled-in" value=true name=<?=item?>
                   <? for(i = 0; i < checkedItems.length; i++) { 
