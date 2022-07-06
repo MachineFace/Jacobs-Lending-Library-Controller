@@ -125,13 +125,13 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <a class="count-btn" >-</a>
+                  <button class="count-btn" >-</button>
                   <input id=<?=item+"Quantity"?> type="text" name=<?=item+"text"?> style="width: 20px;font-weight: bold;"
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
                       <? } else ?> value="0" <? } ?> >
-                  <a class="count-btn" >+</a>
+                  <button class="count-btn" >+</button>
                   <span><?= item ?></span></input>
                 </div>
               </label>
