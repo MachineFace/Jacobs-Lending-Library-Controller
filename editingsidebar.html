@@ -119,8 +119,9 @@
               <label key=<?=index?>>
                 <input id=<?=item+"text"?> type="text" name=<?=item+"text"?> style="width: 200px;"
                   <? for(i = 0; i < checkedItems.length; i++) { 
-                    (checkedItems[i] == item ? ?> value="1" <? : ?> value="0" 
-                    <? } ?>
+                    if (checkedItems[i] == item { ?>
+                      value="1" 
+                    <? } } ?>
                 </input>
                 <input id=<?=item?> type="checkbox" class="filled-in" value=true name=<?=item?>
                   <? for(i = 0; i < checkedItems.length; i++) { 
