@@ -122,14 +122,8 @@
                     <? for(i = 0; i < checkedItems.length; i++) { 
                       if (checkedItems[i] == item) { ?>
                         value="1" 
-                      <? } else ?> disabled <? } ?> >
-                  </input>
-                  <input id=<?=item?> type="checkbox" class="filled-in" value=true name=<?=item?>
-                    <? for(i = 0; i < checkedItems.length; i++) { 
-                      if (checkedItems[i] == item) { ?>
-                        checked=true
-                      <? } } ?>
-                  } ?> <span><?= item ?></span></input>
+                      <? } else ?> value="0" <? } ?> >
+                  <span><?= item ?></span></input>
                 </div>
               </label>
             </li>
