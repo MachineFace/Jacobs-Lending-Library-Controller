@@ -28,6 +28,7 @@ const EditFromSelected = async () => {
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.data = rowData;
   template.name = name;
+  template.issuer = issuer;
   template.studentEmail = studentEmail;
   template.studentId = studentId;
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
