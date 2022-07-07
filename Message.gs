@@ -1,15 +1,13 @@
 /**
  * -----------------------------------------------------------------------------------------------------------------
- * Class for Creating Response Messages
- * Properties accessed via 'this.receivedMessage' or 'this.failedMessage'
+ * 
  * @param {string} name
- * @param {string} projectname
- * @param {number} jobnumber
- * @param {string} approvalURL
- * @param {number} material1Quantity
- * @param {number} material2Quantity
+ * @param {number} trackingNumber
+ * @param {Date} checkedOutDate
+ * @param {Date} returnedDate
+ * @param {Date} dueDate
+ * @param {string} remainingDays
  * @param {string} designspecialist
- * @param {string} designspecialistemaillink
  */
 class CreateMessage 
 {
@@ -21,7 +19,6 @@ class CreateMessage
     dueDate : dueDate,
     remainingDays : remainingDays, 
     designspecialist : designspecialist, 
-    designspecialistemaillink : designspecialistemaillink,
   }){
     this.name = name ? name : `Student Name`;
     this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
