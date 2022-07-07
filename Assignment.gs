@@ -7,6 +7,7 @@ class AssignUserABasket
     issuer : issuer = `Cody`,
     name : name = `Unknown Name`,
     email : email = `Unknown Email`,
+    sid : sid = 10000001,
     basket : basket = [],
     notes : notes = `Note: Item was checked out in good quality.`,
   }) { 
@@ -16,6 +17,7 @@ class AssignUserABasket
     this.issuer = issuer ? issuer : `Cody`;
     this.name = name ? name : `Unknown Name`;
     this.email = email ? email : `Unknown Email`;
+    this.sid = sid ? sid : 1000001;
     this.basket = basket ? basket : `No Basket`;
     this.notes = notes ? notes : `Note: Item was checked out in good quality.`
     this.Assign();
@@ -35,24 +37,23 @@ class AssignUserABasket
     const remainingDays = t.Duration(returnDate, now);
     console.info(`Assigning Basket to: ${this.name}`);
     this.trackingNumber = this._MakeTrackingNumber();
-    const thisRow = SHEETS.Main.getLastRow() + 1;
     let ticket;
     try {
       // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
-      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, this.trackingNumber);
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
-      SetByHeader(SHEETS.Main, HEADERNAMES.issuer, thisRow, `Staff`);
-      SetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow, now);
-      SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, thisRow, this.email);
-      SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, this.name);
-      SetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow, AFFILLIATION.researcher);
-      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, this.basket);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, returnDate);
-      SetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow, this.notes);
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
+      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
+      SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
+      SetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row, this.issuer);
+      SetByHeader(SHEETS.Main, HEADERNAMES.timestamp, this.row, now);
+      SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, this.email);
+      SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, this.name);
+      SetByHeader(SHEETS.Main, HEADERNAMES.studentId, this.row, this.sid);
+      SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, this.row, AFFILLIATION.researcher);
+      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, this.basket);
+      SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, now.toDateString());
+      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
+      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate);
+      SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
+      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
     } catch(err) {
       console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
     }
