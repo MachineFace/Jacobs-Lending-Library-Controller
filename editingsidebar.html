@@ -126,7 +126,7 @@
 
         <!-- Checked Out By -->
         <div class="input-field" style="padding:1em; padding-right:1em">
-          <select class="browser-default" name="staff" required>
+          <select class="browser-default" name="staff" selected="<?=issuer?>" required>
             <option value="" disabled selected>Choose Yourself</option>
             <? staff.forEach(person => { ?>
               <option id="staff" name="staff" value=<?=person?>><span> <?= person ?> </span></option>
