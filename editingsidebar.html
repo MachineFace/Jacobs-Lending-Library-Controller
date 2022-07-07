@@ -92,7 +92,7 @@
       const handleFormSubmit = (formObject) => {
         google.script.run
           .withSuccessHandler(handleClearForm)
-          .ProcessForm(formObject, rowData);
+          .ProcessEditForm(formObject, rowData);
         google.script.run
           .handleClearForm(formObject);
         // google.script.host.close()
@@ -126,10 +126,12 @@
 
         <!-- Checked Out By -->
         <div class="input-field" style="padding:1em; padding-right:1em">
-          <select class="browser-default" name="staff" required>
-            <option value="" disabled selected>Choose Yourself</option>
+          <select class="browser-default" name="staff" selected="<?=issuer?>" required>
+            <option value="" disabled>Choose Yourself</option>
             <? staff.forEach(person => { ?>
-              <option id="staff" name="staff" value=<?=person?>><span> <?= person ?> </span></option>
+              <option id="staff" name="staff" value=<?=person?> 
+                <? if (person == issuer) { ?> selected <? } ?>
+              ><span> <?= person ?> </span></option>
             <? }); ?>
           </select>
         </div>

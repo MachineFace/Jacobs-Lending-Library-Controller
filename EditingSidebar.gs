@@ -23,10 +23,12 @@ const EditFromSelected = async () => {
   const name = rowData?.name;
   const studentEmail = rowData?.studentEmail;
   const studentId = rowData?.studentId;
+  const issuer = rowData?.issuer;
   const itemBasket = rowData?.itemBasket?.split(', ');
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.data = rowData;
   template.name = name;
+  template.issuer = issuer;
   template.studentEmail = studentEmail;
   template.studentId = studentId;
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
