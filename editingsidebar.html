@@ -143,17 +143,16 @@
                 <div>
                   <button class="count-btn" onclick="handleDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
                   <input id="<?=item?>" type="text" name="<?=item?>" style="width: 20px;font-weight: bold;"
-                    <? let found = false; 
-                      for(i = 0; i < checkedItems.length; i++) { 
+                    <?  let found = false; 
+                        for(i = 0; i < checkedItems.length; i++) { 
                       
-                      if (checkedItems[i] == item) { 
-                        found=true 
-                      }
-                    }
-                    if (found==true) { ?> 
-                      value="1" <?
-                    else ?> value="0" 
-                      <? } ?>
+                          if (checkedItems[i] == item) { 
+                            found=true 
+                          }
+                        }
+                        if (found==true) { ?> 
+                          value="1" <? }
+                        else { ?> value="0" <? } ?> 
                     >
                   <button class="count-btn" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
                   <span><?= item ?></span></input>
