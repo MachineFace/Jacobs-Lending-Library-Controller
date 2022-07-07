@@ -42,6 +42,8 @@ const EditFromSelected = async () => {
   ui.showSidebar(html);
 }
 
+/** 
+ * @NOTIMPLEMENTED
 const ShowEditingSidebar = async (rowData) => {
   const ui = SpreadsheetApp.getUi();
   const name = rowData.name;
@@ -64,8 +66,9 @@ const ShowEditingSidebar = async (rowData) => {
       ).setWidth(400)
   ui.showSidebar(html);
 }
+*/
 
-const ProcessEditForm = (formObject) => {
+const ProcessEditForm = (formObject, rowData) => {
   let name = ``, email = ``, staff = ``, basket = [], notes = ``; 
   Object.entries(formObject).forEach( pair => {
     // console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
@@ -76,14 +79,6 @@ const ProcessEditForm = (formObject) => {
     else if(pair[1] == `true`) basket.push(pair[0])
   })
   console.info(`Name: ${name}, Email: ${email}, Staff: ${staff}, Basket: ${basket}`);
-  new AssignUserABasket({
-    name : name,
-    email : email,
-    issuer : staff,
-    basket : basket,
-    notes : notes,
-  })
-  let thisRow = SHEETS.Main.getLastRow() + 1;
-  console.warn(`Form processed to row: ${thisRow}`);
+  ModifyOrder(rowData);
 
 }

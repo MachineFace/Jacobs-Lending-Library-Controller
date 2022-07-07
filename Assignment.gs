@@ -172,5 +172,91 @@ const _testAssign = () => {
 
 
 
+const ModifyOrder = (rowData) => {
+  const thisRow = rowData?.row;
+  const t = new TimeConverter();
+  const now = new Date();
+  const returnDate = new Date(t.ReturnDate(now));
+  const remainingDays = t.Duration(returnDate, now);
+  console.info(`Modifying Basket for: ${rowData.name}`);
+  const trackingNumber = rowData.trackingNumber ? rowData.trackingNumber : Number.parseInt(100000 + thisRow + 1);
+  let ticket;
+  try {
+    // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
+    SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, trackingNumber);
+    SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
+    SetByHeader(SHEETS.Main, HEADERNAMES.issuer, thisRow, `Staff`);
+    SetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow, now);
+    SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, thisRow, this.email);
+    SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, this.name);
+    SetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow, ``);
+    SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow, AFFILLIATION.researcher);
+    SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, this.basket);
+    SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
+    SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
+    SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, returnDate);
+    SetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow, this.notes);
+    SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
+  } catch(err) {
+    console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
+  }
+  try {
+    ticket = new Ticket({
+      trackingNumber : this.trackingNumber,
+      status : STATUS.checkedOut, 
+      name : this.name, 
+      email : this.email, 
+      issuer : this.issuer,
+      checkedOutDate : now, 
+      basket : this.basket,
+      notes : this.notes,
+      dueDate : returnDate,
+    });
+    ticket.CreateTicket();
+  } catch(err) {
+    console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
+  }
+  try {
+    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
+  } catch(err) {
+    console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
+  }
+  try {
+    new InventoryManager({basket : this.basket}).CheckOutBasket();
+  } catch(err) {
+    console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
+  }
+  try {
+    new RecordTaker({
+      trackingNumber : this.trackingNumber,
+      date : now,
+      issuer : this.issuer,
+      name : this.name,
+      email : this.email,
+      basket : this.basket,
+      notes : this.notes,
+    });
+    PrintTurnaround(this.row);
+  } catch (err) {
+    console.error(`${err}, Whoops: Couldn't write record for some reason...`);
+  }
+  
+  // Ready to go:
+  // try {
+  //   new Emailer({
+  //     trackingNumber : this.trackingNumber,
+  //     checkedOutDate : now,
+  //     dueDate : returnDate,  
+  //     email : this.email,
+  //     status : STATUS.checkedOut,
+  //     name : this.name,
+  //     remainingDays : remainingDays,
+  //     designspecialist : this.issuer, 
+  //   })
+  // } catch(err) {
+  //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+  // }
+}
 
 
