@@ -42,7 +42,7 @@
         else document.getElementById("email").innerHTML = `Bad Email`
       }
 
-      const handleClearForm = (form) => {
+      const handleClearEditForm = (form) => {
         console.info(`Clearing form now....`);
         document.getElementById(`form`).reset();
         // clearing inputs
@@ -73,25 +73,25 @@
         return false;
       }
 
-      const handleAlert = () => {
+      const handleEditAlert = () => {
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student...`, ui.ButtonSet.OK);
       }
 
-      const handleFailure = (e) => {
+      const handleEditFailure = (e) => {
         console.error(e.message);
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
       }
 
-      const handleSuccess = () => {
+      const handleEditSuccess = () => {
         const ui = SpreadsheetApp.getUi();
         ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
       }
 
-      const handleFormSubmit = (formObject) => {
+      const handleEditFormSubmit = (formObject) => {
         google.script.run
-          .withSuccessHandler(handleClearForm)
+          .withSuccessHandler(handleClearEditForm)
           .ProcessEditForm(formObject, row, items);
         google.script.run
           .handleClearForm(formObject);
@@ -110,7 +110,7 @@
   </head>
   <body>
     <div class="shopping-cart">
-      <form id="form" onsubmit="handleFormSubmit(this)">
+      <form id="form" onsubmit="handleEditFormSubmit(this)">
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 
