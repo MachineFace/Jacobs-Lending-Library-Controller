@@ -130,7 +130,7 @@
             <option value="" disabled>Choose Yourself</option>
             <? staff.forEach(person => { ?>
               <option id="staff" name="staff" value=<?=person?> 
-                  if (person == issuer) { ?> selected <? } ?>
+                  if (person == issuer) ?> selected
               ><span> <?= person ?> </span></option>
             <? }); ?>
           </select>
