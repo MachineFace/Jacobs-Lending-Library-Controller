@@ -145,7 +145,7 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <button class="count-btn" onclick="handleDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
+                  <button type="button" class="count-btn" onclick="handleDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
                   <input id="<?=item?>" type="text" name="<?=item?>" style="width: 20px; font-weight: bold; text-align: center;"
                     <?  let found = false; 
                         for(i = 0; i < itemBasket.length; i++) { 
@@ -155,7 +155,7 @@
                           value="1" <? }
                         else { ?> value="0" <? } ?> 
                     >
-                  <button class="count-btn" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                  <button type="button" class="count-btn" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
                   <span><?= item ?></span></input>
                 </div>
               </label>
