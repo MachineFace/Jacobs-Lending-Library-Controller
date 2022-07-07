@@ -48,7 +48,7 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, this.name);
       SetByHeader(SHEETS.Main, HEADERNAMES.studentId, this.row, this.sid);
       SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, this.row, AFFILLIATION.researcher);
-      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, this.basket);
+      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, JSON.stringify(this.basket));
       SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, now.toDateString());
       SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
       SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate);
