@@ -92,7 +92,7 @@
       const handleFormSubmit = (formObject) => {
         google.script.run
           .withSuccessHandler(handleClearForm)
-          .ProcessEditForm(formObject, rowData);
+          .ProcessEditForm(formObject, row, items);
         google.script.run
           .handleClearForm(formObject);
         // google.script.host.close()
@@ -145,20 +145,17 @@
             <li class="collection-item">
               <label key=<?=index?>>
                 <div>
-                  <button class="count-btn" onclick="handleDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
+                  
                   <input id="<?=item?>" type="text" name="<?=item?>" style="width: 20px; font-weight: bold; text-align: center;"
                     <?  let found = false; 
-                        for(i = 0; i < checkedItems.length; i++) { 
-                      
-                          if (checkedItems[i] == item) { 
-                            found=true 
-                          }
+                        for(i = 0; i < itemBasket.length; i++) { 
+                          if (itemBasket[i] == item) found=true;
                         }
                         if (found==true) { ?> 
                           value="1" <? }
                         else { ?> value="0" <? } ?> 
                     >
-                  <button class="count-btn" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                  
                   <span><?= item ?></span></input>
                 </div>
               </label>
@@ -172,7 +169,7 @@
           <label for="notes" style="padding-left:1em; padding-right:1em">Notes</label>
         </div>
         <div style="padding-left:1em">
-          <button class="btn waves-effect waves-light" type="submit" value="submit">Edit Basket</button>
+          <button class="btn waves-effect waves-light" type="submit" value="submit" onclick="handleFormSubmit">Edit Basket</button>
         </div>
       </form>
       <br/>
