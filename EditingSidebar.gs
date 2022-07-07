@@ -19,7 +19,7 @@ const EditFromSelected = async () => {
   const rowData = GetRowData(thisSheet, thisRow);
   console.warn(rowData)
 
-  // Pass rowData to ShowEditingSidebar
+  // Pass rowData to Sidebar
   const name = rowData?.name;
   const studentEmail = rowData?.studentEmail;
   const studentId = rowData?.studentId;
