@@ -18,11 +18,12 @@ const ShowModal = async () => {
 }
 
 const ProcessForm = (formObject) => {
-  let name = ``, email = ``, staff = ``, basket = [], notes = ``; 
+  let name = ``, email = ``, sid = 0, staff = ``, basket = [], notes = ``; 
   Object.entries(formObject).forEach( pair => {
     // console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
     if(pair[0] == `name`) name = pair[1] ? TitleCase(pair[1]) : `Unknown Name`;
     if(pair[0] == `email`) email = ValidateEmail(pair[1]) ? pair[1] : `Unknown Email`;
+    if(pair[0] ==`sid`) sid = pair[1] ? pair[1] : 0;
     if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
     if(pair[0] == `notes`) notes = pair[1] ? pair[1] : `Notes`;
     else if(pair[1] == `true`) basket.push(pair[0])
@@ -31,6 +32,7 @@ const ProcessForm = (formObject) => {
   new AssignUserABasket({
     name : name,
     email : email,
+    sid : sid,
     issuer : staff,
     basket : basket,
     notes : notes,
