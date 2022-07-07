@@ -78,15 +78,16 @@ class Ticket
       });
 
     // Create a two-dimensional array containing the cell contents.
-    body.appendTable([
-        ["Tracking Number:", this.trackingNumber.toString()],
-        ["Date Checked Out", this.checkedOutDate.toString()],
-        ["DUE DATE:", this.dueDate.toString()],
-        ["Issuer:", this.issuer],
-        ["Student Email:", this.email.toString()],
-        ["Basket Items: ", JSON.stringify(this.basket).toString()],
-        ["Notes:", this.notes],
-      ])
+    const table = [
+      ["Tracking Number:", this.trackingNumber.toString()],
+      ["Date Checked Out", this.checkedOutDate.toString()],
+      ["DUE DATE:", this.dueDate.toString()],
+      ["Issuer:", this.issuer],
+      ["Student Email:", this.email.toString()],
+      ["Notes:", this.notes],
+    ];
+    [...this.basket].forEach(item => table.append([`Item`, item.toString()]));
+    body.appendTable(table)
       .setAttributes({
         [DocumentApp.Attribute.FONT_SIZE]: 6,
         [DocumentApp.Attribute.LINE_SPACING]: 1,
