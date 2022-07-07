@@ -91,7 +91,7 @@
 
       const handleFormSubmit = (formObject) => {
         google.script.run
-          .withSuccessHandler(handleClearForm)
+          // .withSuccessHandler(handleClearForm)
           .ProcessEditForm(formObject, row, items);
         google.script.run
           .handleClearForm(formObject);
