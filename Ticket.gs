@@ -86,7 +86,8 @@ class Ticket
       ["Student Email:", this.email.toString()],
       ["Notes:", this.notes],
     ];
-    [...this.basket].forEach(item => table.push([`Item`, item.toString()]));
+    const count = 1;
+    [...this.basket].forEach(item => table.push([`Quantity: ${count ? count : 1}`, `Item: ${item.toString()}`]));
     body.appendTable(table)
       .setAttributes({
         [DocumentApp.Attribute.FONT_SIZE]: 6,
