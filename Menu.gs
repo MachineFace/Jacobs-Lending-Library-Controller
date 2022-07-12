@@ -131,7 +131,10 @@ const PopupCalcTurnaround = async () => {
 };
 
 const PopupReturnModal = async () => {
-  let thisRow = await SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
+  const thisSheet = SpreadsheetApp.getActiveSheet();
+  if(thisSheet.getSheetName() != SHEETS.Main) return;
+  let thisRow = thisSheet.getActiveRange().getRow();
+  if (thisRow <= 1) return;
   let data = await GetRowData(thisRow);
   await ShowReturnModal(data);
 }

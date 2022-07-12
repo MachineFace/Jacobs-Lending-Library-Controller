@@ -19,6 +19,7 @@ const ReturnByBarcode = () => {
   if (searchFind != null) {
     const date = new Date().toDateString();
     searchRow = searchFind.getRow();
+    if (searchRow <= 1) return;
 
     // change status to picked up
     // SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
