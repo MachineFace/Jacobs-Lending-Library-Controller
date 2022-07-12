@@ -76,12 +76,12 @@
 
         <!-- Checked Out By -->
         <div class="input-field" style="padding:1em; padding-right:1em">
-          <select class="browser-default" name="staff" selected="<?= data?.issuer ?>" required>
+          <select class="browser-default" name="staff" required selected=<?= data?.issuer ?>>
             <option value="" disabled>Choose Yourself</option>
             <? staff.forEach(person => { ?>
-              <option id="staff" name="staff" value=<?= person ?> 
-                <? if (person == data?.issuer) { ?> selected <? } ?>
-              <span> <?= person ?> </span></option>
+              <option id="staff" name="staff" value=<?= person ?>> 
+                <? if (person == data?.issuer) { ?> selected=true <? } ?> <span> <?= person ?> </span>
+              </option>
             <? }); ?>
           </select>
         </div>
@@ -95,14 +95,14 @@
             <li class="collection-item">
               <label key=<?= index ?>>
                 <div>
-                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
+                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemDecrement(item, document.getElementById(item).value)">-</button>
                   <script>
                     let checkValue = `0`;
                     if ([...data?.itemBasket].includes(item)) checkValue = `1`;
                     else checkValue = `0`;
                   </script> 
-                  <input style="width: 20px; font-weight: bold; text-align: center;" type="text" id="<?= item ?>"  name="<?= item ?>" value="<?=checkValue?>">
-                    <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                  <input style="width: 20px; font-weight: bold; text-align: center;" type="text" id=<?= item ?>  name=<?= item ?> value=<?=checkValue?>>
+                    <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemIncrement(item, document.getElementById(item).value)" >+</button>
                     <span><?= item ?></span>
                   </input>
                 </div>
