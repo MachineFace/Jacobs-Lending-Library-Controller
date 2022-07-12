@@ -7,6 +7,7 @@ const ReturnByBarcode = () => {
   const writer = new WriteLogger();
   const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
   let progress = OTHERSHEETS.Scanner.getRange(4,2);
+  let searchRow = 1;
   progress.setValue(`Searching for Tracking ID #${number}.......`);
   if (number == null || number == "") {
     progress.setValue(`No Tracking ID Number provided! Select the yellow cell, scan, then press enter to make sure the cell's value has been changed.`);
@@ -16,32 +17,33 @@ const ReturnByBarcode = () => {
   const textFinder = SHEETS.Main.createTextFinder(number);
   const searchFind = textFinder.findNext();
   if (searchFind != null) {
+    const date = new Date().toDateString();
     searchRow = searchFind.getRow();
 
     // change status to picked up
-    SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
-    const date = new Date().toDateString();
-    SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
-    progress.setValue(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
+    // SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
+    // SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
+    // progress.setValue(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
     // writer.Info(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
 
     let data = GetRowData(SHEETS.Main, searchRow);
+    ShowReturnModal(data);
 
-    try {
-      new Emailer({
-        trackingNumber : data.tracking,
-        checkedOutDate : data.checkedOut,
-        returnedDate : data.dateReturned, 
-        email : data.studentEmail,
-        status : data.status,
-        name : data.name,
-        remainingDays : data.remainingDays,
-        designspecialist : data.checkedOutBy,
-      })
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    }
-    return;
+    // try {
+    //   new Emailer({
+    //     trackingNumber : data.tracking,
+    //     checkedOutDate : data.checkedOut,
+    //     returnedDate : data.dateReturned, 
+    //     email : data.studentEmail,
+    //     status : data.status,
+    //     name : data.name,
+    //     remainingDays : data.remainingDays,
+    //     designspecialist : data.checkedOutBy,
+    //   })
+    // } catch(err) {
+    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    // }
+    // return;
   }
   else {
     progress.setValue('Tracking ID not found. Try again.');

@@ -130,6 +130,12 @@ const PopupCalcTurnaround = async () => {
 
 };
 
+const PopupReturnModal = async () => {
+  let thisRow = await SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
+  let data = await GetRowData(thisRow);
+  await ShowReturnModal(data);
+}
+
 
 /**
  * Builds our JPS Menu and sets functions.
@@ -138,7 +144,7 @@ const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
     .addItem(`Manual Checkout`, `ShowCheckoutModal`)
-    .addItem(`Manual Return`, `ShowReturnModal`)
+    .addItem(`Manual Return`, `PopupReturnModal`)
     .addItem(`Edit Selected Submission`, `EditFromSelected`)
     .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
     .addItem(`Return Items`, `PopupReturnByBarcode`)
@@ -150,7 +156,10 @@ const BarMenu = () => {
     .addItem(`Help`, `PopupHelp`)
     .addSeparator()
     .addItem(`Recompute Metrics`, `PopupMetrics`)
-    .addItem(`Calculate Selected Person's Turnaround Time`, `PopupCalcTurnaround`)
+    .addItem(
+      `Calculate Selected Person's Turnaround Time`,
+      `PopupCalcTurnaround`
+    )
     .addToUi();
 }; 
 

@@ -1,11 +1,12 @@
 
 
-const ShowReturnModal = async () => {
+const ShowReturnModal = async (data) => {
   const ui = SpreadsheetApp.getUi();
   let template = HtmlService.createTemplateFromFile('returnmodal')
   // const rowData = GetRowData(thisSheet, thisRow);
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  template.data = data;
   let html = HtmlService
     .createHtmlOutput(
       template.evaluate()
