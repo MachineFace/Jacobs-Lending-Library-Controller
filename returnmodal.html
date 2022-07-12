@@ -52,7 +52,7 @@
       const handleReturnFormSubmit = (formObject) => {
         google.script.run
           .withSuccessHandler(handleClearReturnForm)
-          .ProcessEditForm(formObject, row, items);
+          .ProcessReturnForm(formObject, row, items);
         google.script.host.close()
       }
 
@@ -87,7 +87,7 @@
         </div>
 
         <!-- Basket Title -->
-        <h5 style="padding-left:1em; padding-right:1em;">Checkout Basket</h5>
+        <h5 style="padding-left:1em; padding-right:1em;">Return Basket</h5>
 
         <!-- Products -->
         <ul class="collection" name="items">
@@ -95,14 +95,14 @@
             <li class="collection-item">
               <label key=<?= index ?>>
                 <div>
-                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
+                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
                   <script>
                     let checkValue = `0`;
                     if ([...data?.itemBasket].includes(item)) checkValue = `1`;
                     else checkValue = `0`;
                   </script> 
                   <input style="width: 20px; font-weight: bold; text-align: center;" type="text" id="<?= item ?>"  name="<?= item ?>" value="<?=checkValue?>">
-                    <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                    <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormItemIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
                     <span><?= item ?></span>
                   </input>
                 </div>
