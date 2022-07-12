@@ -3,28 +3,25 @@
   <head>
     <meta charset="UTF-8">
     <base target="_top">
-    <title>Editing Sidebar</title>
+    <title>Return Modal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <style>
-    .count-btn{  
-      width:24px;  
-      height:24px;
-      border: none;
-      border-radius: 12px;
-      font-size:12px; 
-      text-align: center;
-      display: inline-block;
-      background-color: #229c8f; 
-      opacity: .7;
-      color: #ccffff;
-    } </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <style>
+      .count-btn{  
+        width:24px;  
+        height:24px;
+        border: none;
+        border-radius: 12px;
+        font-size:12px; 
+        text-align: center;
+        display: inline-block;
+        background-color: #229c8f; 
+        opacity: .7;
+        color: #ccffff;
+      } 
+    </style>
     <script>
-
-      // * Notes: 
-      // * This still has a few issues. It submits when pressing increment / decrement buttons. Not sure why. 
-      // * Also it submits a new order instead of editing the existing one
 
       const preventFormSubmit = () => {
         let forms = document.querySelectorAll('form');
@@ -36,82 +33,34 @@
       }
       window.addEventListener('load', preventFormSubmit);
 
-      const handleValidateEmail = () => {
-        let unsanitaryInput = document.getElementById("email").innerHTML;
-        let test = ValidateEmail(unsanitaryInput);
-        if(test == true) return unsanitaryInput;
-        else document.getElementById("email").innerHTML = `Bad Email`
-      }
-
-      const handleClearEditForm = (form) => {
-        console.info(`Clearing form now....`);
-        document.getElementById(`form`).reset();
-        // clearing inputs
-        let inputs = form.getElementsByTagName('input');
-        for (let i = 0; i < inputs.length; i++) {
-          switch (inputs[i].type) {
-            case 'text':
-                inputs[i].value = '';
-                break;
-            case 'radio':
-            case 'checkbox':
-                inputs[i].checked = false;   
-          }
-        }
-
-        // clearing selects
-        let selects = form.getElementsByTagName('select');
-        for (let i = 0; i < selects.length; i++) {
-          selects[i].selectedIndex = 0;
-        }
-
-        // clearing textarea
-        let text = form.getElementsByTagName('textarea');
-        for (let i = 0; i < text.length; i++) {
-          text[i].innerHTML= '';
-        }
-        console.info(`Form cleared....`);
-        return false;
-      }
-
-      const handleEditAlert = () => {
-        const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student...`, ui.ButtonSet.OK);
-      }
-
-      const handleEditFailure = (e) => {
-        console.error(e.message);
-        const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
-      }
-
-      const handleEditSuccess = () => {
-        const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
-      }
-
-      const handleEditFormSubmit = (formObject) => {
-        google.script.run
-          .withSuccessHandler(handleClearEditForm)
-          .ProcessEditForm(formObject, row, items);
-        // google.script.run
-        //   .handleClearForm(formObject);
-        // google.script.host.close()
-      }
-      
-      const handleIncrement = (id, startVal) => {
-        startVal = parseInt(startVal, 10);
+      const handleReturnFormItemIncrement = (id, startVal) => {
+        startVal = Number.parseInt(startVal, 10);
         document.getElementById(id).value = startVal + 1;
       }
-      const handleDecrement = (id, startVal) => {
-        startVal = parseInt(startVal, 10);
+
+      const handleReturnFormItemDecrement = (id, startVal) => {
+        startVal = Number.parseInt(startVal, 10);
         if (startVal > 0) document.getElementById(id).value = startVal - 1;
       }
+
+      const handleClearReturnForm = (form) => {
+        console.info(`Clearing form now....`);
+        document.getElementById(`form`).reset();
+        console.info(`Form cleared....`);
+      }
+
+      const handleReturnFormSubmit = (formObject) => {
+        google.script.run
+          .withSuccessHandler(handleClearReturnForm)
+          .ProcessEditForm(formObject, row, items);
+        google.script.host.close()
+      }
+
     </script>
   </head>
   <body>
     <div class="">
-      <form id="form" onsubmit="handleEditFormSubmit(this)">
+      <form id="form" onsubmit="handleReturnFormSubmit(this)">
         <!-- Title -->
         <h5 style="padding-left:1em">Student Info</h5>
 
@@ -144,9 +93,9 @@
         <ul class="collection" name="items">
           <? items.forEach( (item, index) => { ?>
             <li class="collection-item">
-              <label key=<?=index?>>
+              <label key=<?= index ?>>
                 <div>
-                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
+                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
                   <input id="<?=item?>" type="text" name="<?=item?>" style="width: 20px; font-weight: bold; text-align: center;"
                     <?  let found = false; 
                         for(i = 0; i < itemBasket.length; i++) { 
@@ -156,7 +105,7 @@
                           value="1" <? }
                         else { ?> value="0" <? } ?> 
                   >
-                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
                   <span><?= item ?></span></input>
                 </div>
               </label>
@@ -180,5 +129,3 @@
     </div>
   </body>
 </html>
-
-

@@ -137,7 +137,8 @@ const PopupCalcTurnaround = async () => {
 const BarMenu = () => {
   SpreadsheetApp.getUi()
     .createMenu(ServiceName)
-    .addItem(`Manual Checkout`, `ShowModal`)
+    .addItem(`Manual Checkout`, `ShowCheckoutModal`)
+    .addItem(`Manual Return`, `ShowReturnModal`)
     .addItem(`Edit Selected Submission`, `EditFromSelected`)
     .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
     .addItem(`Return Items`, `PopupReturnByBarcode`)
@@ -157,6 +158,9 @@ const BarMenu = () => {
 /**
  * Switch to scanning page.
  */
-const OpenBarcodeTab = async () => await SpreadsheetApp.getActiveSpreadsheet().setActiveSheet(OTHERSHEETS.Scanner).getRange('B3').activate();
+const OpenBarcodeTab = async () => await SpreadsheetApp.getActiveSpreadsheet()
+  .setActiveSheet(OTHERSHEETS.Scanner)
+  .getRange('B3')
+  .activate();
 
 
