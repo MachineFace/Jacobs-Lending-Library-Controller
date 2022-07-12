@@ -49,7 +49,7 @@
       const handleFormSubmit = (formObject) => {
         google.script.run
           .withSuccessHandler(handleClearForm)
-          .ProcessForm(formObject);
+          .ProcessCheckoutForm(formObject);
         google.script.run
           .handleClearForm(formObject);
         google.script.host.close()

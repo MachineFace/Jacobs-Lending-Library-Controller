@@ -1,8 +1,8 @@
 
 
-const ShowModal = async () => {
+const ShowCheckoutModal = async () => {
   const ui = SpreadsheetApp.getUi();
-  let template = HtmlService.createTemplateFromFile('modal')
+  let template = HtmlService.createTemplateFromFile('checkoutmodal')
   template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
   template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
@@ -17,7 +17,7 @@ const ShowModal = async () => {
   ui.showModalDialog(html, `${ServiceName}`);
 }
 
-const ProcessForm = (formObject) => {
+const ProcessCheckoutForm = (formObject) => {
   let name = ``, email = ``, sid = 0, staff = ``, basket = [], notes = ``; 
   Object.entries(formObject).forEach( pair => {
     // console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
