@@ -96,15 +96,15 @@
               <label key=<?= index ?>>
                 <div>
                   <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormDecrement(<?=item?>, document.getElementById(<?=item?>).value)">-</button>
-                  <input id="<?=item?>" type="text" name="<?=item?>" style="width: 20px; font-weight: bold; text-align: center;"
-                    <? let found = false; ?>
-                    <? for(i = 0; i < data?.itemBasket.length; i++) { ?>
-                    <?  if (data?.itemBasket[i] == item) found = true; ?>
-                    <? } ?>
-                    <? if (found == true) value = "1" ?>
-                    <? else { ?> value = "0" <? } ?> ?> 
-                  <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
-                  <span><?= item ?></span></input>
+                  <script>
+                    let checkValue = `0`;
+                    if ([...data?.itemBasket].includes(item)) checkValue = `1`;
+                    else checkValue = `0`;
+                  </script> 
+                  <input style="width: 20px; font-weight: bold; text-align: center;" type="text" id="<?= item ?>"  name="<?= item ?>" value="<?=checkValue?>">
+                    <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleReturnFormIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
+                    <span><?= item ?></span>
+                  </input>
                 </div>
               </label>
             </li>
