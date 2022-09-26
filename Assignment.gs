@@ -100,20 +100,20 @@ class AssignUserABasket
     }
     
     // Ready to go:
-    // try {
-    //   new Emailer({
-    //     trackingNumber : this.trackingNumber,
-    //     checkedOutDate : now,
-    //     dueDate : returnDate,  
-    //     email : this.email,
-    //     status : STATUS.checkedOut,
-    //     name : this.name,
-    //     remainingDays : remainingDays,
-    //     designspecialist : this.issuer, 
-    //   })
-    // } catch(err) {
-    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    // }
+    try {
+      new Emailer({
+        trackingNumber : this.trackingNumber,
+        checkedOutDate : now,
+        dueDate : returnDate,  
+        email : this.email,
+        status : STATUS.checkedOut,
+        name : this.name,
+        remainingDays : remainingDays,
+        designspecialist : this.issuer, 
+      })
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    }
   }
 
   Unassign() {

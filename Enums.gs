@@ -161,7 +161,7 @@ const OTHERSHEETS = {
 }
 
 const DRIVEFOLDERS = {
-  barcodeTarget : DriveApp.getFolderById(`1jGfdwx4GwiMegVySKj28YW4XH_neI2Oz`),
+  ticketfolder : DriveApp.getFolderById(`1i4lF70ziCOKD1MxIrnG50lsijSrvRBOI`),
 }
 
 const FORM = {

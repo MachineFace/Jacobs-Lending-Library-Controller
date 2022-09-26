@@ -12,13 +12,13 @@
 class CreateMessage 
 {
   constructor({
-    name : name, 
-    trackingNumber : trackingNumber,
-    checkedOutDate : checkedOutDate,
-    returnedDate : returnedDate,
-    dueDate : dueDate,
-    remainingDays : remainingDays, 
-    designspecialist : designspecialist, 
+    name : name = `Student Name`, 
+    trackingNumber : trackingNumber = `1000001`,
+    checkedOutDate : checkedOutDate = new Date().toDateString(),
+    returnedDate : returnedDate = new Date().toDateString(),
+    dueDate : dueDate = new Date().toDateString(),
+    remainingDays : remainingDays = `0 days`, 
+    designspecialist : designspecialist = `Staff`, 
   }){
     this.name = name ? name : `Student Name`;
     this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;

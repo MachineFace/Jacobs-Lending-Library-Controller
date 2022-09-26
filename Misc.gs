@@ -227,8 +227,8 @@ const SetConditionalFormatting = () => {
     SpreadsheetApp.newConditionalFormatRule()
       .whenFormulaSatisfied(`=$B2="${STATUS.requested}"`)
       .setRanges([SHEETS.Main.getRange(2, 1, SHEETS.Main.getMaxRows(), SHEETS.Main.getMaxColumns()),])
-      .setBackground(COLORS.orange_light)
-      .setFontColor(COLORS.orange)
+      .setBackground(COLORS.yellow_light)
+      .setFontColor(COLORS.yellow_dark)
       .build()
     ,
     SpreadsheetApp.newConditionalFormatRule()

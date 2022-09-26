@@ -6,15 +6,15 @@
 class Ticket
 {
   constructor({
-    trackingNumber : trackingNumber,
-    status : status, 
-    name : name, 
-    email : email, 
-    issuer : issuer,
-    checkedOutDate : checkedOutDate, 
-    basket : basket,
-    notes : notes,
-    dueDate : dueDate,
+    trackingNumber : trackingNumber = `10000001`,
+    status : status = STATUS.requested, 
+    name : name = `Student Name`, 
+    email : email = `Student Email`, 
+    issuer : issuer = `Staff`,
+    checkedOutDate : checkedOutDate = new Date().toDateString(), 
+    basket : basket = [],
+    notes : notes = `Notes`,
+    dueDate : dueDate = new Date().toDateString(),
   }){
     // Tracking Number,	Checked Out / Returned,	Checked Out To,	Student Email,	Checked Out By,	Date Checked Out,	Date Returned,	Ticket,	Barcode,	Item Basket,	Notes,	Due Date,	Days Remaining Until Overdue,
     this.trackingNumber = trackingNumber ? trackingNumber : `10000001`;
@@ -32,16 +32,16 @@ class Ticket
   }
 
   _ReplaceTextToImage(body, searchText, image) {
-    var next = body.findText(searchText);
+    let next = body.findText(searchText);
     if (!next) return;
-    var r = next.getElement();
+    let r = next.getElement();
     r.asText().setText("");
-    var img = r.getParent().asParagraph().insertInlineImage(0, image);
+    let img = r.getParent().asParagraph().insertInlineImage(0, image);
     return next;
   };
 
   CreateTicket() {
-    const folder = DriveApp.getFoldersByName(`Job Tickets`); // Set the correct folder
+    const folder = DRIVEFOLDERS.ticketfolder; // Set the correct folder
     const doc = DocumentApp.create(this.ticketName); // Make Document
     let body = doc.getBody();
     let docId = doc.getId();
@@ -78,15 +78,22 @@ class Ticket
       });
 
     // Create a two-dimensional array containing the cell contents.
-    const table = [
+    body.appendTable([
       ["Tracking Number:", this.trackingNumber.toString()],
       ["Date Checked Out", this.checkedOutDate.toString()],
       ["DUE DATE:", this.dueDate.toString()],
       ["Issuer:", this.issuer],
       ["Student Email:", this.email.toString()],
       ["Notes:", this.notes],
-    ];
+    ])
+      .setAttributes({
+        [DocumentApp.Attribute.FONT_SIZE]: 6,
+        [DocumentApp.Attribute.LINE_SPACING]: 1,
+        [DocumentApp.Attribute.BORDER_WIDTH]: 0.5,
+      });
+
     const count = 1;
+    const table = [];
     [...this.basket].forEach(item => table.push([`Quantity: ${count ? count : 1}`, `Item: ${item.toString()}`]));
     body.appendTable(table)
       .setAttributes({
@@ -97,21 +104,16 @@ class Ticket
 
     // Remove File from root and Add that file to a specific folder
     try {
-      while(folder.hasNext()){
-        const docFile = DriveApp.getFileById(docId);
-        DriveApp.removeFile(docFile);
-        folder.next().addFile(docFile);
-        folder.next().addFile(barcode);
-      }
+      const docFile = DriveApp.getFileById(docId);
+      docFile.moveTo(folder);
+      barcode.moveTo(folder);
+      // Set permissions to 'anyone can edit' for that file
+      let file = DriveApp.getFileById(docId);
+      file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.EDIT); //set sharing
     } catch (err) {
       console.error(`Whoops : ${err}`);
     }
 
-
-    // Set permissions to 'anyone can edit' for that file
-    let file = DriveApp.getFileById(docId);
-    file.setSharing(DriveApp.Access.ANYONE, DriveApp.Permission.EDIT); //set sharing
-    
     // Return Document to use later
     console.info(`DOC ----> ${doc?.getUrl()?.toString()}`)
     this.url = doc?.getUrl()?.toString();

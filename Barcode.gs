@@ -4,7 +4,6 @@
  * Searches for job number found in cell B2 of SearchByBarCode sheet and changes status to 'Checked In'
  */
 const ReturnByBarcode = () => {
-  const writer = new WriteLogger();
   const number = OTHERSHEETS.Scanner.getRange(3,2).getValue();
   let progress = OTHERSHEETS.Scanner.getRange(4,2);
   let searchRow = 1;
@@ -30,21 +29,21 @@ const ReturnByBarcode = () => {
     let data = GetRowData(SHEETS.Main, searchRow);
     ShowReturnModal(data);
 
-    // try {
-    //   new Emailer({
-    //     trackingNumber : data.tracking,
-    //     checkedOutDate : data.checkedOut,
-    //     returnedDate : data.dateReturned, 
-    //     email : data.studentEmail,
-    //     status : data.status,
-    //     name : data.name,
-    //     remainingDays : data.remainingDays,
-    //     designspecialist : data.checkedOutBy,
-    //   })
-    // } catch(err) {
-    //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-    // }
-    // return;
+    try {
+      new Emailer({
+        trackingNumber : data.tracking,
+        checkedOutDate : data.checkedOut,
+        returnedDate : data.dateReturned, 
+        email : data.studentEmail,
+        status : data.status,
+        name : data.name,
+        remainingDays : data.remainingDays,
+        designspecialist : data.checkedOutBy,
+      })
+    } catch(err) {
+      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+    }
+    return;
   }
   else {
     progress.setValue('Tracking ID not found. Try again.');
@@ -62,8 +61,10 @@ const ReturnByBarcode = () => {
  * @return {string} url
  */
 class BarcodeGenerator {
-  constructor({ number : number, }) {
-    this.number = number ? number : Math.floor(Math.random() * 100000).toFixed();
+  constructor({ 
+    number : number = Number(Math.floor(Math.random() * 100000)).toFixed(), 
+  }) {
+    this.number = number ? number : Number(Math.floor(Math.random() * 100000)).toFixed();
     this.url;
   }
 
@@ -79,22 +80,23 @@ class BarcodeGenerator {
     const barcodeLoc = root + type + ts + this.number + scale + postfx;
 
     const params = {
-        "method" : "GET",
-        "headers" : { "Authorization": "Basic ", "Content-Type" : "image/png" },
-        "contentType" : "application/json",
-        followRedirects : true,
-        muteHttpExceptions : true
+      "method" : "GET",
+      "headers" : { "Authorization": "Basic ", "Content-Type" : "image/png" },
+      "contentType" : "application/json",
+      followRedirects : true,
+      muteHttpExceptions : true
     };
     
     let barcode;
 
     let html = UrlFetchApp.fetch(barcodeLoc, params);
     // console.info("Response Code : " + html.getResponseCode());
-    if (html.getResponseCode() == 200) {
-      const target = DRIVEFOLDERS.barcodeTarget;
-      barcode = target.createFile(Utilities.newBlob(html.getContent()).setName(this.MakeFilename(`Barcode`)));
-    } 
-    else console.error('Failed to GET Barcode');
+    if (html.getResponseCode() != 200) {
+      console.error('Failed to GET Barcode')
+      return false; 
+    }
+    const target = DRIVEFOLDERS.ticketfolder;
+    barcode = target.createFile(Utilities.newBlob(html.getContent()).setName(this.MakeFilename(`Barcode`)));
     this.url = barcode?.getUrl()?.toString();
     let id = barcode?.getId()?.toString();
     console.info(`BARCODE CREATED ---> ${this.url}, ID: ${id}`);
@@ -125,12 +127,13 @@ class BarcodeGenerator {
     const res = UrlFetchApp.fetch(barcodeLoc, params);
     const responseCode = res.getResponseCode();
     // console.info(`Response Code : ${responseCode}, ${RESPONSECODES[responseCode]}`);
-    if (responseCode == 200) {
-      const target = DRIVEFOLDERS.barcodeTarget;
-      barcode = target.createFile( Utilities.newBlob(res.getContent()).setName(this.MakeFilename(`Barcode-${this.number}`)) );
-      barcode.setTrashed(true);
+    if (responseCode != 200) {
+      console.error('Failed to GET Barcode');
+      return false;
     } 
-    else console.error('Failed to GET Barcode');
+    const target = DRIVEFOLDERS.barcodeTarget;
+    barcode = target.createFile( Utilities.newBlob(res.getContent()).setName(this.MakeFilename(`Barcode-${this.number}`)) );
+    barcode.setTrashed(true);
     console.info(`BARCODE CREATED ---> ${barcode?.getUrl()}`);
     return barcode;
   }

@@ -87,20 +87,22 @@ const onSubmission = async (e) => {
   }
   
   // Ready to go:
-  // try {
-  //   new Emailer({
-  //     trackingNumber : this.trackingNumber,
-  //     checkedOutDate : now,
-  //     dueDate : returnDate,  
-  //     email : this.email,
-  //     status : STATUS.checkedOut,
-  //     name : this.name,
-  //     remainingDays : this.remainingDays,
-  //     designspecialist : this.issuer, 
-  //   })
-  // } catch(err) {
-  //   console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
-  // }
+  try {
+    new Emailer({
+      trackingNumber : this.trackingNumber,
+      checkedOutDate : now,
+      dueDate : returnDate,  
+      email : this.email,
+      status : STATUS.checkedOut,
+      name : this.name,
+      remainingDays : this.remainingDays,
+      designspecialist : this.issuer, 
+    })
+  } catch(err) {
+    console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+  }
+
+  SetConditionalFormatting();
 
 };
 
@@ -200,6 +202,8 @@ const onChange = async (e) => {
   } catch(err) {
     console.error(`${err}, Whoops: Couldn't set variables for some reason...`);
   }   
+
+  SetConditionalFormatting();
 
 }
 
