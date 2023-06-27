@@ -3,10 +3,9 @@
  * -----------------------------------------------------------------------------------------------------------------
  * Ticket Class
  */
-class Ticket
-{
+class Ticket {
   constructor({
-    trackingNumber : trackingNumber = `10000001`,
+    trackingNumber : trackingNumber = IDService.createId(),
     status : status = STATUS.requested, 
     name : name = `Student Name`, 
     email : email = `Student Email`, 
@@ -17,20 +16,35 @@ class Ticket
     dueDate : dueDate = new Date().toDateString(),
   }){
     // Tracking Number,	Checked Out / Returned,	Checked Out To,	Student Email,	Checked Out By,	Date Checked Out,	Date Returned,	Ticket,	Barcode,	Item Basket,	Notes,	Due Date,	Days Remaining Until Overdue,
-    this.trackingNumber = trackingNumber ? trackingNumber : `10000001`;
-    this.status = status ? status : STATUS.checkedOut,										
+    /** @private */
+    this.trackingNumber = trackingNumber ? trackingNumber : IDService.createId();
+    /** @private */
+    this.status = status ? status : STATUS.requested;
+    /** @private */
     this.name = name ? name : `Student Name`;
-    this.email = email ? email : `Student Email`;
+    /** @private */
+    this.email = email ? email : `Unknown Email`;
+    /** @private */
     this.issuer = issuer ? issuer : `Staff`;
+    /** @private */
     this.checkedOutDate = checkedOutDate instanceof Date ? checkedOutDate.toDateString() : new Date().toDateString();
-    this.basket = basket ? basket : [];
-    this.notes = notes ? notes : ``;
+    /** @private */
+    this.basket = basket;
+    /** @private */
+    this.notes = notes;
+    /** @private */
     this.dueDate = dueDate instanceof Date ? dueDate.toDateString() : new Date().toDateString();
+    /** @private */
     this.ticketName = `JacobsLendingLibraryTicket-${this.trackingNumber}`;
+    /** @private */
     this.barcode;
     this.url = ``;
   }
 
+  /**
+   * Replace Text To Image
+   * @private
+   */
   _ReplaceTextToImage(body, searchText, image) {
     let next = body.findText(searchText);
     if (!next) return;
@@ -40,13 +54,16 @@ class Ticket
     return next;
   };
 
+  /**
+   * Create Ticket
+   */
   CreateTicket() {
     const folder = DRIVEFOLDERS.ticketfolder; // Set the correct folder
     const doc = DocumentApp.create(this.ticketName); // Make Document
     let body = doc.getBody();
     let docId = doc.getId();
     
-    const barcode = new BarcodeGenerator({ number : this.trackingNumber.toString() }).GenerateBarCode();
+    const barcode = new BarcodeService({ number : this.trackingNumber.toString() }).Barcode;
     this.barcode = barcode;
     // Append Document with Info
     body
@@ -121,19 +138,7 @@ class Ticket
   };
 }
 
-const _testTicket = () => {
-  new Ticket({
-    trackingNumber : `1000005`,
-    status : STATUS.checkedOut, 
-    name : `TestName`, 
-    email : `email@email.com`, 
-    issuer : `Cody`,
-    checkedOutDate : new Date(), 
-    basket : ["Tiny mitre saw/mitre box","Hot Glue Gun (+2 full glue sticks)","Breadboard","Sandpaper (one square each of 80, 220, 400)","Roomba","Scissors","Exacto (+3 new blades)"],
-    notes : `Notes go here.... `,
-    dueDate : new TimeConverter().ReturnDate(new Date()),
-  }).CreateTicket();
-}
+
 
 
 
@@ -150,34 +155,26 @@ const FixMissingTickets = () => {
     if(!cell) {
       let thisRow = index + 2;
       console.warn(`Index : ${thisRow} is Missing a Ticket! Creating new Ticket....`);
-      
-      const trackingNumber = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row);
-      const status = GetByHeader(SHEETS.Main, HEADERNAMES.status, this.row);
-      const name = GetByHeader(SHEETS.Main, HEADERNAMES.name, this.row);
-      const email = GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row);
-      const issuer = GetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row);
-      const checkedOutDate = GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row);
-      const basket = GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row);
-      const dueDate = GetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row);
-      const notes = GetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row);
+      const rowData = GetRowData(SHEETS.Main, thisRow);
+      let { tracking, status, issuer, name, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = rowData;
     
-      const ticket = await new Ticket({
-        trackingNumber : trackingNumber,
+      const tick = await new Ticket({
+        trackingNumber : tracking,
         status : status, 
         name : name, 
         email : email, 
         issuer : issuer,
-        checkedOutDate : checkedOutDate, 
-        basket : basket,
+        checkedOutDate : dateCheckedOut, 
+        basket : itemBasket,
         notes : notes,
         dueDate : dueDate,
       });
-      const url = ticket.getUrl();
+      const url = tick.getUrl();
       SHEETS.Main.getRange(thisRow, 14).setValue(url.toString());
       console.warn(`Ticket Created....`);
     }
   });
   console.info(`Tickets Checked and Fixed....`);
-
+  return 0;
 }
 

@@ -12,11 +12,11 @@ const ShowReturnModal = async (data) => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`${ServiceName} Menu`)
+        .setName(`${SERVICE_NAME} Menu`)
       )
       .setWidth(800)
       .setHeight(600)
-  ui.showModalDialog(html, `${ServiceName}`);
+  ui.showModalDialog(html, `${SERVICE_NAME}`);
 }
 
 const ProcessReturnForm = (formObject) => {
@@ -31,14 +31,14 @@ const ProcessReturnForm = (formObject) => {
     else if(pair[1] == `true`) basket.push(pair[0])
   })
   console.info(`Name: ${name}, Email: ${email}, Staff: ${staff}, Basket: ${basket}`);
-  new AssignUserABasket({
+  new AssignmentService({
     name : name,
     email : email,
     sid : sid,
     issuer : staff,
     basket : basket,
     notes : notes,
-  })
+  }).Assign();
   let thisRow = SHEETS.Main.getLastRow() + 1;
   console.warn(`Form processed to row: ${thisRow}`);
 

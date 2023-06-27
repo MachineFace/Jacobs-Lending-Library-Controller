@@ -9,8 +9,7 @@
  * @param {string} remainingDays
  * @param {string} designspecialist
  */
-class CreateMessage 
-{
+class CreateMessage {
   constructor({
     name : name = `Student Name`, 
     trackingNumber : trackingNumber = `1000001`,
@@ -20,14 +19,23 @@ class CreateMessage
     remainingDays : remainingDays = `0 days`, 
     designspecialist : designspecialist = `Staff`, 
   }){
-    this.name = name ? name : `Student Name`;
-    this.trackingNumber = trackingNumber ? trackingNumber : `1000001`;
-    this.checkedOutDate = checkedOutDate instanceof Date ? checkedOutDate.toDateString() : new Date().toDateString();
+    /** @private */
+    this.name = name;
+    /** @private */
+    this.trackingNumber = trackingNumber;
+    /** @private */
+    this.checkedOutDate = checkedOutDate;
+    /** @private */
     this.returnedDate = returnedDate instanceof Date ? returnedDate.toDateString() : new Date().toDateString();
+    /** @private */
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
-    this.remainingDays = remainingDays ? remainingDays : `0 days`;
-    this.designspecialist = designspecialist ? designspecialist : `Staff`;
+    /** @private */
+    this.remainingDays = remainingDays;
+    /** @private */
+    this.designspecialist = designspecialist;
+    /** @private */
     this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
+    /** @private */
     this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
   }
   get defaultMessage() {
@@ -98,30 +106,7 @@ class CreateMessage
 
 
 
-/**
- * -----------------------------------------------------------------------------------------------------------------
- * Unit Test for Making 'OnEdit' Messages
- */
-const _testMessages = async () => {
-  console.time(`Execution Timer`);
-  const message = new CreateMessage({
-    name : `Stew Dent`, 
-    trackingNumber : `1000001`,
-    checkedOutDate : new Date(),
-    returnedDate : new Date(), 
-    remainingDays : `10 days`,
-    designspecialist : `Cody`,
-  })
 
-  console.warn(`DEFAULT ---> ${message.defaultMessage}`);
-  console.warn(`REQUESTED ---> ${message.requestedMessage}`);
-  console.warn(`CHECKED OUT ---> ${message.checkedOutMessage}`);
-  console.warn(`RETURNED ---> ${message.returnedMessage}`);
-  console.warn(`OVERDUE ---> ${message.overdueMessage}`);
-
-  console.timeEnd(`Execution Timer`);
-  
-}
 
 
 

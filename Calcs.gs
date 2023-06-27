@@ -2,8 +2,7 @@
  * -----------------------------------------------------------------------------------------------------------------
  * Calculate Metrics
  */
-class Calculate
-{
+class Calculate {
   constructor() {
 
   }
@@ -11,15 +10,13 @@ class Calculate
   /**
    * Calculate Average Turnaround Time
    */
-  CalculateAverageTurnaround () {
+  CalculateAverageTurnaround() {
     const timeFunc = new TimeConverter();
-    let culled = [];
-    let completionTimes = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays);
-    culled = completionTimes.filter(Boolean);
-    console.info(culled)
+    let completionTimes = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)
+      .filter(Boolean);
 
     let total = 0;
-    culled.forEach( time => {
+    completionTimes.forEach( time => {
       if(!time) total += 0;
       else total += timeFunc.TimerStringToMilliseconds(time);
     });
@@ -31,7 +28,11 @@ class Calculate
     console.info(`Total Time : ${total}, Average : ${time}`);
     return time;
   }
-  PrintAverageTurnaround () {
+
+  /**
+   * Print Average Turnaround Times
+   */
+  PrintAverageTurnaround() {
     OTHERSHEETS.Metrics.getRange(`B6`).setValue(`Average Checkout Length`);
     OTHERSHEETS.Metrics.getRange(`C6`).setValue(this.CalculateAverageTurnaround());
   }
@@ -39,15 +40,18 @@ class Calculate
   /**
    * Sum all Statuses
    */
-  StatusCounts () {
+  StatusCounts() {
     let count = {};
-    let statuses = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status);
-    statuses = [].concat(...statuses);
-    let countFunc = (keys) => count[keys] = ++count[keys] || 1;
-    statuses.forEach(countFunc);
+    GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)
+      .filter(Boolean)
+      .forEach((keys) => count[keys] = ++count[keys] || 1);
     return count;
   }
-  PrintStatusCounts () {
+
+  /**
+   * Print Status Counts
+   */
+  PrintStatusCounts() {
     let counts = this.StatusCounts();
     Object.entries(counts).forEach(([key, value], index) => {
       // console.warn(`Key: ${key}, Value: ${value}`);
@@ -68,11 +72,9 @@ class Calculate
    * Calculate the distribution of occurrances in a list
    * How many times does some value show up in a list?
    */
-  CalculateDistribution (sheet, headername) {
-    // sheet = OTHERSHEETS.Record; // test value
-    // headername = `Name`; // test value
-    let list = GetColumnDataByHeader(sheet, headername);
-    list.filter(Boolean);
+  CalculateDistribution(sheet, headername) {
+    let list = GetColumnDataByHeader(sheet, headername)
+      .filter(Boolean);
 
     let occurrences = list.reduce( (acc, curr) => {
       return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
@@ -85,12 +87,14 @@ class Calculate
     items.sort((first, second) => {
       return second[1] - first[1];
     });
-    items.forEach(item => {
-      console.info(item);
-    })
+    items.forEach(item => console.info(item));
     return items;  
   }
-  PrintTopTen () {
+
+  /**
+   * Print Top Ten
+   */
+  PrintTopTen() {
     const distribution = this.CalculateDistribution(OTHERSHEETS.Record, `Name`);
 
     // Create a new array with only the first 10 items
@@ -108,7 +112,7 @@ class Calculate
   /**
    * Calculate the total number of checkouts
    */
-  CountTotalCheckouts () {
+  CountTotalCheckouts() {
     let count = OTHERSHEETS.Record.getLastRow() - 1;
     console.info(`Total Count : ${count}`);
     OTHERSHEETS.Metrics.getRange(`B7`).setValue(`Total Checkouts`);
@@ -119,13 +123,12 @@ class Calculate
   /**
    * Count all unique users who have checked out an item
    */
-  CountUniqueUsers () {
-    const countUnique = (iterable) => new Set(iterable).size;
+  CountUniqueUsers() {
     let users = GetColumnDataByHeader(OTHERSHEETS.Record, `Name`);
-    const count = countUnique(users);
+    const count = new Set(users).size
+    console.info(`Number of Users -----> ${count}`);
     OTHERSHEETS.Metrics.getRange(`B8`).setValue(`Number of Unique Users`);
     OTHERSHEETS.Metrics.getRange(`C8`).setValue(count);
-    console.info(`Number of Users -----> ${count}`);
     return count;
   }
 
@@ -135,7 +138,6 @@ class Calculate
   CalculateStandardDeviation () {
     const distribution = this.CalculateDistribution(OTHERSHEETS.Record, `Name`);
     const n = distribution.length;
-    console.info(`n = ${n}`);
 
     const data = []
     distribution.forEach(item => data.push(item[1]));
@@ -155,7 +157,6 @@ class Calculate
   CalculateArithmeticMean (sheet, headername) {
     const distribution = this.CalculateDistribution(sheet, headername);
     const n = distribution.length;
-    console.info(`n = ${n}`);
 
     const data = []
     distribution.forEach(item => data.push(item[1]));

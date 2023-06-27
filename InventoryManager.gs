@@ -3,8 +3,7 @@
 /**
  * Inventory Manager Class
  */
-class InventoryManager 
-{
+class InventoryManager {
   constructor({
     basket : basket = [],
   }) {
@@ -12,6 +11,9 @@ class InventoryManager
     this.sheet = OTHERSHEETS.Inventory;
   }
 
+  /**
+   * Checkout Basket
+   */
   CheckOutBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
     console.warn(`Checking out items from inventory: ${this.basket}`);
@@ -27,6 +29,9 @@ class InventoryManager
     console.warn(`Checkout Complete`);
   }
 
+  /**
+   * Checkin Basket
+   */
   CheckInBasket() {
     // Count,	Item Name,	Description,	Barcode,	Notes,
     console.warn(`Checking in items to inventory: ${this.basket}`);
@@ -41,6 +46,9 @@ class InventoryManager
     console.warn(`CheckIn Complete`);
   }
 
+  /**
+   * Reset Inventory
+   */
   ResetInventory() {
     let lastRow = this.sheet.getLastRow();
     for(let i = 2; i <= lastRow; i++) {
@@ -52,15 +60,7 @@ class InventoryManager
 }
 
 
-/**
- * Test Inventory Manager
- */
-const _testInventoryManager = () => {
-  let testBasket = ["Tiny mitre saw/mitre box","Hot Glue Gun (+2 full glue sticks)","Breadboard","Sandpaper (one square each of 80, 220, 400)","Roomba","Scissors","Exacto (+3 new blades)"];
-  let invM = new InventoryManager({basket : testBasket});
-  invM.CheckOutBasket();
-  invM.CheckInBasket();
-}
+
 
 const _testResetInventory = () => new InventoryManager({}).ResetInventory();
 

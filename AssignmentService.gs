@@ -1,8 +1,7 @@
 /**
- * Class for Assigning a User to a Headset
+ * Class for Assigning a User to a Basket
  */
-class AssignUserABasket
-{
+class AssignmentService {
   constructor({
     issuer : issuer = `Cody`,
     name : name = `Unknown Name`,
@@ -11,34 +10,38 @@ class AssignUserABasket
     basket : basket = [],
     notes : notes = `Note: Item was checked out in good quality.`,
   }) { 
-    this.trackingNumber = 1000001;
+    /** @private */
+    this.trackingNumber = IDService.createId();
+    /** @private */
     this.date = new Date().toDateString();
+    /** @private */
     this.row = SHEETS.Main.getLastRow() + 1;
-    this.issuer = issuer ? issuer : `Cody`;
-    this.name = name ? name : `Unknown Name`;
-    this.email = email ? email : `Unknown Email`;
-    this.sid = sid ? sid : 1000001;
+    /** @private */
+    this.issuer = issuer;
+    /** @private */
+    this.name = name;
+    /** @private */
+    this.email = email;
+    /** @private */
+    this.sid = sid;
+    /** @private */
     this.basket = basket ? basket : `No Basket`;
-    this.notes = notes ? notes : `Note: Item was checked out in good quality.`
-    this.Assign();
+    /** @private */
+    this.notes = notes;
   }
 
-  _MakeTrackingNumber () {
-    const prevRow = SHEETS.Main.getLastRow();
-    const prevNum = GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) ? GetByHeader(SHEETS.Main, HEADERNAMES.tracking, prevRow) : 1000001;
-    const prevTrackingNumber = Number.parseInt(prevNum) + 1;
-    return prevTrackingNumber;
-  }
-
+  /**
+   * Assign
+   */
   Assign() {
-    const t = new TimeConverter();
-    const now = new Date();
-    const returnDate = new Date(t.ReturnDate(now));
-    const remainingDays = t.Duration(returnDate, now);
-    console.info(`Assigning Basket to: ${this.name}`);
-    this.trackingNumber = this._MakeTrackingNumber();
-    let ticket;
     try {
+      const t = new TimeConverter();
+      const now = new Date();
+      const returnDate = new Date(t.ReturnDate(now));
+      const remainingDays = t.Duration(returnDate, now);
+      console.info(`Assigning Basket to: ${this.name}`);
+      this.trackingNumber = IDService.createId();
+
       // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
       SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
       SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
@@ -54,11 +57,9 @@ class AssignUserABasket
       SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate);
       SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
-    }
-    try {
-      ticket = new Ticket({
+
+      // Create Ticket
+      const newTicket = new Ticket({
         trackingNumber : this.trackingNumber,
         status : STATUS.checkedOut, 
         name : this.name, 
@@ -68,23 +69,15 @@ class AssignUserABasket
         basket : this.basket,
         notes : this.notes,
         dueDate : returnDate,
-      });
-      ticket.CreateTicket();
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
-    }
-    try {
-      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
-    }
-    try {
-      new InventoryManager({basket : this.basket}).CheckOutBasket();
-    } catch(err) {
-      console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
-    }
-    try {
+      })
+      const ticket = newTicket.CreateTicket();
+      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.getUrl());
+      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl());
+      
+      // Set Inventory
+      new InventoryManager({ basket : this.basket, }).CheckOutBasket();
+
+      // Record Interaction
       new RecordTaker({
         trackingNumber : this.trackingNumber,
         date : now,
@@ -95,12 +88,8 @@ class AssignUserABasket
         notes : this.notes,
       });
       PrintTurnaround(this.row);
-    } catch (err) {
-      console.error(`${err}, Whoops: Couldn't write record for some reason...`);
-    }
-    
-    // Ready to go:
-    try {
+
+      // Email
       new Emailer({
         trackingNumber : this.trackingNumber,
         checkedOutDate : now,
@@ -110,12 +99,17 @@ class AssignUserABasket
         name : this.name,
         remainingDays : remainingDays,
         designspecialist : this.issuer, 
-      })
+      });
+      return 0;
     } catch(err) {
-      console.error(`${err}, Whoops: Couldn't send an email for some reason...`);
+      console.error(`"Assign()" failed : ${err}`);
+      return 1;
     }
   }
 
+  /**
+   * Unassign
+   */
   Unassign() {
     const t = new TimeConverter();
     const returnDate = new Date();
@@ -167,22 +161,20 @@ const _testAssign = () => {
     email : `testa@test.com`,
     basket : [`Tiny mitre saw/mitre box`,`Hot Glue Gun (+2 full glue sticks)`,`Breadboard`,`Sandpaper (one square each of 80, 220, 400)`,`Roomba`,`Scissors`,`Exacto (+3 new blades)`,]
   });
-  let t = a._MakeTrackingNumber();
-  console.info(t);
 }
 
 
 
 const ModifyOrder = (rowData) => {
-  const thisRow = rowData?.row;
-  const t = new TimeConverter();
-  const now = new Date();
-  const returnDate = new Date(t.ReturnDate(now));
-  const remainingDays = t.Duration(returnDate, now);
-  console.info(`Modifying Basket for: ${rowData.name}`);
-  const trackingNumber = rowData.trackingNumber ? rowData.trackingNumber : Number.parseInt(100000 + thisRow + 1);
-  let ticket;
   try {
+    const thisRow = rowData?.row;
+    const t = new TimeConverter();
+    const now = new Date();
+    const returnDate = new Date(t.ReturnDate(now));
+    const remainingDays = t.Duration(returnDate, now);
+    console.info(`Modifying Basket for: ${rowData.name}`);
+    const trackingNumber = rowData.trackingNumber ? rowData.trackingNumber : Number.parseInt(100 + thisRow + 1);
+    
     // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
     SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, trackingNumber);
     SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
@@ -198,11 +190,9 @@ const ModifyOrder = (rowData) => {
     SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, returnDate);
     SetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow, this.notes);
     SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
-  } catch(err) {
-    console.error(`${err}, Whoops: Couldn't write info to sheet for some reason...`);
-  }
-  try {
-    ticket = new Ticket({
+
+    // Create a ticket
+    const ticket = new Ticket({
       trackingNumber : this.trackingNumber,
       status : STATUS.checkedOut, 
       name : this.name, 
@@ -214,21 +204,14 @@ const ModifyOrder = (rowData) => {
       dueDate : returnDate,
     });
     ticket.CreateTicket();
-  } catch(err) {
-    console.error(`${err}, Whoops: Couldn't create a ticket for some reason...`);
-  }
-  try {
+    if(!ticket) throw new Error(`Couldn't generate a ticket.`)
     SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
     SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
-  } catch(err) {
-    console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...`);
-  }
-  try {
+
+    // Manage Inventory
     new InventoryManager({basket : this.basket}).CheckOutBasket();
-  } catch(err) {
-    console.error(`${err}, Whoops: Couldn't update our inventory for some reason...`);
-  }
-  try {
+
+    // Record the Interaction
     new RecordTaker({
       trackingNumber : this.trackingNumber,
       date : now,
@@ -239,8 +222,10 @@ const ModifyOrder = (rowData) => {
       notes : this.notes,
     });
     PrintTurnaround(this.row);
-  } catch (err) {
-    console.error(`${err}, Whoops: Couldn't write record for some reason...`);
+    return 0;
+  } catch(err) {
+    console.error(`"ModifyOrder()" failed : ${err}`);
+    return 1;
   }
   
   // Ready to go:

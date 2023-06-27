@@ -1,0 +1,17 @@
+/**
+ * Set the document properties
+ */
+try {
+  const scriptProperties = PropertiesService.getScriptProperties();
+  scriptProperties.setProperties({
+    SUPPORT_ALIAS : GmailApp.getAliases()[0],
+    SERVICE_NAME : `🤖 Jacobs LendingBot`,
+    SERVICE_NAME_NO_ICON : `Jacobs LendingBot`,
+    THISGID : `1IcBrLJ511mxN4skXBw3RalCvS9urZhk0WzKNPcf7I88`,
+    DRIVE_FOLDER : `1DUpHmj0zxchXjhsrA7EfahuPcI9M0HqU`, 
+    DRIVE_FOLDER_URL : `https://docs.google.com/forms/d/e/1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA/viewform`,
+    FORM : `17-Ll2AninOpRfapyNw6flEP2OlEQ0cYxfXAKlXcSbe0`,
+  });
+} catch (err) {
+  console.log(`Failed with error: ${err.message}`);
+}

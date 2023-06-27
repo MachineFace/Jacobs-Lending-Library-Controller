@@ -3,7 +3,6 @@
  * MISC
  */
 
-
 /**
  * ----------------------------------------------------------------------------------------------------------------
  * Return the value of a cell by column name and row number
@@ -13,15 +12,109 @@
  */
 const GetByHeader = (sheet, columnName, row) => {
   try {
-    let data = sheet.getDataRange().getValues();
-    let col = data[0].indexOf(columnName);
+    if(typeof(sheet) !== typeof(SHEETS.Main)) throw new Error(`Bad input: Sheet: ${sheet} Col Name specified: ${columnName} Row: ${row}`);
+    const data = sheet.getDataRange().getValues();
+    const col = data[0].indexOf(columnName);
     if (col != -1) return data[row - 1][col];
+    else {
+      console.error(`Getting data by header fucking failed...`);
+      return 1;
+    }
   } catch (err) {
-    console.error(`${err} : GetByHeader failed - Sheet: ${sheet} Col Name specified: ${columnName} Row: ${row}`);
+    console.error(`"GetByHeader()" failed : ${err}`);
+    return 1;
   }
 };
 
+
 /**
+ * ----------------------------------------------------------------------------------------------------------------
+ * Return the values of a column by the name
+ * @param {sheet} sheet
+ * @param {string} colName
+ * @param {number} row
+ */
+const GetColumnDataByHeader = (sheet, columnName) => {
+  try {
+    if(typeof(sheet) !== typeof(SHEETS.Main)) throw new Error(`Bad input: Sheet: ${sheet} Col Name specified: ${columnName}`);
+    const data = sheet.getDataRange().getValues();
+    const col = data[0].indexOf(columnName);
+    let colData = data.map(d => d[col]);
+    colData.splice(0, 1);
+    if (col != -1) return colData;
+    else {
+      console.error(`Getting column data by header fucking failed...`);
+      return 1;
+    }
+  } catch (err) {
+    console.error(`"GetColumnDataByHeader()" failed : ${err}`);
+    return 1;
+  }
+}
+
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------
+ * Return the values of a row by the number
+ * @param {sheet} sheet
+ * @param {number} row
+ * @returns {dict} {header, value}
+ */
+const GetRowData = (sheet, row) => {
+  if(typeof sheet != `object`) return 1;
+  let dict = {};
+  try {
+    let headers = sheet.getRange(1, 1, 1, sheet.getMaxColumns()).getValues()[0];
+    headers.forEach( (name, index) => {
+      let linkedKey = Object.keys(HEADERNAMES).find(key => HEADERNAMES[key] === name);
+      if(!linkedKey) headers[index] = name;
+      else headers[index] = linkedKey;
+    })
+    let data = sheet.getRange(row, 1, 1, sheet.getMaxColumns()).getValues()[0];
+    headers.forEach( (header, index) => {
+      dict[header] = data[index];
+    });
+    dict[`sheetName`] = sheet.getSheetName();
+    dict[`row`] = row;
+    // console.info(dict);
+    return dict;
+  } catch (err) {
+    console.error(`${err} : GetRowData failed - Sheet: ${sheet} Row: ${row}`);
+    return 1;
+  }
+}
+
+
+
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------
+ * Set the value of a cell by column name and row number
+ * @param {sheet} sheet
+ * @param {string} colName
+ * @param {number} row
+ * @param {any} val
+ */
+const SetByHeader = (sheet, columnName, row, val) => {
+  if(typeof sheet != `object`) return 1;
+  let data;
+  let col;
+  try {
+    data = sheet.getDataRange().getValues();
+    col = data[0].indexOf(columnName) + 1;
+    if(col != -1) {
+      sheet.getRange(row, col).setValue(val);
+      return 0;
+    } else return 1;
+  } catch (err) {
+    console.error(`${err} : SetByHeader failed - Sheet: ${sheet} Row: ${row} Col: ${col} Value: ${val}`);
+    return 1;
+  }
+};
+
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------
  * Search all Sheets for one specific value
  * @required {string} value
  * @returns {[sheet, [number]]} [sheetname, row]
@@ -39,71 +132,6 @@ const FindOne = (value) => {
   return res;
 }
 
-
-/**
- * ----------------------------------------------------------------------------------------------------------------
- * Return the values of a column by the name
- * @param {sheet} sheet
- * @param {string} colName
- * @param {number} row
- */
-const GetColumnDataByHeader = (sheet, columnName) => {
-  try {
-    const data = sheet.getDataRange().getValues();
-    const col = data[0].indexOf(columnName);
-    let colData = data.map(d => d[col]);
-    colData.splice(0, 1);
-    if (col != -1) return colData;
-  } catch (err) {
-    console.error(`${err} : GetByHeader failed - Sheet: ${sheet} Col Name specified: ${columnName}`);
-  }
-};
-
-
-/**
- * ----------------------------------------------------------------------------------------------------------------
- * Return the values of a row by the number
- * @param {sheet} sheet
- * @param {number} row
- * @returns {dict} {header, value}
- */
-const GetRowData = (sheet, row) => {
-  let dict = {};
-  try {
-    let headers = sheet.getRange(1, 1, 1, sheet.getMaxColumns()).getValues()[0];
-    headers.forEach( (name, index) => {
-      headers[index] = Object.keys(HEADERNAMES).find(key => HEADERNAMES[key] === name);
-    })
-    let data = sheet.getRange(row, 1, 1, sheet.getMaxColumns()).getValues()[0];
-    headers.forEach((header, index) => dict[header] = data[index]);
-    dict[`sheetname`] = sheet.getSheetName();
-    dict[`row`] = row;
-    console.info(dict);
-    return dict;
-  } catch (err) {
-    console.error(`${err} : GetRowData failed - Sheet: ${sheet} Row: ${row}`);
-  }
-}
-
-
-
-/**
- * ----------------------------------------------------------------------------------------------------------------
- * Set the value of a cell by column name and row number
- * @param {sheet} sheet
- * @param {string} colName
- * @param {number} row
- * @param {any} val
- */
-const SetByHeader = (sheet, columnName, row, val) => {
-  try {
-    const data = sheet.getDataRange().getValues();
-    const col = data[0].indexOf(columnName) + 1;
-    sheet.getRange(row, col).setValue(val);
-  } catch (err) {
-    console.error(`${err} : SetByHeader failed - Sheet: ${sheet} Row: ${row} Col: ${col} Value: ${val}`);
-  }
-};
 
 
 /**
@@ -183,21 +211,45 @@ const SearchSpecificSheet = (sheet, value) => {
  */
 const DSInfo = (ds) => {
   const row = SearchSpecificSheet(OTHERSHEETS.Staff, ds);
-  const name = GetByHeader(OTHERSHEETS.Staff, `NAME`, row);
-  const fullname = GetByHeader(OTHERSHEETS.Staff, `FIRST LAST NAME`, row);
-  const email = GetByHeader(OTHERSHEETS.Staff, `EMAIL`, row);
-  const emailLink = GetByHeader(OTHERSHEETS.Staff, `EMAIL LINK`, row);
-  const type = GetByHeader(OTHERSHEETS.Staff, `Type`, row);
+  if(row == 0) return 1;
+  const rd = GetRowData(OTHERSHEETS.Staff, row);
   return {
-    name : name,
-    fullname : fullname,
-    email : email,
-    emailLink : emailLink,
-    type : type,	
+    name : rd[`NAME`],
+    fullname : rd[`FIRST LAST NAME`],
+    email : rd[`EMAIL`],
+    emailLink : rd[`EMAIL LINK`],
+    type : rd[`Type`],	
   }
 }
 
+const _testDS = () => {
+  console.info(DSInfo(`Cody`));
+  console.info(`DSInfo SHOULD return "1": Actual: ${DSInfo(`NOT A NAME`)}`);
+}
+
 const MakeFilename = (name) => `${name}-${Utilities.formatDate(new Date(), "PST", "yyyyMMddHHmmss").toString()}`;
+
+
+/**
+ * Check if this sheet is forbidden
+ * @param {sheet} sheet to check
+ * @returns {bool} false if sheet is allowed
+ * @returns {bool} true if forbidden
+ */
+const CheckSheetIsForbidden = (someSheet) => {
+  let forbiddenNames = [];
+  Object.values(OTHERSHEETS).forEach(sheet => forbiddenNames.push(sheet.getSheetName()));
+  const index = forbiddenNames.indexOf(someSheet.getName());
+  if(index == -1 || index == undefined) {
+    console.info(`Sheet is NOT FORBIDDEN : ${someSheet.getName()}`)
+    return false;
+  } else {
+    console.error(`SHEET FORBIDDEN : ${forbiddenNames[index]}`);
+    return true;
+  }
+}
+
+
 
 
 /**
@@ -273,15 +325,7 @@ const TitleCase = (str) => {
   return str.join(' ');
 }
 
-/**
- * Make a Tracking Number
- * @returns {number} trackingNumber
- */
-const MakeTrackingNumber = () => {
-  const prevRowNum = SHEETS.Main.getLastRow() - 1;
-  const trackingNumber = Number.parseInt(100000 + prevRowNum);
-  return trackingNumber;
-}
+
 
 /**
  * Validate an email string

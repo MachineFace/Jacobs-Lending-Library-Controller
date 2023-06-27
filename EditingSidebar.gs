@@ -8,7 +8,7 @@ const EditFromSelected = async () => {
   // Is this the correct sheet?
   if (thisSheet.getSheetName() != SHEETS.Main.getSheetName()) {
     Browser.msgBox(
-      `Incorrect Sheet Active`,
+      SERVICE_NAME,
       `Please select 'Form Responses'. Select one cell in the row and an editing sidebar will pop up.`,
       Browser.Buttons.OK
     );
@@ -17,14 +17,12 @@ const EditFromSelected = async () => {
 
   // Get row data
   const rowData = GetRowData(thisSheet, thisRow);
-  console.warn(rowData)
+  console.warn(rowData);
+  let { tracking, status, issuer, timestamp, studentEmail, name, studentId, affiliation, itemBasket, dateCheckedOut, dateReturned, ticket, barcode, notes, dueDate, remainingDays, sheetName, row } = rowData;
 
   // Pass rowData to Sidebar
-  const name = rowData?.name;
-  const studentEmail = rowData?.studentEmail;
-  const studentId = rowData?.studentId;
-  const issuer = rowData?.issuer;
-  const itemBasket = rowData?.itemBasket?.split(', ');
+  itemBasket = itemBasket?.split(', ');
+  
   let template = HtmlService.createTemplateFromFile('editingsidebar');
   template.rowData = rowData;
   template.name = name;
@@ -39,7 +37,7 @@ const EditFromSelected = async () => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`${ServiceName} Menu`)
+        .setName(`${SERVICE_NAME} Menu`)
       ).setWidth(400)
   ui.showSidebar(html);
 }
@@ -64,7 +62,7 @@ const ShowEditingSidebar = async (rowData) => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`${ServiceName} Menu`)
+        .setName(`${SERVICE_NAME} Menu`)
       ).setWidth(400)
   ui.showSidebar(html);
 }

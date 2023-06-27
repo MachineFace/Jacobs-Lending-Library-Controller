@@ -2,12 +2,12 @@
  * -----------------------------------------------------------------------------------------------------------------
  * Code Enumerations
  */
-const ServiceName = `🤖 Jacobs LendingBot`;
+const SERVICE_NAME = `🤖 Jacobs LendingBot`;
 const ServiceNameNoIcon = `Jacobs LendingBot`;
 const CheckoutLength = 14; // How many days a student can hold a headset
 const PickupHours = `Monday - Friday: 11am - 1pm & 4pm - 6pm.`;
 
-const COLORS = {
+const COLORS = Object.freeze({
   green_light : `#d9ead3`,
   green : `74d975`, 
   green_dark : `#93c47d`, 
@@ -34,9 +34,9 @@ const COLORS = {
   grey : `#cccccc`, 
   grey_dark : `#999999`,
   black : `#000000`,
-}
+});
 
-const RESPONSECODES = {
+const RESPONSECODES = Object.freeze({
 	200 : `OK`,
 	201 : `Created`,
 	202 : `Accepted`,
@@ -103,9 +103,9 @@ const RESPONSECODES = {
 	511 : `Network Authentication Required`,
 	598 : `Network read timeout error`,
 	599 : `Network connect timeout error`,
-}
+});
 
-const AFFILLIATION = {
+const AFFILLIATION = Object.freeze({
   researcher : `Researcher`,
   desinvfaculty : `DES INV Faculty`,
   faculty : `Jacobs-affiliated Course Faculty`,
@@ -116,18 +116,20 @@ const AFFILLIATION = {
   staff : `Jacobs Staff (Including Work-studies)`,
   students : `Students in Jacobs-affiliated courses (NON-DES INV)`,
   club : `Club and/or Team`,
-  other : `Other: Berkeley Faculty, Berkeley Staff, and Students`,
-}
+  other : `Other: Berkeley Faculty, Berkeley Staff`,
+  generalStudents : `General Students`,
+});
 
-const STATUS = {
+const STATUS = Object.freeze({
   requested : `Requested`,
   checkedOut : `Checked Out`,
   checkedIn : `Checked In`,
   overdue : `Overdue!`,
-}
+  reserved : `Reserved`,
+  missing : `Missing`,
+});
 
-
-const HEADERNAMES = {
+const HEADERNAMES = Object.freeze({
   tracking: `Tracking Number`,
   status: `Status`,
   issuer: `Issuer`,
@@ -145,33 +147,33 @@ const HEADERNAMES = {
   dueDate: `Due Date`,
   remainingDays: `Days Remaining Until Overdue`,
   checkedOutCount: `Number of Times Checked Out`,
-};
+});
 
-const SHEETS = {
+const SHEETS = Object.freeze({
   Main : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Main`),
-};
+});
 
-const OTHERSHEETS = {
+const OTHERSHEETS = Object.freeze({
   Scanner : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Pickup Scanner`),
   Staff : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`StaffList`),
   Logger : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Logger`),
   Metrics : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Metrics`),
   Record : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`CheckOut Record`),
   Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
-}
+});
 
-const DRIVEFOLDERS = {
-  ticketfolder : DriveApp.getFolderById(`1DUpHmj0zxchXjhsrA7EfahuPcI9M0HqU`),
-}
+const DRIVEFOLDERS = Object.freeze({
+  ticketfolder : DriveApp.getFolderById(PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER`)),
+});
 
-const FORM = {
-  id : `17-Ll2AninOpRfapyNw6flEP2OlEQ0cYxfXAKlXcSbe0`,
-  url : `https://docs.google.com/forms/d/e/1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA/viewform`,
-}
+const FORM = Object.freeze({
+  id : PropertiesService.getScriptProperties().getProperty(`FORM`),
+  url : PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER_URL`),
+});
 
 
 
-const PAGESIZES = {
+const PAGESIZES = Object.freeze({
   letter: {width: 612.283, height: 790.866},
   tabloid: {width: 790.866,height: 1224.57},
   statement: {width: 396.85, height: 612.283},
@@ -179,7 +181,7 @@ const PAGESIZES = {
   a4: {width: 595.276, height: 841.89},
   a5: {width: 419.528, height: 595.276},
   custom: {width: 204.000, height: 566.000},
-}
+});
 
 
 

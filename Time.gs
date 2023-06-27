@@ -1,8 +1,7 @@
 /**
  * Class for dealing with time
  */
-class TimeConverter
-{
+class TimeConverter {
   constructor() {
 
   }

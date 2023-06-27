@@ -76,18 +76,30 @@
 
       const handleEditAlert = () => {
         const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student...`, ui.ButtonSet.OK);
+        ui.alert(
+          `Jacobs Lending Library Bot`, 
+          `Assigning Basket to Student...`, 
+          ui.ButtonSet.OK
+        );
       }
 
       const handleEditFailure = (e) => {
         console.error(e.message);
         const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Assigning Basket to Student Failed and is Incomplete`, ui.ButtonSet.OK);
+        ui.alert(
+          `Jacobs Lending Library Bot`, 
+          `Assigning Basket to Student Failed and is Incomplete`, 
+          ui.ButtonSet.OK
+        );
       }
 
       const handleEditSuccess = () => {
         const ui = SpreadsheetApp.getUi();
-        ui.alert(`Jacobs Lending Library Bot`, `Basket Assigned to Student.`, ui.ButtonSet.OK);
+        ui.alert(
+          `Jacobs Lending Library Bot`, 
+          `Basket Assigned to Student.`, 
+          ui.ButtonSet.OK
+        );
       }
 
       const handleEditFormSubmit = (formObject) => {
