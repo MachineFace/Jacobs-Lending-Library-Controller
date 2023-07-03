@@ -58,7 +58,7 @@ class Ticket {
    * Create Ticket
    */
   CreateTicket() {
-    const folder = DRIVEFOLDERS.ticketfolder; // Set the correct folder
+    const folder = DriveApp.getFolderById(DRIVEFOLDERS.ticketfolder); // Set the correct folder
     const doc = DocumentApp.create(this.ticketName); // Make Document
     let body = doc.getBody();
     let docId = doc.getId();

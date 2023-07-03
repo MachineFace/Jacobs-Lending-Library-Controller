@@ -23,7 +23,7 @@ class BarcodeService {
     const ts = '&text=';
     const scale = '&scale=0.75'
     const postfx = '&includetext';
-    const target = DRIVEFOLDERS.ticketfolder;
+    const target = DriveApp.getFolderById(DRIVEFOLDERS.ticketfolder);
 
     const fixedUUID = IDService.isValid(this.uuid) ? this.uuid : IDService.createId();
     const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
@@ -143,7 +143,6 @@ const ReturnByBarcode = () => {
     // SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
     // SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
     // progress.setValue(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
-    // writer.Info(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
 
     const data = GetRowData(SHEETS.Main, searchRow);
     let { tracking, status, studentEmail, name, dateReturned, remainingDays, } = data;

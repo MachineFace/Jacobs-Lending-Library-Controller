@@ -101,12 +101,11 @@ const _gasTLoggerAndMessagingTesting = async () => {
 
   });
 
-  await test(`WriteLogger`, (t) => {
-    const write = new WriteLogger();
-    const x = write.Warning(`Warning Test ----> Message`);
-    const y = write.Info(`Info Test ----> Message`);
-    const z = write.Error(`ERROR Test ----> Message`);
-    const w = write.Debug(`Debugging Test ----> Message`);
+  await test(`Log`, (t) => {
+    const x = Log.Warning(`Warning Test ----> Message`);
+    const y = Log.Info(`Info Test ----> Message`);
+    const z = Log.Error(`ERROR Test ----> Message`);
+    const w = Log.Debug(`Debugging Test ----> Message`);
     t.notThrow(() => x, `Warning SHOULD NOT throw error.`);
     t.notThrow(() => y, `Info SHOULD NOT throw error.`);
     t.notThrow(() => z, `Error SHOULD NOT throw error.`);

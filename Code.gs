@@ -116,7 +116,6 @@ const onSubmission = async (e) => {
  * Main OnEdit
  */
 const onChange = async (e) => {
-  const writer = new WriteLogger();
   var thisSheet = e.range.getSheet();
   console.info(`This Sheet : ${thisSheet.getSheetName()}`)
 
@@ -158,16 +157,16 @@ const onChange = async (e) => {
   try {
     switch(status) {
       case STATUS.requested:
-        writer.Warning(`Tracking Number ${tracking} requested by user ${name} on ${timestamp}.`);
+        Log.Warning(`Tracking Number ${tracking} requested by user ${name} on ${timestamp}.`);
         break;
       case STATUS.checkedIn:
-        writer.Warning(`Tracking Number ${tracking} checked out by ${issuer} to ${name} on ${dateCheckedOut} has now been returned.`);
+        Log.Warning(`Tracking Number ${tracking} checked out by ${issuer} to ${name} on ${dateCheckedOut} has now been returned.`);
         SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
-        try {
-          new InventoryManager({ basket: itemBasket }).CheckInBasket();
-        } catch (err) {
-          console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
-        }
+
+        // Update Inventory
+        new InventoryManager({ basket: itemBasket }).CheckInBasket();
+
+        // Make Record
         new RecordTaker({
           trackingNumber: tracking,
           date: dateCheckedOut,
@@ -180,16 +179,16 @@ const onChange = async (e) => {
         PrintTurnaround(thisRow);
         break;
       case STATUS.checkedOut:
-        writer.Warning(`Tracking Number ${tracking} has been checked out by ${issuer} to ${name} on ${dateCheckedOut}`);
+        Log.Warning(`Tracking Number ${tracking} has been checked out by ${issuer} to ${name} on ${dateCheckedOut}`);
         SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
         SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
         SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
         SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
-        try {
-          new InventoryManager({ basket: itemBasket }).CheckOutBasket();
-        } catch (err) {
-          console.error( `${err}, Whoops: Couldn't update our inventory for some reason...` );
-        }
+
+        // Update Inventory
+        new InventoryManager({ basket: itemBasket }).CheckOutBasket();
+
+        // Record Interaction
         new RecordTaker({
           trackingNumber: tracking,
           date: dateCheckedOut,

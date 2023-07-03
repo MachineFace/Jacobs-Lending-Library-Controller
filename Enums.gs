@@ -163,7 +163,7 @@ const OTHERSHEETS = Object.freeze({
 });
 
 const DRIVEFOLDERS = Object.freeze({
-  ticketfolder : DriveApp.getFolderById(PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER`)),
+  ticketfolder : PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER`),
 });
 
 const FORM = Object.freeze({
