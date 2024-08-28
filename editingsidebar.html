@@ -164,9 +164,9 @@
                         for(i = 0; i < itemBasket.length; i++) { 
                           if (itemBasket[i] == item) found=true;
                         }
-                        if (found==true) { ?> 
-                          value="1" <? }
-                        else { ?> value="0" <? } ?> 
+                        if (found == true) { ?> 
+                          value = "1" <? }
+                        else { ?> value = "0" <? } ?> 
                   >
                   <button type="button" class="count-btn" style="font-weight: bold;" onclick="handleIncrement(<?=item?>, document.getElementById(<?=item?>).value)" >+</button>
                   <span><?= item ?></span></input>

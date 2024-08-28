@@ -9,7 +9,7 @@ class Emailer {
     trackingNumber : trackingNumber = `1001`,
     status : status = STATUS.checkedOut,
     name : name = `Your Name`,
-    email : email = `jacobsprojectsupport@berkeley.edu`, 
+    email : email = SERVICE_EMAIL, 
     checkedOutDate : checkedOutDate = new Date().toDateString(),
     returnedDate : returnedDate = new Date().toDateString(),
     remainingDays : remainingDays = `0 days`,
@@ -20,15 +20,13 @@ class Emailer {
     this.status = status;
     this.name = name;
     this.email = email;
-    this.gmailName = `Jacobs Lending Library Tracking Bot`;
     this.checkedOutDate = checkedOutDate;
     this.returnedDate = returnedDate;
     this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
     this.remainingDays = remainingDays ? remainingDays : `0 days`;
-    this.supportAlias = GmailApp.getAliases()[0];
     this.designspecialist = designspecialist ? designspecialist : `Staff`;
-    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
-    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
+    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : SERVICE_EMAIL;
+    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:${SERVICE_EMAIL}">${SERVICE_EMAIL}</a>`;
     /** @private */
     this.message = new CreateMessage({
       name : this.name, 
@@ -45,42 +43,42 @@ class Emailer {
   SendEmail () {
     switch (this.status) {
       case STATUS.requested:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Requested`, "", {
+        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Requested`, "", {
           htmlBody: this.message.requestedMessage,
-          from: this.supportAlias,
+          from: SERVICE_EMAIL,
           cc: this.designspecialistemail,
-          bcc: "",
-          name: this.gmailName,
+          bcc: SERVICE_EMAIL,
+          name: SERVICE_NAME_NO_ICON,
         });
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.checkedOut:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Checked Out`, "", {
+        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Checked Out`, "", {
           htmlBody: this.message.checkedOutMessage,
-          from: this.supportAlias,
+          from: SERVICE_EMAIL,
           cc: this.designspecialistemail,
-          bcc: "",
-          name: this.gmailName,
+          bcc: SERVICE_EMAIL,
+          name: SERVICE_NAME_NO_ICON,
         });
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.checkedIn:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools Returned`, "", {
+        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Returned`, "", {
             htmlBody: this.message.returnedMessage,
-            from: this.supportAlias,
+            from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
-            bcc: "",
-            name: this.gmailName,
+            bcc: SERVICE_EMAIL,
+            name: SERVICE_NAME_NO_ICON,
         });
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;
       case STATUS.overdue:
-        GmailApp.sendEmail(this.email, `${this.gmailName} : Tools OVERDUE!!`, "", {
+        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools OVERDUE!!`, "", {
             htmlBody: this.message.overdueMessage,
-            from: this.supportAlias,
+            from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
-            bcc: "",
-            name: this.gmailName,
+            bcc: SERVICE_EMAIL,
+            name: SERVICE_NAME_NO_ICON,
         });
         console.warn(`Student ${this.name} emailed ${this.status} message...`);
         break;

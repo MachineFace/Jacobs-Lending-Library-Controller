@@ -1,5 +1,11 @@
 /**
  * Class for Assigning a User to a Basket
+ * @param {string} issuer (Staff Member Name)
+ * @param {string} name
+ * @param {string} email
+ * @param {number} sid
+ * @param {object} basket
+ * @param {string} notes
  */
 class AssignmentService {
   constructor({

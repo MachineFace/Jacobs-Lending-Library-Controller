@@ -1,8 +1,6 @@
 /**
  * ----------------------------------------------------------------------------------------------------------------
- * Generate new Job number from a date
- * @param {time} date
- * @return {number} job number
+ * ID Service
  */
 class IDService {
   constructor() {

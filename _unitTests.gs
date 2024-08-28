@@ -356,7 +356,7 @@ const _gasTCalculationTesting = async () => {
 
   // ------------------------------------------------------------------------------------------------------------------------------
   await test(`Calc Average Turnaround`, (t) => {
-    const x = calc.CalculateAverageTurnaround(SHEETS.Laser);
+    const x = calc.GetAverageTurnaround(SHEETS.Laser);
     t.ok(x, `Time string is ok.`);
   });
   
@@ -388,7 +388,7 @@ const _gasTCalculationTesting = async () => {
   });
 
   await test(`Calc Distribution`, (t) => {
-    const x = calc.CalculateDistribution();
+    const x = calc.GetDistribution();
     t.notEqual(x, undefined, `Distribution should not return undefined.`);
   });
 
@@ -398,12 +398,12 @@ const _gasTCalculationTesting = async () => {
   });
   
   await test(`Calc Standard Deviation`, (t) => {
-    const x = calc.CalculateStandardDeviation();
+    const x = calc.GetStandardDeviation();
     t.notEqual(x, undefined || null, `Standard Deviation should not return undefined or null.`);
   });
 
   await test(`Calculate Arithmetic Mean`, (t) => {
-    const x = calc.CalculateArithmeticMean();
+    const x = calc.GetArithmeticMean();
     t.notEqual(x, undefined || null, `Arithmetic Mean should not return undefined or null.`);
   });
   

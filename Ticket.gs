@@ -111,7 +111,9 @@ class Ticket {
 
     const count = 1;
     const table = [];
-    [...this.basket].forEach(item => table.push([`Quantity: ${count ? count : 1}`, `Item: ${item.toString()}`]));
+    console.info(this.basket);
+    [...this.basket]
+      .forEach(item => table.push([`Quantity: ${count ? count : 1}`, `Item: ${item.toString()}`]));
     body.appendTable(table)
       .setAttributes({
         [DocumentApp.Attribute.FONT_SIZE]: 6,

@@ -4,9 +4,6 @@
 try {
   PropertiesService.getScriptProperties()
     .setProperties({
-      SUPPORT_ALIAS : GmailApp.getAliases()[0],
-      SERVICE_NAME : `🤖 Jacobs LendingBot`,
-      SERVICE_NAME_NO_ICON : `Jacobs LendingBot`,
       THISGID : `1IcBrLJ511mxN4skXBw3RalCvS9urZhk0WzKNPcf7I88`,
       DRIVE_FOLDER : `1DUpHmj0zxchXjhsrA7EfahuPcI9M0HqU`, 
       DRIVE_FOLDER_URL : `https://docs.google.com/forms/d/e/1FAIpQLSfEBfrAmisR-whlGRNX4Iip-QIQkZIsxU4Y8J4edrLUfr3YHA/viewform`,

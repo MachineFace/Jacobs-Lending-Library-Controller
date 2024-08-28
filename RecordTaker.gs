@@ -4,6 +4,13 @@
 /**
  * -----------------------------------------------------------------------------------------------------------------
  * Class For Logging to a record taker
+ * @param {string} trackingNumber
+ * @param {Date} date
+ * @param {string} issuer (Staff Member Name)
+ * @param {string} name
+ * @param {string} email
+ * @param {object} basket
+ * @param {string} notes
  */
 class RecordTaker {
   constructor({

@@ -10,7 +10,7 @@ class Calculate {
   /**
    * Calculate Average Turnaround Time
    */
-  CalculateAverageTurnaround() {
+  GetAverageTurnaround() {
     const timeFunc = new TimeConverter();
     let completionTimes = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)
       .filter(Boolean);
@@ -20,10 +20,9 @@ class Calculate {
       if(!time) total += 0;
       else total += timeFunc.TimerStringToMilliseconds(time);
     });
-    console.info(total);
 
     // Average the totals (a list of times in minutes)
-    let average = Number.parseFloat(total / culled.length).toFixed(2);
+    let average = Number.parseFloat(total / completionTimes.length).toFixed(2);
     let time = timeFunc.MillisecondsToTimerString(average);
     console.info(`Total Time : ${total}, Average : ${time}`);
     return time;
@@ -33,8 +32,7 @@ class Calculate {
    * Print Average Turnaround Times
    */
   PrintAverageTurnaround() {
-    OTHERSHEETS.Metrics.getRange(`B6`).setValue(`Average Checkout Length`);
-    OTHERSHEETS.Metrics.getRange(`C6`).setValue(this.CalculateAverageTurnaround());
+    OTHERSHEETS.Metrics.getRange(6, 2, 1, 2).setValues([[ `Average Checkout Length`, this.GetAverageTurnaround()]]);
   }
 
   /**
@@ -43,8 +41,8 @@ class Calculate {
   StatusCounts() {
     let count = {};
     GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)
-      .filter(Boolean)
       .forEach((keys) => count[keys] = ++count[keys] || 1);
+    console.info(`Status Counts: ${JSON.stringify(count, null, 4)}`);
     return count;
   }
 
@@ -56,14 +54,11 @@ class Calculate {
     Object.entries(counts).forEach(([key, value], index) => {
       // console.warn(`Key: ${key}, Value: ${value}`);
       if(key == STATUS.checkedIn) {
-        OTHERSHEETS.Metrics.getRange(`B5`).setValue(`Currently Checked In`);
-        OTHERSHEETS.Metrics.getRange(`C5`).setValue(value);
+        OTHERSHEETS.Metrics.getRange(5, 2, 1, 2).setValues([[ `Currently Checked In`, value ]]);
       } else if(key == STATUS.checkedOut) {
-        OTHERSHEETS.Metrics.getRange(`B4`).setValue(`Currently Checked Out`);
-        OTHERSHEETS.Metrics.getRange(`C4`).setValue(value);
+        OTHERSHEETS.Metrics.getRange(4, 2, 1, 2).setValues([[ `Currently Checked Out`, value ]]);
       } else if(key == STATUS.overdue) {
-        OTHERSHEETS.Metrics.getRange(`B11`).setValue(`Currently Overdue`);
-        OTHERSHEETS.Metrics.getRange(`C11`).setValue(value);
+        OTHERSHEETS.Metrics.getRange(11, 2, 1, 2).setValues([[ `Currently Overdue`, value ]]);
       }
     });
   }
@@ -72,7 +67,7 @@ class Calculate {
    * Calculate the distribution of occurrances in a list
    * How many times does some value show up in a list?
    */
-  CalculateDistribution(sheet, headername) {
+  GetDistribution(sheet, headername) {
     let list = GetColumnDataByHeader(sheet, headername)
       .filter(Boolean);
 
@@ -84,10 +79,7 @@ class Calculate {
         return [key, occurrences[key]];
       }
     });
-    items.sort((first, second) => {
-      return second[1] - first[1];
-    });
-    items.forEach(item => console.info(item));
+    items.sort((first, second) => second[1] - first[1]);
     return items;  
   }
 
@@ -95,18 +87,13 @@ class Calculate {
    * Print Top Ten
    */
   PrintTopTen() {
-    const distribution = this.CalculateDistribution(OTHERSHEETS.Record, `Name`);
+    const distribution = this.GetDistribution(OTHERSHEETS.Record, `Name`);
 
     // Create a new array with only the first 10 items
     let chop = distribution.slice(0, 11);
-    console.info(chop);
-
-    chop.forEach((pair, index) => {
-      console.info(`${pair[0]} -----> ${pair[1]}`);
-      OTHERSHEETS.Metrics.getRange(16 + index, 1, 1, 1).setValue(index + 1);
-      OTHERSHEETS.Metrics.getRange(16 + index, 2, 1, 1).setValue(pair[0]);
-      OTHERSHEETS.Metrics.getRange(16 + index, 3, 1, 1).setValue(pair[1]);
-    });
+    const chop2 = chop.map((list, i) => [i + 1, ...list]);
+    console.info(chop2);
+    OTHERSHEETS.Metrics.getRange(16, 1, chop.length, 3).setValues(chop2);
   }
 
   /**
@@ -115,8 +102,7 @@ class Calculate {
   CountTotalCheckouts() {
     let count = OTHERSHEETS.Record.getLastRow() - 1;
     console.info(`Total Count : ${count}`);
-    OTHERSHEETS.Metrics.getRange(`B7`).setValue(`Total Checkouts`);
-    OTHERSHEETS.Metrics.getRange(`C7`).setValue(count);
+    OTHERSHEETS.Metrics.getRange(7, 2, 1, 2).setValues([[ `Total Checkouts`, count ]]);
     return count;
   }
 
@@ -125,46 +111,47 @@ class Calculate {
    */
   CountUniqueUsers() {
     let users = GetColumnDataByHeader(OTHERSHEETS.Record, `Name`);
-    const count = new Set(users).size
+    const count = new Set(users).size;
     console.info(`Number of Users -----> ${count}`);
-    OTHERSHEETS.Metrics.getRange(`B8`).setValue(`Number of Unique Users`);
-    OTHERSHEETS.Metrics.getRange(`C8`).setValue(count);
+    OTHERSHEETS.Metrics.getRange(8, 2, 1, 2).setValues([[ `Number of Unique Users`, count ]]);
     return count;
   }
 
   /**
    * Standard Deviation of All Users and their checkout counts
    */
-  CalculateStandardDeviation () {
-    const distribution = this.CalculateDistribution(OTHERSHEETS.Record, `Name`);
+  GetStandardDeviation() {
+    const distribution = this.GetDistribution(OTHERSHEETS.Record, `Name`);
     const n = distribution.length;
 
-    const data = []
+    const data = [];
     distribution.forEach(item => data.push(item[1]));
       
-    let mean = data.reduce((a, b) => a + b) / n;
+    const mean = data.reduce((a, b) => a + b) / n;
+    const standardDeviation = Math.sqrt(data.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
+    const truncatedDeviation = Number(standardDeviation).toFixed(3);
 
-    let standardDeviation = Math.sqrt(data.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
-    console.info(`Standard Deviation for Number of Submissions : ${standardDeviation}`);
-    OTHERSHEETS.Metrics.getRange(`B9`).setValue(`Standard Deviation of Checkouts to Users`);
-    OTHERSHEETS.Metrics.getRange(`C9`).setValue(standardDeviation);
-    return standardDeviation;
+    console.info(`Standard Deviation for Number of Submissions : +/- ${truncatedDeviation}`);
+    OTHERSHEETS.Metrics.getRange(10, 2, 1, 2).setValues([[ `Standard Deviation of Checkouts to Users`, `+/- ${truncatedDeviation}` ]]);
+    return truncatedDeviation;
   }
 
   /**
    * Arithmetic Mean
    */
-  CalculateArithmeticMean (sheet, headername) {
-    const distribution = this.CalculateDistribution(sheet, headername);
+  GetArithmeticMean(sheet, headername) {
+    sheet = sheet ? sheet : OTHERSHEETS.Record;
+    headername = headername ? headername : `Name`;
+    const distribution = this.GetDistribution(sheet, headername);
     const n = distribution.length;
 
     const data = []
     distribution.forEach(item => data.push(item[1]));
       
     let mean = data.reduce((a, b) => a + b) / n;
-    console.info(`Mean = ${mean}`);
 
-    // OTHERSHEETS.Metrics.getRange(44, 3, 1, 1).setValue(mean);
+    console.info(`Mean = ${mean}`);
+    OTHERSHEETS.Metrics.getRange(9, 2, 1, 2).setValues([[ `Average Checkouts per Users`, mean ]]);
     return mean;
   }
 
@@ -183,7 +170,8 @@ const Metrics = () => {
     calculate.PrintStatusCounts();
     calculate.PrintTopTen();
     calculate.CountUniqueUsers();
-    calculate.CalculateStandardDeviation();
+    calculate.GetStandardDeviation();
+    calculate.GetArithmeticMean();
     calculate.StatusCounts();
     console.warn(`Recalculated Metrics`);
   }
@@ -222,7 +210,8 @@ const PrintTurnaround = async (row) => {
 
 const _testCalc = () => {
   const c = new Calculate();
-  c.CalculateArithmeticMean(OTHERSHEETS.Record, `Name`);
+  // c.GetArithmeticMean(OTHERSHEETS.Record, `Name`);
+  c.GetArithmeticMean();
 }
 
 

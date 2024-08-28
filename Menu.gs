@@ -192,31 +192,107 @@ const PopupCreateNewId = async () => {
   if(a === ui.Button.OK) return 0;
 };
 
+/**
+ * Create a new Barcode
+ */
+const PopupCreateBarcode = async () => {
+  const ui = await SpreadsheetApp.getUi();
+  const thisSheet = SpreadsheetApp.getActiveSheet();
+  const thisRow = thisSheet.getActiveRange().getRow();
+
+  if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
+    const a = ui.alert(
+      `${SERVICE_NAME}: Alert!`,
+      `Select a user on the Main Sheet...`,
+      ui.ButtonSet.OK
+    );
+    if(a === ui.Button.OK) return;
+  }
+
+  let { tracking, status, issuer, name, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(thisSheet, thisRow);
+
+  const b = new BarcodeService({ number : tracking });
+  b.Barcode;
+  const url = b.url
+  console.info(url)
+  SetByHeader(thisSheet, HEADERNAMES.barcode, thisRow, url);
+  const a = ui.alert(
+    `${SERVICE_NAME}: Alert!`,
+    `Created a New Barcode for ${name}:\n${url}`,
+    ui.ButtonSet.OK
+  );
+  if(a === ui.Button.OK) return;
+}
+
+const PopupCreateTicket = async () => {
+  const ui = await SpreadsheetApp.getUi();
+  const thisSheet = SpreadsheetApp.getActiveSheet();
+  const thisRow = thisSheet.getActiveRange().getRow();
+  if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
+    const a = ui.alert(
+      `${SERVICE_NAME}: Alert!`,
+      `Select a user on the Main Sheet...`,
+      ui.ButtonSet.OK
+    );
+    if(a === ui.Button.OK) return;
+  }
+  let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(thisSheet, thisRow);
+
+  const tick = await new Ticket({
+    trackingNumber : tracking,
+    status : status, 
+    name : name, 
+    email : email, 
+    issuer : issuer,
+    checkedOutDate : dateCheckedOut, 
+    basket : Array.from(itemBasket.split(`,`)),
+    notes : notes,
+    dueDate : dueDate,
+  });
+  tick.CreateTicket();
+  const url = tick.url;
+  SetByHeader(thisSheet, HEADERNAMES.ticket, thisRow, url);
+  console.warn(`Ticket Created....`);
+  const a = ui.alert(
+    `${SERVICE_NAME}: Alert!`,
+    `Created a New Ticket for ${name}:\n${url}`,
+    ui.ButtonSet.OK
+  );
+  if(a === ui.Button.OK) return;
+}
+
 
 /**
  * Builds our JPS Menu and sets functions.
  */
 const BarMenu = () => {
-  SpreadsheetApp.getUi()
-    .createMenu(SERVICE_NAME)
-    .addItem(`Manual Checkout`, `ShowCheckoutModal`)
-    .addItem(`Manual Return`, `PopupReturnModal`)
-    .addItem(`Edit Selected Submission`, `EditFromSelected`)
-    .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
-    .addItem(`Return Items`, `PopupReturnByBarcode`)
-    .addItem(`Create New Id`, `PopupCreateNewId`)
+  const ui = SpreadsheetApp.getUi();
+  ui
+    .createMenu(`${SERVICE_NAME} Menu`)
+    .addItem(`Create New Id for SELECTED User`, `PopupCreateNewId`)
+    .addItem(`Create New Barcode for SELECTED User`, `PopupCreateBarcode`)
+    .addItem(`Create New Ticket for SELECTED User`, `PopupCreateTicket`)
     .addSeparator()
-    .addItem(`Count Currently Checked Out`, `PopupCountCheckedOut`)
-    .addItem(`Count Currently Checked In`, `PopupCountCheckedIn`)
-    .addItem(`Count Currently Overdue!`, `PopupCountOverdue`)
+    .addSubMenu(
+      ui.createMenu(`Checkout`)
+        .addItem(`Manual Checkout for SELECTED User`, `ShowCheckoutModal`)
+        .addItem(`Manual Return for SELECTED User`, `PopupReturnModal`)
+        .addItem(`Edit Submission for SELECTED User`, `EditFromSelected`)
+        .addItem(`Return Items for SELECTED User`, `PopupReturnByBarcode`)
+    )
+    .addSeparator()
+    .addItem(`Go to Scanner Page`, `OpenBarcodeTab`)
+    .addSeparator()
+    .addSubMenu(
+      ui.createMenu(`Metrics`)
+        .addItem(`Recompute Metrics`, `PopupMetrics`)
+        .addItem(`Calculate Selected Person's Turnaround Time`, `PopupCalcTurnaround`)
+        .addItem(`Count Currently Checked Out`, `PopupCountCheckedOut`)
+        .addItem(`Count Currently Checked In`, `PopupCountCheckedIn`)
+        .addItem(`Count Currently Overdue!`, `PopupCountOverdue`)
+    )
     .addSeparator()
     .addItem(`Help`, `PopupHelp`)
-    .addSeparator()
-    .addItem(`Recompute Metrics`, `PopupMetrics`)
-    .addItem(
-      `Calculate Selected Person's Turnaround Time`,
-      `PopupCalcTurnaround`
-    )
     .addToUi();
 }; 
 
@@ -232,5 +308,9 @@ const OpenBarcodeTab = async () => await SpreadsheetApp.getActiveSpreadsheet()
 
 
 
-
+const _akshdjfg = () => {
+  let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(SHEETS.Main, 3);
+  const ar = Array.from(itemBasket.split(`,`));
+  console.info(`Basket --> ${ar}`)
+}
 

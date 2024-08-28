@@ -2,6 +2,7 @@
 
 /**
  * Inventory Manager Class
+ * @param {object} basket
  */
 class InventoryManager {
   constructor({

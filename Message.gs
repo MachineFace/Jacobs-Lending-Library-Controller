@@ -1,6 +1,6 @@
 /**
  * -----------------------------------------------------------------------------------------------------------------
- * 
+ * Create Message
  * @param {string} name
  * @param {number} trackingNumber
  * @param {Date} checkedOutDate
@@ -34,20 +34,35 @@ class CreateMessage {
     /** @private */
     this.designspecialist = designspecialist;
     /** @private */
-    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `jacobsprojectsupport@berkeley.edu`
+    this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : `${SERVICE_EMAIL}`
     /** @private */
-    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:jacobsprojectsupport@berkeley.edu">jacobsprojectsupport@berkeley.edu</a>`;
+    this.designspecialistemaillink = this.designspecialist ? DSInfo(this.designspecialist).emailLink : `<a href="mailto:${SERVICE_EMAIL}">${SERVICE_EMAIL}</a>`;
+
+    /** @private */
+    this.greetings = `<p>Hi ${this.name},</p>`;
+    /** @private */
+    this.thanks = `Thank you for checking out tools with ${SERVICE_NAME}<br/><br/>`;
+    /** @private */
+    this.help = `If you have questions or need assistance please email ${this.designspecialistemaillink}.<br/>`;
+    /** @private */
+    this.salutations = `<p>Best,<br/>Jacobs Hall Staff</p>`;
+    /** @private */
+    this.survey = `<p><small>Please take a moment to take our survey so we can improve ${SERVICE_NAME}:<br/><a href="https://docs.google.com/forms/d/1fICKWXj67v8k6EznXgkYz6qgiy45V8bV-X8dlRwRPDc/viewform">Take Survey</a></small></p><br/>`;
   }
   get defaultMessage() {
-    let message = `<p>Hi ${this.name},</p>`;
-      message += `<p>Thank you for checking out tools with Jacobs Project Support.<br/><br/>`;
-      message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/></p>`;
-      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+    let message = this.greetings;
+      message += `<p>`;
+      message += this.thanks;
+      message += this.help;
+      message += `</p>`;
+      message += this.salutations;
+      message += this.survey;
     return message; 
   }
   get requestedMessage() {
-    let message = `<p>Hi ${this.name},</p>`;
-      message += `<p>Thank you for requesting to check out fabrication tools with Jacobs Project Support.<br />`;
+    let message = this.greetings;
+      message += `<p>`;
+      message += this.thanks;
       message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> can be picked up in person.<br/>`;
       message += `<br/>`;
       message += `<b>Pick-up Location:<br/>`;
@@ -55,15 +70,17 @@ class CreateMessage {
       message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
       message += `<b>Pick-up Hours:<br/>`;
       message += `${PickupHours}</b><br/><br/>`
-      message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/>`;
+      message += this.help;
       message += `</p>`;
-      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+      message += this.salutations;
+      message += this.survey;
     return message;
   }
   get checkedOutMessage() {
-    let message = `<p>Hi ${this.name},</p>`;
-      message += `<p>Thank you for checking out fabrication tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
-      message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been issued.<br/>`;
+    let message = this.greetings;
+      message += `<p>`;
+      message += this.thanks;
+      message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been issued on ${this.checkedOutDate}.<br/>`;
       message += `Please return them <b>ON or BEFORE ${this.dueDate}.</b><br/>`;
       message += `Items can be returned here:<br/><br/>`;
       message += `<b>Drop-off Location:<br/>`;
@@ -71,23 +88,25 @@ class CreateMessage {
       message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
       message += `<b>Drop-off Hours:<br/>`;
       message += `${PickupHours}</b><br/><br/>`
-      message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/>`;
+      message += this.help;
       message += `</p>`;
-      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+      message += this.salutations;
+      message += this.survey;
     return message;
   }
   get returnedMessage() {
-    let message = `<p>Hi ${this.name},</p>`;
+    let message = this.greetings;
       message += `<p>Thank you for returning our tools on ${this.returnedDate}.<br />`;
       message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been returned.<br/>`;
-      message += `If you have questions or need assistance please email ${this.designspecialistemaillink}. <br/>`;
+      message += this.help;
       message += `</p>`;
-      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+      message += this.salutations;
+      message += this.survey;
     return message;
   }
   get overdueMessage() {
-    let message = `<p>Hi ${this.name},</p>`;
-      message += `<p>Thank you for checking out tools with Jacobs Project Support on ${this.checkedOutDate}.<br />`;
+    let message = this.greetings;
+      message += this.thanks;
       message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.dueDate}, and are now (${this.remainingDays}) OVERDUE.</b></font><br/>`;
       message += `<font style="color:#FF0000";><b>Please return these tools IMMEDIATELY.</b></font><br/>`;
       message += `Items can be returned here:<br/><br/>`;
@@ -96,9 +115,10 @@ class CreateMessage {
       message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
       message += `<b>Drop-off Hours:<br/>`;
       message += `${PickupHours}</b><br/><br/>`
-      message += `If you have questions or are having trouble returning the headset, please email ${this.designspecialistemaillink}. <br/>`;
+      message += this.help;
       message += `</p>`;
-      message += `<p>Best,<br />Jacobs Hall Staff</p>`;
+      message += this.salutations;
+      message += this.survey;
     return message;
   }
 }

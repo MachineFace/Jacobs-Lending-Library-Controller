@@ -164,18 +164,9 @@ const onChange = async (e) => {
         SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
 
         // Update Inventory
-        new InventoryManager({ basket: itemBasket }).CheckInBasket();
+        new InventoryManager({ basket : itemBasket }).CheckInBasket();
 
-        // Make Record
-        new RecordTaker({
-          trackingNumber: tracking,
-          date: dateCheckedOut,
-          issuer: issuer,
-          name: name,
-          email: studentEmail,
-          notes: notes,
-          basket : itemBasket,
-        });
+        // Figure out Turnaround Time
         PrintTurnaround(thisRow);
         break;
       case STATUS.checkedOut:
@@ -186,20 +177,19 @@ const onChange = async (e) => {
         SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
 
         // Update Inventory
-        new InventoryManager({ basket: itemBasket }).CheckOutBasket();
-
-        // Record Interaction
-        new RecordTaker({
-          trackingNumber: tracking,
-          date: dateCheckedOut,
-          issuer: issuer,
-          name: name,
-          email: studentEmail,
-          notes: notes,
-          basket: itemBasket,
-        });
+        new InventoryManager({ basket : itemBasket }).CheckOutBasket();
         break;
     }
+    // Make Record
+    new RecordTaker({
+      trackingNumber : tracking,
+      date : dateCheckedOut,
+      issuer : issuer,
+      name : name,
+      email : studentEmail,
+      notes : notes,
+      basket : itemBasket,
+    });
   } catch(err) {
     console.error(`${err}, Whoops: Couldn't set variables for some reason...`);
   }   

@@ -1,9 +1,10 @@
 
 
 const EditForm = () => {
-  let choices = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`).filter(Boolean);
-  console.warn(`Updating Choices....`)
   try {
+    let choices = [...GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)]
+      .filter(Boolean);
+    console.warn(`Updating Choices....`);
     const form = FormApp.openById(FORM.id);
     let items = form.getItems()
     items.forEach(item => {
@@ -17,8 +18,10 @@ const EditForm = () => {
           .setChoiceValues(choices)
         console.warn(`Choices Updated.`)
       }
-    })
+    });
+    return 0;
   } catch(err) {
-    console.error(`Whoops: Couldn't update the form items: ${err}`);
+    console.error(`"EditForm()" failed : ${err}`);
+    return 1;
   }
 }
