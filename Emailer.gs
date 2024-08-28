@@ -41,51 +41,57 @@ class Emailer {
   }
 
   SendEmail () {
-    switch (this.status) {
-      case STATUS.requested:
-        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Requested`, "", {
-          htmlBody: this.message.requestedMessage,
-          from: SERVICE_EMAIL,
-          cc: this.designspecialistemail,
-          bcc: SERVICE_EMAIL,
-          name: SERVICE_NAME_NO_ICON,
-        });
-        console.warn(`Student ${this.name} emailed ${this.status} message...`);
-        break;
-      case STATUS.checkedOut:
-        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Checked Out`, "", {
-          htmlBody: this.message.checkedOutMessage,
-          from: SERVICE_EMAIL,
-          cc: this.designspecialistemail,
-          bcc: SERVICE_EMAIL,
-          name: SERVICE_NAME_NO_ICON,
-        });
-        console.warn(`Student ${this.name} emailed ${this.status} message...`);
-        break;
-      case STATUS.checkedIn:
-        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Returned`, "", {
-            htmlBody: this.message.returnedMessage,
+    try {
+      switch (this.status) {
+        case STATUS.requested:
+          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Requested`, "", {
+            htmlBody: this.message.requestedMessage,
             from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
             bcc: SERVICE_EMAIL,
             name: SERVICE_NAME_NO_ICON,
-        });
-        console.warn(`Student ${this.name} emailed ${this.status} message...`);
-        break;
-      case STATUS.overdue:
-        MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools OVERDUE!!`, "", {
-            htmlBody: this.message.overdueMessage,
+          });
+          console.warn(`Student ${this.name} emailed ${this.status} message...`);
+          break;
+        case STATUS.checkedOut:
+          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Checked Out`, "", {
+            htmlBody: this.message.checkedOutMessage,
             from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
             bcc: SERVICE_EMAIL,
             name: SERVICE_NAME_NO_ICON,
-        });
-        console.warn(`Student ${this.name} emailed ${this.status} message...`);
-        break;
-      case "":
-      case undefined:
-        console.warn(`Student ${this.name} NOT emailed...`);
-        break;
+          });
+          console.warn(`Student ${this.name} emailed ${this.status} message...`);
+          break;
+        case STATUS.checkedIn:
+          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Returned`, "", {
+              htmlBody: this.message.returnedMessage,
+              from: SERVICE_EMAIL,
+              cc: this.designspecialistemail,
+              bcc: SERVICE_EMAIL,
+              name: SERVICE_NAME_NO_ICON,
+          });
+          console.warn(`Student ${this.name} emailed ${this.status} message...`);
+          break;
+        case STATUS.overdue:
+          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools OVERDUE!!`, "", {
+              htmlBody: this.message.overdueMessage,
+              from: SERVICE_EMAIL,
+              cc: this.designspecialistemail,
+              bcc: SERVICE_EMAIL,
+              name: SERVICE_NAME_NO_ICON,
+          });
+          console.warn(`Student ${this.name} emailed ${this.status} message...`);
+          break;
+        case "":
+        case undefined:
+          console.warn(`Student ${this.name} NOT emailed...`);
+          break;
+      }
+      return 0;
+    } catch(err) {
+      console.error(`"SendEmail()" failed: ${err}`);
+      return 1;
     }
   }
 }
@@ -103,7 +109,6 @@ const _testEmailer = () => {
       email : "codyglen@berkeley.edu",
       status : status,
       name : `Dingus Dongus`,
-      designspecialist : `Cody`,
     })
   })
 }

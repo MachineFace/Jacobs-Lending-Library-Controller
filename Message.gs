@@ -41,7 +41,7 @@ class CreateMessage {
     /** @private */
     this.greetings = `<p>Hi ${this.name},</p>`;
     /** @private */
-    this.thanks = `Thank you for checking out tools with ${SERVICE_NAME}<br/><br/>`;
+    this.thanks = `Thank you for checking out tools with ${SERVICE_NAME_NO_ICON}<br/><br/>`;
     /** @private */
     this.location = `<b>Pick-up / Drop-off Location:<br/>
       <a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby.<br/>

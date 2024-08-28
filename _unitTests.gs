@@ -444,7 +444,7 @@ const _gasTEmailTesting = async () => {
   await test(`Emailer`, async(t) => {
     const name = `Dingus`; 
     const email = "codyglen@berkeley.edu";
-    const jobnumber = new JobNumberGenerator({ date : new Date()}).jobnumber;
+    const jobnumber = new IDService().id;
     const projectname = `Some Kinda Project`;
     const message = new CreateMessage({
       name : name,

@@ -79,8 +79,8 @@ const PopupReturnByBarcode = async () => {
   let button = result.getSelectedButton();
   let trackingNumber = result.getResponseText();
   if (button == ui.Button.OK) ui.alert(`Tracker Number is : ${trackingNumber}`);
-  else if (button == ui.Button.CANCEL) ui.alert('I didn\'t get your name.');
-  else if (button == ui.Button.CLOSE) ui.alert('You closed the dialog.');
+  else if (button == ui.Button.CANCEL) ui.alert(`I didn't get your name.`);
+  else if (button == ui.Button.CLOSE) ui.alert(`You closed the dialog.`);
 }
 
 /**
@@ -88,27 +88,21 @@ const PopupReturnByBarcode = async () => {
  */
 const BuildHTMLHELP = () => {
   let items = [
-    `Note : All status changes trigger an email to the student. USE with CAUTION.`,
     `On the sidebar: Fill in the student name / email and assign yourself as the DS / SS.`,
     `Check any items the student will be checking out.`,
     `Add notes if needed.`,
     `Click: "Assign Basket To Student"`,
     `A new line will be added to the "Main" tab and the student will be emailed.`,
     `When the student returns the items, mark their tracking number as "Checked-In."`,
-    `See Cody or Chris for additional help + protips.`,
   ];
   let html = `<h2 style="text-align:center"><b> HELP MENU </b></h2>`;
   html += `<h3 style="font-family:Roboto">How to Use ${SERVICE_NAME} : </h3>`;
   html += `<hr>`;
-  html += `<p>${items[0]}</p>`;
+  html += `<p>Note : All status changes trigger an email to the student. USE with CAUTION.</p>`;
   html += `<ol style="font-family:Roboto font-size:10">`;
-  items.forEach((item, index) => {
-    if (index > 0 && index < items.length - 1) {
-      html += `<li>${item}</li>`;
-    }
-  });
+  items.forEach(item =>  html += `<li>${item}</li>`);
   html += `</ol>`;
-  html += `<p>${items[items.length - 1]}</p>`;
+  html += `<p>See Cody or Nicole for additional help / protips.</p>`;
 
   console.info(html);
   return html;
@@ -272,6 +266,7 @@ const BarMenu = () => {
     .addItem(`Create New Id for SELECTED User`, `PopupCreateNewId`)
     .addItem(`Create New Barcode for SELECTED User`, `PopupCreateBarcode`)
     .addItem(`Create New Ticket for SELECTED User`, `PopupCreateTicket`)
+    .addItem(`Get Turnaround Time for SELECTED User`, `PopupCalcTurnaround`)
     .addSeparator()
     .addSubMenu(
       ui.createMenu(`Checkout`)
@@ -286,7 +281,6 @@ const BarMenu = () => {
     .addSubMenu(
       ui.createMenu(`Metrics`)
         .addItem(`Recompute Metrics`, `PopupMetrics`)
-        .addItem(`Calculate Selected Person's Turnaround Time`, `PopupCalcTurnaround`)
         .addItem(`Count Currently Checked Out`, `PopupCountCheckedOut`)
         .addItem(`Count Currently Checked In`, `PopupCountCheckedIn`)
         .addItem(`Count Currently Overdue!`, `PopupCountOverdue`)
