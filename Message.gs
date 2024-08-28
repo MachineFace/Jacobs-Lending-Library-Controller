@@ -43,11 +43,18 @@ class CreateMessage {
     /** @private */
     this.thanks = `Thank you for checking out tools with ${SERVICE_NAME}<br/><br/>`;
     /** @private */
+    this.location = `<b>Pick-up / Drop-off Location:<br/>
+      <a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby.<br/>
+      2530 Ridge Rd, Berkeley, CA 94709</a></b><br/><br/>`;
+    /** @private */
+    this.hours = `<b>Pick-up / Drop-off Hours:<br/>${PICKUP_HOURS}</b><br/><br/>`;
+    /** @private */
     this.help = `If you have questions or need assistance please email ${this.designspecialistemaillink}.<br/>`;
     /** @private */
     this.salutations = `<p>Best,<br/>Jacobs Hall Staff</p>`;
     /** @private */
-    this.survey = `<p><small>Please take a moment to take our survey so we can improve ${SERVICE_NAME}:<br/><a href="https://docs.google.com/forms/d/1fICKWXj67v8k6EznXgkYz6qgiy45V8bV-X8dlRwRPDc/viewform">Take Survey</a></small></p><br/>`;
+    this.survey = `<p><small>Please take a moment to take our survey so we can improve ${SERVICE_NAME}:<br/>
+      <a href="https://docs.google.com/forms/d/1fICKWXj67v8k6EznXgkYz6qgiy45V8bV-X8dlRwRPDc/viewform">Take Survey</a></small></p>`;
   }
   get defaultMessage() {
     let message = this.greetings;
@@ -65,11 +72,8 @@ class CreateMessage {
       message += this.thanks;
       message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> can be picked up in person.<br/>`;
       message += `<br/>`;
-      message += `<b>Pick-up Location:<br/>`;
-      message += `<a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby. <br/>`; 
-      message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
-      message += `<b>Pick-up Hours:<br/>`;
-      message += `${PickupHours}</b><br/><br/>`
+      message += this.location;
+      message += this.hours;
       message += this.help;
       message += `</p>`;
       message += this.salutations;
@@ -83,11 +87,8 @@ class CreateMessage {
       message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been issued on ${this.checkedOutDate}.<br/>`;
       message += `Please return them <b>ON or BEFORE ${this.dueDate}.</b><br/>`;
       message += `Items can be returned here:<br/><br/>`;
-      message += `<b>Drop-off Location:<br/>`;
-      message += `<a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby. <br/>`; 
-      message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
-      message += `<b>Drop-off Hours:<br/>`;
-      message += `${PickupHours}</b><br/><br/>`
+      message += this.location;
+      message += this.hours;
       message += this.help;
       message += `</p>`;
       message += this.salutations;
@@ -96,7 +97,8 @@ class CreateMessage {
   }
   get returnedMessage() {
     let message = this.greetings;
-      message += `<p>Thank you for returning our tools on ${this.returnedDate}.<br />`;
+      message += `<p>`;
+      message += `Thank you for returning our tools on ${this.returnedDate}.<br />`;
       message += `These tools <b><i>ID: ${this.trackingNumber}</i></b> have been returned.<br/>`;
       message += this.help;
       message += `</p>`;
@@ -106,15 +108,13 @@ class CreateMessage {
   }
   get overdueMessage() {
     let message = this.greetings;
+      message += `<p>`;
       message += this.thanks;
       message += `<font style="color:#FF0000";><b>The tools <i>ID: ${this.trackingNumber}</i> were due back on ${this.dueDate}, and are now (${this.remainingDays}) OVERDUE.</b></font><br/>`;
       message += `<font style="color:#FF0000";><b>Please return these tools IMMEDIATELY.</b></font><br/>`;
       message += `Items can be returned here:<br/><br/>`;
-      message += `<b>Drop-off Location:<br/>`;
-      message += `<a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby. <br/>`; 
-      message += `2530 Ridge Rd, Berkeley, CA 94709</a><br/><br/></b>`;
-      message += `<b>Drop-off Hours:<br/>`;
-      message += `${PickupHours}</b><br/><br/>`
+      message += this.location;
+      message += this.hours;
       message += this.help;
       message += `</p>`;
       message += this.salutations;

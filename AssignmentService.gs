@@ -47,7 +47,7 @@ class AssignmentService {
       const remainingDays = t.Duration(returnDate, now);
       console.info(`Assigning Basket to: ${this.name}`);
       this.trackingNumber = IDService.createId();
-
+      
       // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
       SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
       SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);

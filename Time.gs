@@ -131,7 +131,7 @@ class TimeConverter {
    */
   ReturnDate (date) {
     date = date instanceof Date ? date : new Date();
-    const returndate = new Date(this.DateToMilliseconds(date) + 1.21e+9);
+    const returndate = new Date(this.DateToMilliseconds(date) + this.DaysToMillis(CHECKOUT_LENGTH));
     console.info(`Return Date ---> ${returndate}`);
     return returndate;
   }
@@ -151,6 +151,15 @@ class TimeConverter {
     } catch (err) {
       console.error(`${err} : Calculating remaining time has failed for some reason.`);
     }
+  }
+
+  /**
+   * Days to Milliseconds
+   * @param {number} days (integer)
+   * @returns {number} milliseconds
+   */
+  DaysToMillis(days = 1) {
+    return days * 24 * 60 * 60 * 1000;
   }
 
 }

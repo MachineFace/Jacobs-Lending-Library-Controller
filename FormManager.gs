@@ -6,7 +6,7 @@ const EditForm = () => {
       .filter(Boolean);
     console.warn(`Updating Choices....`);
     const form = FormApp.openById(FORM.id);
-    let items = form.getItems()
+    let items = form.getItems();
     items.forEach(item => {
       // console.info(`${item.getIndex()}: ${item.getTitle()}`);
       if(item.getTitle() == `Please select the tools you would like to check out.`) {
