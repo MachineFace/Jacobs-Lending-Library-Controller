@@ -28,7 +28,7 @@ class CreateMessage {
     /** @private */
     this.returnedDate = returnedDate instanceof Date ? returnedDate.toDateString() : new Date().toDateString();
     /** @private */
-    this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
+    this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(TimeService.ReturnDate(this.checkedOutDate)).toDateString();
     /** @private */
     this.remainingDays = remainingDays;
     /** @private */

@@ -41,10 +41,9 @@ class AssignmentService {
    */
   Assign() {
     try {
-      const t = new TimeConverter();
       const now = new Date();
-      const returnDate = new Date(t.ReturnDate(now));
-      const remainingDays = t.Duration(returnDate, now);
+      const returnDate = new Date(TimeService.ReturnDate(now));
+      const remainingDays = TimeService.Duration(returnDate, now);
       console.info(`Assigning Basket to: ${this.name}`);
       this.trackingNumber = IDService.createId();
       
@@ -117,7 +116,6 @@ class AssignmentService {
    * Unassign
    */
   Unassign() {
-    const t = new TimeConverter();
     const returnDate = new Date();
     console.info(`Unassigning Basket from: ${this.name}`);
     try {
@@ -174,10 +172,9 @@ const _testAssign = () => {
 const ModifyOrder = (rowData) => {
   try {
     const thisRow = rowData?.row;
-    const t = new TimeConverter();
     const now = new Date();
-    const returnDate = new Date(t.ReturnDate(now));
-    const remainingDays = t.Duration(returnDate, now);
+    const returnDate = new Date(TimeService.ReturnDate(now));
+    const remainingDays = TimeService.Duration(returnDate, now);
     console.info(`Modifying Basket for: ${rowData.name}`);
     const trackingNumber = rowData.trackingNumber ? rowData.trackingNumber : Number.parseInt(100 + thisRow + 1);
     

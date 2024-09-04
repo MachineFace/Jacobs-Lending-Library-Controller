@@ -22,7 +22,7 @@ class Emailer {
     this.email = email;
     this.checkedOutDate = checkedOutDate;
     this.returnedDate = returnedDate;
-    this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(new TimeConverter().ReturnDate(this.checkedOutDate)).toDateString();
+    this.dueDate = dueDate ? new Date(dueDate).toDateString() : new Date(TimeService.ReturnDate(this.checkedOutDate)).toDateString();
     this.remainingDays = remainingDays ? remainingDays : `0 days`;
     this.designspecialist = designspecialist ? designspecialist : `Staff`;
     this.designspecialistemail = this.designspecialist ? DSInfo(this.designspecialist).email : SERVICE_EMAIL;

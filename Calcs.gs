@@ -11,19 +11,18 @@ class Calculate {
    * Calculate Average Turnaround Time
    */
   GetAverageTurnaround() {
-    const timeFunc = new TimeConverter();
     let completionTimes = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)
       .filter(Boolean);
 
     let total = 0;
     completionTimes.forEach( time => {
       if(!time) total += 0;
-      else total += timeFunc.TimerStringToMilliseconds(time);
+      else total += TimeService.TimerStringToMilliseconds(time);
     });
 
     // Average the totals (a list of times in minutes)
     let average = Number.parseFloat(total / completionTimes.length).toFixed(2);
-    let time = timeFunc.MillisecondsToTimerString(average);
+    let time = TimeService.MillisecondsToTimerString(average);
     console.info(`Total Time : ${total}, Average : ${time}`);
     return time;
   }
@@ -186,24 +185,22 @@ const Metrics = () => {
  * Testing for Metrics
  */
 const PrintAllTurnarounds = () => {
-  const t = new TimeConverter();
   let outs = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut);
   let returns = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateReturned);
   outs.forEach( async (timeOut, index) => {
     if(timeOut && returns[index]) {
       console.info(index + 2);    
-      let time = await t.Duration(timeOut, returns[index]);
+      let time = await TimeService.Duration(timeOut, returns[index]);
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, time);
     }
   })
 }
 
 const PrintTurnaround = async (row) => {
-  const t = new TimeConverter();
   const dateCheckedOut = GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, row);
   const datecheckedIn = GetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, row);
   if(dateCheckedOut && datecheckedIn) {
-    const time = await t.Duration(dateCheckedOut, datecheckedIn);
+    const time = await TimeService.Duration(dateCheckedOut, datecheckedIn);
     await SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, row, time);
   }
 }

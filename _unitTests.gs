@@ -3,15 +3,16 @@
  * See : https://github.com/huan/gast for instructions
  */
 
-const gasT_URL = UrlFetchApp
-  .fetch('https://raw.githubusercontent.com/huan/gast/master/src/gas-tap-lib.js')
-  .getContentText();
+const gasT_URL = `https://raw.githubusercontent.com/huan/gast/master/src/gas-tap-lib.js`;
+
 
 /**
  * Test with GasT
  */
-const _gasTMainTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+const _gasTBarcodeTesting = async () => {
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -25,30 +26,50 @@ const _gasTMainTesting = async () => {
     t.notEqual(z, undefined || null, `Barcode SHOULD NOT be undefined or null : ${z}`);
   });
   
-  await test(`IDService`, (t) => {
-    const x = IDService.createId();
-    t.notEqual(x, undefined || null, `DEFAULT / EMPTY id should not return undefined or null, ${x}`);
+  await test.finish();
+  if (test.totalFailed() > 0) throw "Some test(s) failed!";
+}
 
-    const y = IDService.isValid(IDService.createId());
-    t.equal(y, true, `Valid uuid should be true : ${y}`);
+/**
+ * Test ID with GasT
+ */
+const _gasTIDServiceTesting = async () => {
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
+  const test = new GasTap();
+  console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
-    const z = IDService.isValid(`NoBueno`);
-    t.equal(z, false, `Valid uuid should be false : ${z}`);
-
-    const a = IDService.toDecimal(IDService.createId());
-    t.notEqual(a, null || undefined, `UUID to decimal not null: ${a}`);
-
-    // const goodDate = new CreateJobnumber({ date : jtypes.GoodDate }).Jobnumber;
-    // t.equal(goodDate, 20151103000000, `Job Number for ${jtypes.GoodDate} should return 20151103000000`);
-    // const badDate = new CreateJobnumber({ date : jtypes.BadDate }).Jobnumber;
-    // t.notEqual(badDate, undefined || null, `Bad date should still return good jobnumber, ${badDate}`);
-    // const anotherBad = new CreateJobnumber({ date : jtypes.AnotherBad }).Jobnumber;
-    // t.notEqual(anotherBad, undefined || null, `Bad string date should still return good jobnumber, ${anotherBad}`);
-    // const anotherBadString = new CreateJobnumber({ date : jtypes.AnotherBadString }).Jobnumber;
-    // t.notEqual(anotherBadString, undefined || null, `Bad string date should still return good jobnumber, ${anotherBadString}`);
-  
+  await test(`GetNewID NON-STATIC`, t => {
+    const j = new IDService().id;
+    t.notEqual(j, undefined || null, `GetNewID SHOULD NOT return undefined or null: ${j}`);
   });
-  
+
+  await test(`GetNewID STATIC`, t => {
+    const k = IDService.createId();
+    t.notEqual(k, undefined || null, `GetNewID SHOULD NOT return undefined or null: ${k}`);
+  });
+
+  await test(`TestUUIDToDecimal`, t => {
+    const testUUID = `b819a295-66b7-4b82-8f91-81cf227c5216`;
+    const decInterp = `0244711056233028958513683553892786000406`;
+    const dec = IDService.toDecimal(testUUID);
+    t.equal(dec, decInterp, `TestUUIDToDecimal SHOULD return ${decInterp}: ${decInterp == dec}, ${dec}`);
+  });
+
+  await test(`TestDecimalToUUID`, t => {
+    const testUUID = `b819a295-66b7-4b82-8f91-81cf227c5216`;
+    const dec = `0244711056233028958513683553892786000406`;
+    const x = IDService.decimalToUUID(dec);
+    t.equal(x, testUUID, `TestDecimalToUUID SHOULD return ${testUUID}: ${x == testUUID}, ${x}`);
+  });
+
+  await test(`IDIsValid`, t => {
+    const testUUID = `b819a295-66b7-4b82-8f91-81cf227c5216`;
+    const val = IDService.isValid(testUUID);
+    t.equal(val, true, `IDIsValid SHOULD return true: ${val == true}, ${testUUID} is valid: ${val}`);
+  });
+
   await test.finish();
   if (test.totalFailed() > 0) throw "Some test(s) failed!";
 }
@@ -58,7 +79,9 @@ const _gasTMainTesting = async () => {
  * Test Logger and Message with GasT
  */
 const _gasTLoggerAndMessagingTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -121,7 +144,9 @@ const _gasTLoggerAndMessagingTesting = async () => {
  * Test Ticket with GasT
  */
 const _gasTTicketTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL); 
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -136,7 +161,7 @@ const _gasTTicketTesting = async () => {
       checkedOutDate : new Date(), 
       basket : ["Tiny mitre saw/mitre box","Hot Glue Gun (+2 full glue sticks)","Breadboard","Sandpaper (one square each of 80, 220, 400)","Roomba","Scissors","Exacto (+3 new blades)"],
       notes : `Notes go here.... `,
-      dueDate : new TimeConverter().ReturnDate(new Date()),
+      dueDate : TimeService.ReturnDate(new Date()),
     }).CreateTicket();
     t.notThrow(() => x, `Ticket SHOULD NOT throw error: ${x}`);
     t.notEqual(x, undefined || null, `Ticket SHOULD NOT yield null. ${x}`);
@@ -156,7 +181,9 @@ const _gasTTicketTesting = async () => {
  * Test AssignUserABasket with GasT
  */
 const _gasTAssignmentTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -181,7 +208,9 @@ const _gasTAssignmentTesting = async () => {
  * Test Inventory Manager with GasT
  */
 const _gasTInventoryManagerTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -205,7 +234,9 @@ const _gasTInventoryManagerTesting = async () => {
  * Test Record Taker with GasT
  */
 const _gasTRecordTakerTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL); 
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -231,7 +262,9 @@ const _gasTRecordTakerTesting = async () => {
  * Test Misc with GasT
  */
 const _gasTMiscTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -342,7 +375,9 @@ const _gasTMiscTesting = async () => {
  * Test Calculations with GasT
  */
 const _gasTCalculationTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL); 
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -420,12 +455,74 @@ const _gasTCalculationTesting = async () => {
   if (test.totalFailed() > 0) throw "Some test(s) failed!";
 }
 
+/**
+ * Test TimeService with GasT
+ */
+const _gasTTimeTesting = async () => {
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
+  const test = new GasTap();
+  console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
+
+  await test(`Format Timer GOOD`, (t) => {
+    const x = TimeService.FormatTimerToString(15, 6, 35, 12);
+    t.equal(x, `15 days, 06:35:12`, `Format Timer GOOD: ${x}`);
+  });
+
+  await test(`Format Timer BAD`, (t) => {
+    const x = TimeService.FormatTimerToString(`ten`, `six`, `35`, `12`);
+    t.equal(x, `ten days, six:35:12`, `Format Timer BAD: ${x}`);
+  });
+
+  await test(`Timer String to Millis`, (t) => {
+    const x = TimeService.TimerStringToMilliseconds(`0 days, 0:34:18`);
+    t.equal(x, 2058000, `Timer String to Millis GOOD: ${x}`);
+  });
+
+  await test(`Date to Millis`, (t) => {
+    const x = TimeService.DateToMilliseconds(new Date(1986, 1, 2));
+    t.equal(x, 507715200000, `Date to Millis GOOD: ${x}`);
+  });
+
+  await test(`Millis to Timer String`, (t) => {
+    const x = TimeService.MillisecondsToTimerString(507715200000);
+    t.equal(x, `5876 days, 08:000:000`, `Millis to Timer String GOOD: ${x}`);
+  });
+
+  await test(`Duration`, (t) => {
+    const x = TimeService.Duration(new Date(1986, 01, 02), new Date(2086, 01, 02));
+    t.equal(x, `36525 days, 00:000:000`, `Duration GOOD: ${x}`);
+  });
+
+  await test(`Return Date`, (t) => {
+    const x = TimeService.ReturnDate(new Date(1986, 01, 02));
+    t.equal(x, `Sun Feb 16 1986 00:00:00 GMT-0800 (Pacific Standard Time)`, `Return Date GOOD: ${x}`);
+  });
+
+  await test(`Remaining Time`, (t) => {
+    const x = TimeService.RemainingTime(new Date(2086, 01, 02));
+    t.notThrow(() => x, `Remaining Time SHOULD NOT throw error: ${x}`);
+  });
+
+  await test(`Days to Millis`, (t) => {
+    const x = TimeService.DaysToMillis(100);
+    t.equal(x, 8640000000, `Days to Millis GOOD: ${x}`);
+  });
+  
+  
+  await test.finish();
+  if (test.totalFailed() > 0) throw "Some test(s) failed!";
+}
+
 
 /**
  * Test Email Service with GasT
  */
 const _gasTEmailTesting = async () => {
-  if ((typeof GasTap) === 'undefined') eval(gasT_URL);
+  if ((typeof GasTap) === 'undefined') {
+    eval(UrlFetchApp.fetch(gasT_URL).getContentText());
+  }
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
@@ -476,12 +573,14 @@ const _gasTTestAll = async () => {
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
   Promise.all([
-    await _gasTMainTesting(),
+    await _gasTBarcodeTesting(),
+    await _gasTIDServiceTesting(),
     await _gasTLoggerAndMessagingTesting(),
     await _gasTMiscTesting(),
     await _gasTCalculationTesting(),
     await _gasTShopifyTesting(),
     await _gasTTicketTesting(),
+    await _gasTTimeTesting(),
     await _gasTEmailTesting(),
   ])
   .then(console.info('Test Success.'))

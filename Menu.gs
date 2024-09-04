@@ -140,6 +140,7 @@ const PopupCalcTurnaround = async () => {
   let ui = SpreadsheetApp.getUi();
   let thisRow = SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
   let name = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
+  new Calculate().PrintAverageTurnaround();
   ui.alert(
     SERVICE_NAME, 
     `Recalculated ${name}'s Turnaround Time.`, 

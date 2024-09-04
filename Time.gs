@@ -1,7 +1,7 @@
 /**
  * Class for dealing with time
  */
-class TimeConverter {
+class TimeService {
   constructor() {
 
   }
@@ -14,7 +14,7 @@ class TimeConverter {
    * @param {number} secs
    * @returns {string} formattedString
    */
-  FormatTimerToString (days, hrs, mins, secs) {
+  static FormatTimerToString (days, hrs, mins, secs) {
     hrs = hrs < 10 ? `0${hrs}` : hrs;
     mins = mins < 10 ? `0${mins}` : mins;
     secs = secs < 10 ? `0${secs}` : secs;
@@ -25,10 +25,10 @@ class TimeConverter {
 
   /**
    * Timer String to Milliseconds
-   * @param {string} timerString Format = `0 days & 0:34:18`
+   * @param {string} timerString Format = `0 days, 0:34:18`
    * @returns {number} millis
    */
-  TimerStringToMilliseconds ( timerString ) {
+  static TimerStringToMilliseconds (timerString = `0 days, 0:34:18`) {
     try {
       // timerString = GetByHeader(SHEETS.Main, HEADERNAMES.daysCheckedOut, 3);
       let m = timerString.split(`days`);
@@ -42,6 +42,7 @@ class TimeConverter {
       return value;
     } catch(err) {
       console.error(`${err} : 'TimerStringToMilliseconds' has failed for some reason....`);
+      return 1;
     }
   }
 
@@ -50,7 +51,7 @@ class TimeConverter {
    * @param {date} date
    * @retruns {number} millis
    */
-  DateToMilliseconds (date) {
+  static DateToMilliseconds(date = new Date()) {
     date = date instanceof Date ? date : new Date();
     try {
       const millis = date.getTime();
@@ -58,6 +59,7 @@ class TimeConverter {
       return millis;
     } catch(err) {
       console.error(`${err} : 'DateToMilliseconds' has failed for some reason....`);
+      return 1;
     }
   }
 
@@ -66,7 +68,7 @@ class TimeConverter {
    * @param {number} millis
    * @returns {string} timerString
    */
-  MillisecondsToTimerString (millis) {
+  static MillisecondsToTimerString (millis = 1000) {
     try {
       let timeDiff = Math.abs(millis / 1000); // Milliseconds to sec
 
@@ -82,11 +84,12 @@ class TimeConverter {
       timeDiff = Math.floor(timeDiff / 24); // Difference hrs to days
       let days = timeDiff;
 
-      let formatted = this.FormatTimerToString(days, hrs, minutesAsString, secondsAsString);
+      let formatted = TimeService.FormatTimerToString(days, hrs, minutesAsString, secondsAsString);
       // console.info(`Millis to Timer String ---> ${formatted}`);
       return formatted;
     } catch(err) {
       console.error(`${err} : 'MillisecondsToTimerString' has failed for some reason....`);
+      return 1;
     }
     
   };
@@ -97,7 +100,7 @@ class TimeConverter {
    * @param {date} end
    * @return {string} duration
    */
-  Duration (start, end) {
+  static Duration (start = new Date(1986, 1, 2, 10, 34, 32), end = new Date()) {
     try {
       end = end instanceof Date ? end : console.error(`End Date is not a date...`);
       start = start instanceof Date ? start : console.error(`Start date is not a date....`);
@@ -116,11 +119,12 @@ class TimeConverter {
       timeDiff = Math.floor(timeDiff / 24); // Difference hrs to days
       let days = timeDiff;
 
-      let formatted = this.FormatTimerToString(days, hrs, minutesAsString, secondsAsString);
+      let formatted = TimeService.FormatTimerToString(days, hrs, minutesAsString, secondsAsString);
       console.info(`Duration ---> ${formatted}`);
       return formatted;
     } catch (err) {
       console.error(`${err} : 'Duration' has failed for some reason....`);
+      return 1;
     }
   };
 
@@ -129,10 +133,10 @@ class TimeConverter {
    * @param {date} date
    * @return {date} returndate
    */
-  ReturnDate (date) {
+  static ReturnDate (date = new Date()) {
     date = date instanceof Date ? date : new Date();
-    const returndate = new Date(this.DateToMilliseconds(date) + this.DaysToMillis(CHECKOUT_LENGTH));
-    console.info(`Return Date ---> ${returndate}`);
+    const returndate = new Date(TimeService.DateToMilliseconds(date) + TimeService.DaysToMillis(CHECKOUT_LENGTH));
+    console.warn(`Return Date ---> ${returndate}`);
     return returndate;
   }
 
@@ -142,14 +146,15 @@ class TimeConverter {
    * @param {date} dueDate
    * @return {string} FormatTimerToString(days, hrs, minutesAsString, secondsAsString)
    */
-  RemainingTime (dueDate) {
+  static RemainingTime (dueDate = new Date()) {
     try {
       dueDate = dueDate instanceof Date ? dueDate : new Date();
-      let remaining = this.Duration(new Date(), dueDate);
+      let remaining = TimeService.Duration(new Date(), dueDate);
       console.info(`Remaining ---> ${remaining}`);
       return remaining;
     } catch (err) {
       console.error(`${err} : Calculating remaining time has failed for some reason.`);
+      return 1;
     }
   }
 
@@ -158,7 +163,7 @@ class TimeConverter {
    * @param {number} days (integer)
    * @returns {number} milliseconds
    */
-  DaysToMillis(days = 1) {
+  static DaysToMillis(days = 1) {
     return days * 24 * 60 * 60 * 1000;
   }
 
@@ -170,13 +175,12 @@ class TimeConverter {
  * @TRIGGERED
  */
 const UpdateTimeToOverdue = () => {
-  const t = new TimeConverter();
   let dueDates = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
   console.warn(`Checking and updating Overdue times....`)
   dueDates.forEach((dueDate, index) => {
     if(dueDate) {
       console.log(`Index: ${index + 2}, ${dueDate}`);
-      let remainingTime = t.RemainingTime(dueDate);
+      let remainingTime = TimeService.RemainingTime(dueDate);
       console.log(`REMAINING TIME ----> ${remainingTime}`);
       SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, remainingTime);
     }

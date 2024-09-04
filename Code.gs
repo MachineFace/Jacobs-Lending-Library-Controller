@@ -131,7 +131,6 @@ const onChange = async (e) => {
   });
 
 
-  const t = new TimeConverter();
   const now = new Date();
 
   // Get values OR defaults if it fucks up
@@ -150,8 +149,8 @@ const onChange = async (e) => {
   dateCheckedOut = dateCheckedOut ? dateCheckedOut : now.toDateString();
   dateReturned = dateReturned ? dateReturned : now.toDateString();
   notes = notes ? notes : `No Notes`;
-  dueDate = dueDate ? dueDate : new Date(new TimeConverter().ReturnDate(dateCheckedOut)).toDateString();
-  remainingDays = remainingDays ? remainingDays : t.Duration(dueDate, now);
+  dueDate = dueDate ? dueDate : new Date(TimeService.ReturnDate(dateCheckedOut)).toDateString();
+  remainingDays = remainingDays ? remainingDays : TimeService.Duration(dueDate, now);
   
   // Logic
   try {
