@@ -2,8 +2,8 @@
  * -----------------------------------------------------------------------------------------------------------------
  * Code Enumerations
  */
-const SERVICE_NAME = `🤖 Jacobs LendingBot`;
-const SERVICE_NAME_NO_ICON = `Jacobs LendingBot`;
+const SERVICE_NAME = `Jacobs LendingBot`;
+const SERVICE_NAME_WITH_ICON = `🤖 ${SERVICE_NAME}`;
 const SERVICE_EMAIL = `jacobs-project-support@berkeley.edu`;
 
 const CHECKOUT_LENGTH = 14; // How many days a student can hold a headset

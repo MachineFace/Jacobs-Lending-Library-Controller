@@ -8,7 +8,7 @@ const EditFromSelected = async () => {
   // Is this the correct sheet?
   if (thisSheet.getSheetName() != SHEETS.Main.getSheetName()) {
     Browser.msgBox(
-      SERVICE_NAME,
+      SERVICE_NAME_WITH_ICON,
       `Please select 'Form Responses'. Select one cell in the row and an editing sidebar will pop up.`,
       Browser.Buttons.OK
     );
@@ -37,7 +37,7 @@ const EditFromSelected = async () => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`${SERVICE_NAME} Menu`)
+        .setName(`${SERVICE_NAME_WITH_ICON} Menu`)
       ).setWidth(400)
   ui.showSidebar(html);
 }
@@ -62,7 +62,7 @@ const ShowEditingSidebar = async (rowData) => {
       template.evaluate()
         .setSandboxMode(HtmlService.SandboxMode.IFRAME)
         .getBlob()
-        .setName(`${SERVICE_NAME} Menu`)
+        .setName(`${SERVICE_NAME_WITH_ICON} Menu`)
       ).setWidth(400)
   ui.showSidebar(html);
 }

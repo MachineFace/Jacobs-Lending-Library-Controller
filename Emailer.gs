@@ -44,42 +44,42 @@ class Emailer {
     try {
       switch (this.status) {
         case STATUS.requested:
-          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Requested`, "", {
+          MailApp.sendEmail(this.email, `${SERVICE_NAME} : Tools Requested`, "", {
             htmlBody: this.message.requestedMessage,
             from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
             bcc: SERVICE_EMAIL,
-            name: SERVICE_NAME_NO_ICON,
+            name: SERVICE_NAME,
           });
           console.warn(`Student ${this.name} emailed ${this.status} message...`);
           break;
         case STATUS.checkedOut:
-          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Checked Out`, "", {
+          MailApp.sendEmail(this.email, `${SERVICE_NAME} : Tools Checked Out`, "", {
             htmlBody: this.message.checkedOutMessage,
             from: SERVICE_EMAIL,
             cc: this.designspecialistemail,
             bcc: SERVICE_EMAIL,
-            name: SERVICE_NAME_NO_ICON,
+            name: SERVICE_NAME,
           });
           console.warn(`Student ${this.name} emailed ${this.status} message...`);
           break;
         case STATUS.checkedIn:
-          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools Returned`, "", {
+          MailApp.sendEmail(this.email, `${SERVICE_NAME} : Tools Returned`, "", {
               htmlBody: this.message.returnedMessage,
               from: SERVICE_EMAIL,
               cc: this.designspecialistemail,
               bcc: SERVICE_EMAIL,
-              name: SERVICE_NAME_NO_ICON,
+              name: SERVICE_NAME,
           });
           console.warn(`Student ${this.name} emailed ${this.status} message...`);
           break;
         case STATUS.overdue:
-          MailApp.sendEmail(this.email, `${SERVICE_NAME_NO_ICON} : Tools OVERDUE!!`, "", {
+          MailApp.sendEmail(this.email, `${SERVICE_NAME} : Tools OVERDUE!!`, "", {
               htmlBody: this.message.overdueMessage,
               from: SERVICE_EMAIL,
               cc: this.designspecialistemail,
               bcc: SERVICE_EMAIL,
-              name: SERVICE_NAME_NO_ICON,
+              name: SERVICE_NAME,
           });
           console.warn(`Student ${this.name} emailed ${this.status} message...`);
           break;

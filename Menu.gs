@@ -15,7 +15,7 @@ const PopupCountCheckedOut = async () => {
     if(key == STATUS.checkedOut) checkedOut = value;
   });
   ui.alert(
-    SERVICE_NAME, 
+    SERVICE_NAME_WITH_ICON, 
     `Currently Checked Out Baskets: ${checkedOut}`, 
     ui.ButtonSet.OK_CANCEL
   );
@@ -32,7 +32,7 @@ const PopupCountCheckedIn = async () => {
     if(key == STATUS.checkedIn) checkedIn = value;
   });
   let prompt = ui.alert(
-    SERVICE_NAME, 
+    SERVICE_NAME_WITH_ICON, 
     `Currently Checked In Baskets: ${checkedIn}`, 
     ui.ButtonSet.OK_CANCEL
   );
@@ -49,7 +49,7 @@ const PopupCountOverdue = async () => {
     if(key == STATUS.overdue) overdue = value;
   });
   ui.alert(
-    SERVICE_NAME, 
+    SERVICE_NAME_WITH_ICON, 
     `Currently Checked Out Baskets: ${overdue}`, 
     ui.ButtonSet.OK_CANCEL
   );
@@ -72,7 +72,7 @@ const CountStatuses = () => {
 const PopupReturnByBarcode = async () => {
   let ui = await SpreadsheetApp.getUi();
   let result = ui.prompt(
-    SERVICE_NAME,
+    SERVICE_NAME_WITH_ICON,
     'Please enter the Tracking ID Number:',
     ui.ButtonSet.OK_CANCEL
   );
@@ -113,7 +113,7 @@ const BuildHTMLHELP = () => {
  */
 const PopupHelp = () => {
   let ui = SpreadsheetApp.getUi();
-  let title = `${SERVICE_NAME} HELP`;
+  let title = `${SERVICE_NAME_WITH_ICON} HELP`;
   let htmlOutput = HtmlService.createHtmlOutput(BuildHTMLHELP())
     .setWidth(640)
     .setHeight(480);
@@ -127,7 +127,7 @@ const PopupMetrics = () => {
   let ui = SpreadsheetApp.getUi();
   Metrics();
   ui.alert(
-    SERVICE_NAME, 
+    SERVICE_NAME_WITH_ICON, 
     `Recomputed Statistics`, 
     ui.ButtonSet.OK
   );
@@ -142,7 +142,7 @@ const PopupCalcTurnaround = async () => {
   let name = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
   new Calculate().PrintAverageTurnaround();
   ui.alert(
-    SERVICE_NAME, 
+    SERVICE_NAME_WITH_ICON, 
     `Recalculated ${name}'s Turnaround Time.`, 
     ui.ButtonSet.OK,
   );
@@ -169,7 +169,7 @@ const PopupCreateNewId = async () => {
   const thisSheet = SpreadsheetApp.getActiveSheet();
   if(Object.values(OTHERSHEETS).includes(thisSheet)) {
     ui.alert(
-      `${SERVICE_NAME}:\n Error!`,
+      `${SERVICE_NAME_WITH_ICON}:\n Error!`,
       `Bad Sheet Selected`,
       ui.ButtonSet.OK
     );
@@ -180,7 +180,7 @@ const PopupCreateNewId = async () => {
 
   SetByHeader(thisSheet, HEADERNAMES.tracking, thisRow, id);
   const a = ui.alert(
-    `${SERVICE_NAME}:\n Job Number Created!`,
+    `${SERVICE_NAME_WITH_ICON}:\n Job Number Created!`,
     `Created a New ID:\nID:${id}`,
     ui.ButtonSet.OK
   );
@@ -197,7 +197,7 @@ const PopupCreateBarcode = async () => {
 
   if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
     const a = ui.alert(
-      `${SERVICE_NAME}: Alert!`,
+      `${SERVICE_NAME_WITH_ICON}: Alert!`,
       `Select a user on the Main Sheet...`,
       ui.ButtonSet.OK
     );
@@ -212,7 +212,7 @@ const PopupCreateBarcode = async () => {
   console.info(url)
   SetByHeader(thisSheet, HEADERNAMES.barcode, thisRow, url);
   const a = ui.alert(
-    `${SERVICE_NAME}: Alert!`,
+    `${SERVICE_NAME_WITH_ICON}: Alert!`,
     `Created a New Barcode for ${name}:\n${url}`,
     ui.ButtonSet.OK
   );
@@ -225,7 +225,7 @@ const PopupCreateTicket = async () => {
   const thisRow = thisSheet.getActiveRange().getRow();
   if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
     const a = ui.alert(
-      `${SERVICE_NAME}: Alert!`,
+      `${SERVICE_NAME_WITH_ICON}: Alert!`,
       `Select a user on the Main Sheet...`,
       ui.ButtonSet.OK
     );
@@ -249,7 +249,7 @@ const PopupCreateTicket = async () => {
   SetByHeader(thisSheet, HEADERNAMES.ticket, thisRow, url);
   console.warn(`Ticket Created....`);
   const a = ui.alert(
-    `${SERVICE_NAME}: Alert!`,
+    `${SERVICE_NAME_WITH_ICON}: Alert!`,
     `Created a New Ticket for ${name}:\n${url}`,
     ui.ButtonSet.OK
   );

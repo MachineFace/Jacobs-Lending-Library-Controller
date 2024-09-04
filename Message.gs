@@ -41,7 +41,7 @@ class CreateMessage {
     /** @private */
     this.greetings = `<p>Hi ${this.name},</p>`;
     /** @private */
-    this.thanks = `Thank you for checking out tools with ${SERVICE_NAME_NO_ICON}<br/><br/>`;
+    this.thanks = `Thank you for checking out tools with ${SERVICE_NAME}<br/><br/>`;
     /** @private */
     this.location = `<b>Pick-up / Drop-off Location:<br/>
       <a href="https://www.google.com/maps/d/edit?mid=19_zxiFYyxGysWTUDnMZl27gPX9b--2gz&usp=sharing">Jacobs Hall LeRoy Ave. Main Entrance - Room 234 / Lobby.<br/>
@@ -53,7 +53,7 @@ class CreateMessage {
     /** @private */
     this.salutations = `<p>Best,<br/>Jacobs Hall Staff</p>`;
     /** @private */
-    this.survey = `<p><small>Please take a moment to take our survey so we can improve ${SERVICE_NAME}:<br/>
+    this.survey = `<p><small>Please take a moment to take our survey so we can improve ${SERVICE_NAME_WITH_ICON}:<br/>
       <a href="https://docs.google.com/forms/d/1fICKWXj67v8k6EznXgkYz6qgiy45V8bV-X8dlRwRPDc/viewform">Take Survey</a></small></p>`;
   }
   get defaultMessage() {
