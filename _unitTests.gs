@@ -416,7 +416,9 @@ const _gasTCalculationTesting = async () => {
   });
 
   await test(`Calc Distribution`, (t) => {
-    const x = calc.GetDistributionFromSheet();
+    let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+      .filter(Boolean);
+    const x = calc.Distribution(names);
     t.notEqual(x, undefined, `Distribution should not return undefined.`);
   });
 
@@ -431,7 +433,7 @@ const _gasTCalculationTesting = async () => {
   });
 
   await test(`Calculate Arithmetic Mean`, (t) => {
-    const x = calc.GetArithmeticMean();
+    const x = calc.GetAverageCheckoutsPerUser();
     t.notEqual(x, undefined || null, `Arithmetic Mean should not return undefined or null.`);
   });
   
