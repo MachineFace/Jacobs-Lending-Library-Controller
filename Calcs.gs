@@ -151,11 +151,10 @@ class Calculate {
    */
   Distribution(numbers = []) {
     try {
+      if(numbers.length < 2) throw new Error(`List is empty: ${numbers.length}`);
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
       const occurrences = values.reduce( (acc, curr) => {
         return acc[curr] ? ++acc[curr] : acc[curr] = 1, acc
       }, {});
@@ -186,10 +185,8 @@ class Calculate {
       if(numbers.length < 2) throw new Error(`List is empty: ${numbers.length}`);
 
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
 
       const mean = this.GeometricMean(values);
       console.warn(`Mean = ${mean}`);
@@ -330,10 +327,9 @@ class Calculate {
       if(n == 0) throw new Error(`Distribution is empty: ${n}`);
 
       let values = [];
-      distribution.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(distribution[0])) values = distribution.map(item => item[1]);
+      else values = distribution;
+
       const mean = values.reduce((a, b) => a + b) / n;
       console.warn(`ARITHMETIC MEAN: ${mean}`);
       return mean.toFixed(3);
@@ -353,10 +349,8 @@ class Calculate {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
 
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
 
       const product = values.reduce((product, num) => product * num, 1);
       const geometricMean = Math.pow(product, 1 / values.length);
@@ -378,10 +372,8 @@ class Calculate {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
       
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
 
       const harmonicMean = values.length / values.reduce((a, b) => a + 1 / b, 0);
       console.warn(`HERMONIC MEAN: ${harmonicMean}`);
@@ -402,10 +394,8 @@ class Calculate {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
 
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
 
       const quadraticMean = Math.sqrt(values.reduce((a, b) => a + b * b, 0) / values.length);
       console.warn(`QUADRATIC MEAN: ${quadraticMean}`);
@@ -426,10 +416,8 @@ class Calculate {
       if(numbers.length < 2) throw new Error(`Input less than 2: ${numbers.length}`);
 
       let values = [];
-      numbers.forEach(x => {
-        if(x[0] && x[1]) values.push(x[1]);
-        else if(x[0] && !x[1]) values.push(x[0]);
-      });
+      if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
+      else values = numbers;
 
       const sortedNumbers = [...values].sort((a, b) => a - b);
       const middle = Math.floor(sortedNumbers.length / 2);
