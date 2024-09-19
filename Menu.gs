@@ -169,7 +169,7 @@ const PopupCreateNewId = async () => {
   const thisSheet = SpreadsheetApp.getActiveSheet();
   if(Object.values(OTHERSHEETS).includes(thisSheet)) {
     ui.alert(
-      `${SERVICE_NAME_WITH_ICON}:\n Error!`,
+      `${SERVICE_NAME_WITH_ICON}: Error!`,
       `Bad Sheet Selected`,
       ui.ButtonSet.OK
     );

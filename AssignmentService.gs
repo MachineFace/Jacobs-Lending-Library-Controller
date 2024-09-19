@@ -47,21 +47,24 @@ class AssignmentService {
       console.info(`Assigning Basket to: ${this.name}`);
       this.trackingNumber = IDService.createId();
       
-      // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
-      SetByHeader(SHEETS.Main, HEADERNAMES.tracking, this.row, this.trackingNumber);
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, this.row, STATUS.checkedOut);
-      SetByHeader(SHEETS.Main, HEADERNAMES.issuer, this.row, this.issuer);
-      SetByHeader(SHEETS.Main, HEADERNAMES.timestamp, this.row, now);
-      SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, this.row, this.email);
-      SetByHeader(SHEETS.Main, HEADERNAMES.name, this.row, this.name);
-      SetByHeader(SHEETS.Main, HEADERNAMES.studentId, this.row, this.sid);
-      SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, this.row, AFFILLIATION.researcher);
-      SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, this.row, JSON.stringify(this.basket));
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, this.row, now.toDateString());
-      SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, this.row, ``);
-      SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, this.row, returnDate);
-      SetByHeader(SHEETS.Main, HEADERNAMES.notes, this.row, this.notes);
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, this.row, remainingDays);
+      // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue
+      const rowData = {
+        tracking : this.trackingNumber, 
+        status : STATUS.checkedOut, 
+        issuer : this.issuer, 
+        timestamp : now, 
+        studentEmail : this.email, 
+        name : this.name, 
+        studentId : this.sid, 
+        affiliation : AFFILLIATION.researcher, 
+        itemBasket : JSON.stringify(this.basket), 
+        dateCheckedOut : now.toDateString(), 
+        dateReturned : ``, 
+        notes : this.notes, 
+        dueDate : returnDate, 
+        remainingDays : remainingDays,
+      }
+      SetRowData(SHEETS.Main, this.row, rowData);	
 
       // Create Ticket
       const newTicket = new Ticket({
@@ -168,7 +171,9 @@ const _testAssign = () => {
 }
 
 
-
+/**
+ * Modify Order
+ */
 const ModifyOrder = (rowData) => {
   try {
     const thisRow = rowData?.row;
@@ -178,21 +183,23 @@ const ModifyOrder = (rowData) => {
     console.info(`Modifying Basket for: ${rowData.name}`);
     const trackingNumber = rowData.trackingNumber ? rowData.trackingNumber : Number.parseInt(100 + thisRow + 1);
     
-    // Date Checked Out	Date Returned	Ticket	Barcode	Notes	Due Date	Days Remaining Until Overdue		
-    SetByHeader(SHEETS.Main, HEADERNAMES.tracking, thisRow, trackingNumber);
-    SetByHeader(SHEETS.Main, HEADERNAMES.status, thisRow, STATUS.checkedOut);
-    SetByHeader(SHEETS.Main, HEADERNAMES.issuer, thisRow, `Staff`);
-    SetByHeader(SHEETS.Main, HEADERNAMES.timestamp, thisRow, now);
-    SetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, thisRow, this.email);
-    SetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow, this.name);
-    SetByHeader(SHEETS.Main, HEADERNAMES.studentId, thisRow, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.affiliation, thisRow, AFFILLIATION.researcher);
-    SetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, thisRow, this.basket);
-    SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
-    SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
-    SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, returnDate);
-    SetByHeader(SHEETS.Main, HEADERNAMES.notes, thisRow, this.notes);
-    SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
+    const rowData = {
+      tracking : trackingNumber, 
+      status : STATUS.checkedOut, 
+      issuer : `Staff`, 
+      timestamp : now, 
+      studentEmail : this.email, 
+      name : this.name, 
+      studentId : this.sid, 
+      affiliation : AFFILLIATION.researcher, 
+      itemBasket : JSON.stringify(this.basket), 
+      dateCheckedOut : now.toDateString(), 
+      dateReturned : ``, 
+      notes : this.notes, 
+      dueDate : returnDate, 
+      remainingDays : remainingDays,
+    }
+    SetRowData(SHEETS.Main, this.row, rowData);	
 
     // Create a ticket
     const ticket = new Ticket({

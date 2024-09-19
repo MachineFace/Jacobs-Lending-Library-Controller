@@ -84,6 +84,52 @@ const GetRowData = (sheet, row) => {
   }
 }
 
+/**
+ * ----------------------------------------------------------------------------------------------------------------
+ * Return the values of a row by the number
+ * @param {sheet} sheet
+ * @param {number} row
+ * @param {JSON} data
+ * { tracking, status, issuer, timestamp, studentEmail, name, studentId, affiliation, itemBasket, dateCheckedOut, dateReturned, ticket, barcode, notes, dueDate, remainingDays, sheetName, row }
+ * @returns {dict} {header, value}
+ */
+const SetRowData = (sheet = SHEETS.Main, row = 2, data = {}) => {
+  let dict = {};
+  try {
+    let sheetHeaderNames = Object.values(GetRowData(sheet, 1));
+    let values = [];
+    Object.entries(data).forEach(pair => {
+      let headername = HEADERNAMES[pair[0]];
+      let index = sheetHeaderNames.indexOf(headername);
+      values[index] = pair[1];
+    });
+    console.info(values);
+    SHEETS.Main.getRange(row, 1, 1, values.length).setValues([values]);
+    // sheet.appendRow(values);
+    return 0;
+  } catch (err) {
+    console.error(`"SetRowData()" failed : ${err}`);
+    return 1;
+  }
+}
+
+const _testSetRow = () => {
+  const rowData = { 
+    tracking : IDService.createId(), 
+    status : STATUS.missing, 
+    issuer : `Cody`, 
+    timestamp : new Date(), 
+    studentEmail : SERVICE_EMAIL, 
+    name : `Testa Fiesta`, 
+    studentId : 12938471423, 
+    affiliation : AFFILLIATION.catalyst, 
+    itemBasket : [ `Stuff1`, `Stuff2`, ], 
+    dateCheckedOut : new Date(), 
+    notes : `Notes Go Here.`, 
+  }
+  SetRowData(SHEETS.Main, 9, rowData);
+}
+
 
 
 

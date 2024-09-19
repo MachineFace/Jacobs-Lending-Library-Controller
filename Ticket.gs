@@ -35,7 +35,7 @@ class Ticket {
     /** @private */
     this.dueDate = dueDate instanceof Date ? dueDate.toDateString() : new Date().toDateString();
     /** @private */
-    this.ticketName = `JacobsLendingLibraryTicket-${this.trackingNumber}`;
+    this.ticketName = `${SERVICE_NAME}-${this.trackingNumber}`;
     /** @private */
     this.barcode;
     this.url = ``;
