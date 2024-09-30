@@ -10,32 +10,36 @@ class Calculate {
   /**
    * Calculate Average Turnaround Time
    */
-  AverageTurnaround() {
-    let completionTimes = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)]
-      .filter(Boolean);
+  static AverageTurnaround() {
+    try {
+      const completionTimes = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)]
+        .filter(Boolean)
+        .map(time => TimeService.TimerStringToMilliseconds(time));
 
-    let total = 0;
-    completionTimes.forEach( time => {
-      if(!time) total += 0;
-      else total += TimeService.TimerStringToMilliseconds(time);
-    });
+      const average = Calculate.GeometricMean(completionTimes);
+      const time = TimeService.MillisecondsToTimerString(average);
 
-    let times = [];
-    completionTimes.forEach(t => times.push(TimeService.TimerStringToMilliseconds(t)));
-    let average = this.GeometricMean(times);
-    let time = TimeService.MillisecondsToTimerString(average);
-    console.info(`Total Time : ${TimeService.MillisecondsToTimerString(total)}, Average : ${time}`);
-    OTHERSHEETS.Metrics.getRange(1, 6, 2, 1).setValues([[ `Average Checkout Length` ], [ time ]]);
-    return time;
+      const values = [
+        [ `Average Checkout Length` ], 
+        [ time ]
+      ];
+      console.info(values);
+      OTHERSHEETS.Metrics.getRange(1, 6, 2, 1).setValues(values);
+      return time;
+    } catch(err) {
+      console.error(`"AverageTurnaround()" failed: ${err}`);
+      return 1;
+    }
+
   }
 
   /**
    * Sum all Statuses
    */
-  StatusCounts() {
+  static StatusCounts() {
     try {
       const statuses = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)];
-      const distribution = [...this.Distribution(statuses)];
+      const distribution = [...Calculate.Distribution(statuses)];
       const distSet = new Set(distribution.map(([key, _]) => key));
 
       let list = Object.values(STATUS);
@@ -45,9 +49,12 @@ class Calculate {
         }
       });
       
+      const values = [
+        [ `Status`, `Count`, ],
+        ...distribution,
+      ];
       console.info(distribution);
-      OTHERSHEETS.Metrics.getRange(1, 2, 1, 2).setValues([[ `Status`, `Count`, ]]);
-      OTHERSHEETS.Metrics.getRange(2, 2, distribution.length, 2).setValues(distribution);
+      OTHERSHEETS.Metrics.getRange(1, 2, values.length, 2).setValues(values);
       return distribution;
     } catch(err) {
       console.error(`"StatusCounts()" failed: ${err}`);
@@ -58,78 +65,107 @@ class Calculate {
   /**
    * Print Top Ten
    */
-  PrintTopTen() {
-    let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
-      .filter(Boolean);
-    const distribution = this.Distribution(names);
-
-    // Create a new array with only the first 10 items
-    let chop = distribution.slice(0, 11);
-    const chop2 = chop.map((list, i) => [i + 1, ...list]);
-    console.info(chop2);
-    OTHERSHEETS.Metrics.getRange(1, 16, 1, 3).setValues([[ `Place`, `Name`, `Number of Checkouts` ]]);
-    OTHERSHEETS.Metrics.getRange(2, 16, chop.length, 3).setValues(chop2);
+  static PrintTopTen() {
+    try {
+      let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+        .filter(Boolean)
+        .filter(x => x[0] != `Testa Fiesta`);
+      const distribution = [...Calculate.Distribution(names)]
+        .slice(0, 11)
+        .map((list, i) => [i + 1, ...list]);
+      const values = [
+        [ `Place`, `Name`, `Number of Checkouts` ],
+        ...distribution,
+      ];
+      console.info(values);
+      OTHERSHEETS.Metrics.getRange(1, 16, values.length, 3).setValues(values);
+    } catch(err) {
+      console.error(`"PrintTopTen()" failed: ${err}`);
+      return 1;
+    }
   }
 
   /**
    * Calculate the total number of checkouts
    */
-  CountTotalCheckouts() {
-    let count = OTHERSHEETS.Record.getLastRow() - 1;
-    console.info(`Total Count : ${count}`);
-    const values = [
-      [ `Total Checkouts` ], 
-      [ count ],
-    ];
-    OTHERSHEETS.Metrics.getRange(1, 8, 2, 1).setValues(values);
-    return count;
+  static CountTotalCheckouts() {
+    try {
+      const statuses = [...Calculate.StatusCounts()]
+        .filter(x => x[0] == STATUS.checkedOut);
+      const count = statuses[0][1];
+      const values = [
+        [ `Total Checkouts` ], 
+        [ count ],
+      ];
+      console.info(values);
+      OTHERSHEETS.Metrics.getRange(1, 8, 2, 1).setValues(values);
+      return count;
+    } catch(err) {
+      console.error(`"CountTotalCheckouts()" failed: ${err}`);
+      return 1;
+    }
   }
 
   /**
    * Count all unique users who have checked out an item
    */
-  CountUniqueUsers() {
-    let users = GetColumnDataByHeader(OTHERSHEETS.Record, `Name`);
-    const count = new Set(users).size;
-    console.info(`Number of Users -----> ${count}`);
-    OTHERSHEETS.Metrics.getRange(1, 5, 2, 1).setValues([[ `Number of Unique Users`],[ count ]]);
-    return count;
+  static CountUniqueUsers() {
+    try {
+      let users = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)];
+      const count = new Set(users).size;
+      const values = [
+        [ `Number of Unique Users`],
+        [ count ],
+      ];
+      console.info(values);
+      OTHERSHEETS.Metrics.getRange(1, 5, 2, 1).setValues(values);
+      return count;
+    } catch(err) {
+      console.error(`"CountUniqueUsers()" failed: ${err}`);
+      return 1;
+    }
   }
 
   /**
    * Standard Deviation of All Users and their checkout counts
    */
-  GetStandardDeviationOfSubmissions() {
-    let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
-      .filter(Boolean);
-    const distribution = this.Distribution(names);
-    const stdDev = this.StandardDeviation(distribution);
-    const truncatedDeviation = Math.abs(Number(stdDev).toFixed(3) || 0);
-    console.info(`Standard Deviation for Number of Submissions : +/- ${truncatedDeviation}`);
-    const values = [
-      [ `Standard Deviation of # of Checkouts Per User` ], 
-      [ `+/- ${truncatedDeviation}` ],
-    ];
-    OTHERSHEETS.Metrics.getRange(1, 11, 2, 1).setValues(values);
-    return truncatedDeviation;
+  static UserSubmissionStandardDeviation() {
+    try {
+      let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+        .filter(Boolean);
+      const distribution = Calculate.Distribution(names);
+      const stdDev = Calculate.StandardDeviation(distribution);
+      const truncatedDeviation = Math.abs(Number(stdDev).toFixed(3)) || 0;
+
+      const values = [
+        [ `Standard Deviation of # of Checkouts Per User` ], 
+        [ `+/- ${truncatedDeviation}` ],
+      ];
+      console.warn(values);
+      OTHERSHEETS.Metrics.getRange(1, 11, 2, 1).setValues(values);
+      return truncatedDeviation;
+
+    } catch(err) {
+      console.error(`"UserSubmissionStandardDeviation()" failed: ${err}`);
+      return 1;
+    }
   }
 
   /**
    * Arithmetic Mean
    */
-  GetAverageCheckoutsPerUser() {
+  static GetAverageCheckoutsPerUser() {
     try {
       let emails = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.studentEmail)]
         .filter(Boolean);
-      const distribution = this.Distribution(emails);
-      const mean = this.GeometricMean(distribution);
-      console.info(`Mean = ${mean}`);
+      const distribution = Calculate.Distribution(emails);
+      const mean = Calculate.GeometricMean(distribution);
 
       const values = [
         [ `Average Checkouts per User` ],
         [ mean ],
       ];
-
+      console.warn(values);
       OTHERSHEETS.Metrics.getRange(1, 10, 2, 1).setValues(values);
       return mean;
     } catch(err) {
@@ -137,6 +173,7 @@ class Calculate {
       return 1;
     }
   }
+
 
 
 
@@ -149,7 +186,7 @@ class Calculate {
    * @param {Array} input array to calculate Distribution
    * @returns {[string, number]} sorted list of users
    */
-  Distribution(numbers = []) {
+  static Distribution(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`List is empty: ${numbers.length}`);
       let values = [];
@@ -180,7 +217,7 @@ class Calculate {
    * @param {Array} array of keys and values: "[[key, value],[]...]"
    * @returns {number} Standard Deviation
    */
-  StandardDeviation(numbers = []) {
+  static StandardDeviation(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`List is empty: ${numbers.length}`);
 
@@ -188,7 +225,7 @@ class Calculate {
       if (Array.isArray(numbers[0])) values = numbers.map(item => item[1]);
       else values = numbers;
 
-      const mean = this.GeometricMean(values);
+      const mean = Calculate.GeometricMean(values);
       console.warn(`Mean = ${mean}`);
 
       const s = Math.sqrt(values.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / values.length);
@@ -207,10 +244,10 @@ class Calculate {
    * @param {number} standard deviation
    * @returns {Array} ZScored Entries [[key, value, score], [key, value, score], ... ]
    */
-  ZScore(distribution = [], stdDev = 0) {
+  static ZScore(distribution = [], stdDev = 0) {
     try {
       if(distribution.length < 2) throw new Error(`Distribution Empty: ${distribution.length}`);
-      const mean = this.GeometricMean(distribution);
+      const mean = Calculate.GeometricMean(distribution);
 
       // Compute the Z-Score for each entry
       const zScore = distribution.map(([key, value]) => {
@@ -232,11 +269,11 @@ class Calculate {
    * @param {number} standard deviation
    * @returns {number} Kurtosis Number
    */
-  Kurtosis(distribution = [], stdDev = 0) {
+  static Kurtosis(distribution = [], stdDev = 0) {
     try {
       if(distribution.length < 2) throw new Error(`Distribution Empty: ${distribution.length}`);
 
-      const mean = this.GeometricMean(distribution);
+      const mean = Calculate.GeometricMean(distribution);
 
       // Calculate the fourth moment
       const fourthMoment = distribution.reduce((acc, curr) => {
@@ -267,10 +304,10 @@ class Calculate {
    * @param {number} standard deviation
    * @returns {number} Skewness Number
    */
-  Skewness(distribution = [], stdDev = 0) {
+  static Skewness(distribution = [], stdDev = 0) {
     try {
       // Calculate the mean of the distribution
-      const mean = this.GeometricMean(distribution);
+      const mean = Calculate.GeometricMean(distribution);
 
       // Calculate the third moment
       const thirdMoment = distribution.reduce((acc, curr) => {
@@ -298,10 +335,10 @@ class Calculate {
    * @param {number} threshold
    * @returns {Array} Outliers
    */
-  DetectOutliers(distribution = [], stdDev = 0, threshold = 3) {
+  static DetectOutliers(distribution = [], stdDev = 0, threshold = 3) {
     try {
       // Calculate the mean of the distribution
-      const mean = this.GeometricMean(distribution);
+      const mean = Calculate.GeometricMean(distribution);
 
       // Find outliers
       const outliers = distribution.filter(x => {
@@ -321,7 +358,7 @@ class Calculate {
    * Calculate Arithmetic Mean
    * @returns {number} arithmetic mean
    */
-  ArithmeticMean(distribution = []) {
+  static ArithmeticMean(distribution = []) {
     try {
       const n = distribution.length;
       if(n == 0) throw new Error(`Distribution is empty: ${n}`);
@@ -344,7 +381,7 @@ class Calculate {
    * @param {Array} numbers
    * @returns {number} Geometric Mean
    */
-  GeometricMean(numbers = []) {
+  static GeometricMean(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
 
@@ -367,7 +404,7 @@ class Calculate {
    * @param {Array} numbers
    * @returns {number} Harmonic Mean
    */
-  HarmonicMean(numbers = []) {
+  static HarmonicMean(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
       
@@ -389,7 +426,7 @@ class Calculate {
    * @param {Array} numbers
    * @returns {number} Quadratic Mean
    */
-  QuadraticMean(numbers = []) {
+  static QuadraticMean(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`Distribution is empty: ${numbers.length}`);
 
@@ -411,7 +448,7 @@ class Calculate {
    * @param {Array} numbers
    * @returns {number} Median
    */
-  Median(numbers = []) {
+  static Median(numbers = []) {
     try {
       if(numbers.length < 2) throw new Error(`Input less than 2: ${numbers.length}`);
 
@@ -441,20 +478,18 @@ class Calculate {
  * Run Metrics
  */
 const Metrics = () => {
-  const calculate = new Calculate();
   try {
     console.warn(`Calculating Metrics .... `);
-    calculate.AverageTurnaround();
-    calculate.StatusCounts();
-    calculate.CountTotalCheckouts();
-    calculate.PrintTopTen();
-    calculate.CountUniqueUsers();
-    calculate.GetStandardDeviationOfSubmissions();
-    calculate.GetAverageCheckoutsPerUser();
-    calculate.StatusCounts();
+    Calculate.AverageTurnaround();
+    Calculate.StatusCounts();
+    Calculate.CountTotalCheckouts();
+    Calculate.PrintTopTen();
+    Calculate.CountUniqueUsers();
+    Calculate.UserSubmissionStandardDeviation();
+    Calculate.GetAverageCheckoutsPerUser();
+    Calculate.StatusCounts();
     console.warn(`Recalculated Metrics`);
-  }
-  catch (err) {
+  } catch(err) {
     console.error(`${err} : Couldn't generate statistics...`);
   }
 }
@@ -486,8 +521,7 @@ const PrintTurnaround = async (row) => {
 }
 
 const _testCalc = () => {
-  const c = new Calculate();
-  c.GetAverageCheckoutsPerUser();
+  Calculate.GetAverageCheckoutsPerUser();
 }
 
 

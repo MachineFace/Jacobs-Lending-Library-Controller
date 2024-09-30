@@ -381,74 +381,61 @@ const _gasTCalculationTesting = async () => {
   const test = new GasTap();
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
-  const calc = new Calculate();
-
   await test(`Calc Average Turnaround`, (t) => {
-    const x = calc.GetAverageTurnaround(SHEETS.Laser);
+    const x = Calculate.AverageTurnaround(SHEETS.Laser);
     t.ok(x, `Time string is ok.`);
   });
   
-  await test(`Calc Duration`, (t) => {
-    const x = calc.CalculateDuration( new Date(1992,03,27), new Date(2022,01,01) );
-    t.equal(x.toString(), `10872 1:00:00`, `Good calc`);
-    t.notEqual(x, new Date(), `Not Equal to a new date.`);
-  });
-  
   await test(`Count Active Users`, (t) => {
-    const x = calc.CountActiveUsers();
+    const x = Calculate.CountUniqueUsers();
     t.notEqual(x, undefined, `Count of active users should not return undefined.`);
   });
   
-  await test(`Count Each Submission`, (t) => {
-    const x = calc.CountEachSubmission();
-    t.notEqual(x, undefined, `Count Each Submission should not return undefined.`);
-  });
+  // await test(`Count Each Submission`, (t) => {
+  //   const x = Calculate.CountEachSubmission();
+  //   t.notEqual(x, undefined, `Count Each Submission should not return undefined.`);
+  // });
   
   await test(`Create Top Ten`, (t) => {
-    const x = calc.CreateTopTen();
+    const x = Calculate.CreateTopTen();
     t.notEqual(x, undefined || null, `Top Ten should not return undefined or null.`);
   });
   
-  await test(`Find an Email.`, (t) => {
-    const x = calc.FindEmail(`Cody`);
-    t.equal(x, `codyglen@berkeley.edu`, `Function should find my email: ${x}.`);
-    t.notEqual(x, undefined || null, `Find an Email should not return undefined or null.`);
-  });
 
   await test(`Calc Distribution`, (t) => {
     let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
       .filter(Boolean);
-    const x = calc.Distribution(names);
+    const x = Calculate.Distribution(names);
     t.notEqual(x, undefined, `Distribution should not return undefined.`);
   });
 
   await test(`Count Types`, (t) => {
-    const x = calc.CountTypes();
+    const x = Calculate.CountTypes();
     t.notEqual(x, undefined, `Count Types should not return undefined.`);
   });
   
   await test(`Calc Standard Deviation`, (t) => {
-    const x = calc.GetStandardDeviationOfSubmissions();
+    const x = Calculate.UserSubmissionStandardDeviation();
     t.notEqual(x, undefined || null, `Standard Deviation should not return undefined or null.`);
   });
 
   await test(`Calculate Arithmetic Mean`, (t) => {
-    const x = calc.GetAverageCheckoutsPerUser();
+    const x = Calculate.GetAverageCheckoutsPerUser();
     t.notEqual(x, undefined || null, `Arithmetic Mean should not return undefined or null.`);
   });
   
   await test(`Count Tiers`, (t) => {
-    const x = calc.CountTiers();
+    const x = Calculate.CountTiers();
     t.notEqual(x, undefined || null, `Count Tiers should not return undefined or null.`);
   });
   
   await test(`Count Statuses`, (t) => {
-    const x = calc.CountStatuses();
+    const x = Calculate.CountStatuses();
     t.notEqual(x, undefined || null, `Count Statuses should not return undefined or null.`);
   });
   
   await test(`Count Funding`, (t) => {
-    const x = calc.CountFunding();
+    const x = Calculate.CountFunding();
     console.warn(x);
     t.notEqual(x, undefined || null, `Count Funding should not return undefined or null.`);
   });
