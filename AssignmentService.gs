@@ -77,7 +77,7 @@ class AssignmentService {
         basket : this.basket,
         notes : this.notes,
         dueDate : returnDate,
-      })
+      });
       const ticket = newTicket.CreateTicket();
       SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.getUrl());
       SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl());
