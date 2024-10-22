@@ -9,7 +9,7 @@
  */
 const PopupCountCheckedOut = async () => {
   let ui = await SpreadsheetApp.getUi();
-  let counts = CountStatuses();
+  let counts = Calculate.StatusCounts();
   let checkedOut = 0;
   Object.entries(counts).forEach(([key, value], index) => {
     if(key == STATUS.checkedOut) checkedOut = value;
@@ -26,7 +26,7 @@ const PopupCountCheckedOut = async () => {
  */
 const PopupCountCheckedIn = async () => {
   let ui = await SpreadsheetApp.getUi();
-  let counts = CountStatuses();
+  let counts = Calculate.StatusCounts();
   let checkedIn = 0;
   Object.entries(counts).forEach(([key, value], index) => {
     if(key == STATUS.checkedIn) checkedIn = value;
@@ -43,7 +43,7 @@ const PopupCountCheckedIn = async () => {
  */
 const PopupCountOverdue = async () => {
   let ui = await SpreadsheetApp.getUi();
-  let counts = CountStatuses();
+  let counts = Calculate.StatusCounts();
   let overdue = 0;
   Object.entries(counts).forEach(([key, value], index) => {
     if(key == STATUS.overdue) overdue = value;
@@ -53,17 +53,6 @@ const PopupCountOverdue = async () => {
     `Currently Checked Out Baskets: ${overdue}`, 
     ui.ButtonSet.OK_CANCEL
   );
-}
-
-/**
- * Count Statuses
- */
-const CountStatuses = () => {
-  let count = {};
-  GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)
-    .filter(Boolean)
-    .forEach((keys) => count[keys] = ++count[keys] || 1);
-  return count;
 }
 
 /**
@@ -139,8 +128,8 @@ const PopupMetrics = () => {
 const PopupCalcTurnaround = async () => {
   let ui = SpreadsheetApp.getUi();
   let thisRow = SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
-  let name = GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
-  new Calculate().PrintAverageTurnaround();
+  let name = SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
+  Calculate.AverageTurnaround();
   ui.alert(
     SERVICE_NAME_WITH_ICON, 
     `Recalculated ${name}'s Turnaround Time.`, 
@@ -152,13 +141,13 @@ const PopupCalcTurnaround = async () => {
 /**
  * Return Modal
  */
-const PopupReturnModal = async () => {
+const PopupReturnModal = () => {
   const thisSheet = SpreadsheetApp.getActiveSheet();
   if(thisSheet.getSheetName() != SHEETS.Main) return;
   let thisRow = thisSheet.getActiveRange().getRow();
   if (thisRow <= 1) return;
-  let data = await GetRowData(thisRow);
-  await ShowReturnModal(data);
+  let data = SheetService.GetRowData(thisRow);
+  ShowReturnModal(data);
 }
 
 /**
@@ -167,7 +156,7 @@ const PopupReturnModal = async () => {
 const PopupCreateNewId = async () => {
   const ui = await SpreadsheetApp.getUi();
   const thisSheet = SpreadsheetApp.getActiveSheet();
-  if(Object.values(OTHERSHEETS).includes(thisSheet)) {
+  if(!SheetService.IsValidSheet(thisSheet)) {
     ui.alert(
       `${SERVICE_NAME_WITH_ICON}: Error!`,
       `Bad Sheet Selected`,
@@ -176,9 +165,9 @@ const PopupCreateNewId = async () => {
     return 0;
   }
   let thisRow = thisSheet.getActiveRange().getRow();
-  const id = CreateID();
+  const id = IDService.createId();
 
-  SetByHeader(thisSheet, HEADERNAMES.tracking, thisRow, id);
+  SheetService.SetByHeader(thisSheet, HEADERNAMES.tracking, thisRow, id);
   const a = ui.alert(
     `${SERVICE_NAME_WITH_ICON}:\n Job Number Created!`,
     `Created a New ID:\nID:${id}`,
@@ -195,7 +184,7 @@ const PopupCreateBarcode = async () => {
   const thisSheet = SpreadsheetApp.getActiveSheet();
   const thisRow = thisSheet.getActiveRange().getRow();
 
-  if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
+  if(!SheetService.IsValidSheet(thisSheet)) {
     const a = ui.alert(
       `${SERVICE_NAME_WITH_ICON}: Alert!`,
       `Select a user on the Main Sheet...`,
@@ -204,13 +193,13 @@ const PopupCreateBarcode = async () => {
     if(a === ui.Button.OK) return;
   }
 
-  let { tracking, status, issuer, name, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(thisSheet, thisRow);
+  let { tracking, status, issuer, name, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = SheetService.GetRowData(thisSheet, thisRow);
 
   const b = new BarcodeService({ number : tracking });
   b.Barcode;
   const url = b.url
   console.info(url)
-  SetByHeader(thisSheet, HEADERNAMES.barcode, thisRow, url);
+  SheetService.SetByHeader(thisSheet, HEADERNAMES.barcode, thisRow, url);
   const a = ui.alert(
     `${SERVICE_NAME_WITH_ICON}: Alert!`,
     `Created a New Barcode for ${name}:\n${url}`,
@@ -219,11 +208,14 @@ const PopupCreateBarcode = async () => {
   if(a === ui.Button.OK) return;
 }
 
+/**
+ * Popup Create a Ticket
+ */
 const PopupCreateTicket = async () => {
   const ui = await SpreadsheetApp.getUi();
   const thisSheet = SpreadsheetApp.getActiveSheet();
   const thisRow = thisSheet.getActiveRange().getRow();
-  if(thisSheet.getSheetId() !== SHEETS.Main.getSheetId()) {
+  if(!SheetService.IsValidSheet(thisSheet)) {
     const a = ui.alert(
       `${SERVICE_NAME_WITH_ICON}: Alert!`,
       `Select a user on the Main Sheet...`,
@@ -231,7 +223,7 @@ const PopupCreateTicket = async () => {
     );
     if(a === ui.Button.OK) return;
   }
-  let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(thisSheet, thisRow);
+  let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = SheetService.GetRowData(thisSheet, thisRow);
 
   const tick = await new Ticket({
     trackingNumber : tracking,
@@ -246,7 +238,7 @@ const PopupCreateTicket = async () => {
   });
   tick.CreateTicket();
   const url = tick.url;
-  SetByHeader(thisSheet, HEADERNAMES.ticket, thisRow, url);
+  SheetService.SetByHeader(thisSheet, HEADERNAMES.ticket, thisRow, url);
   console.warn(`Ticket Created....`);
   const a = ui.alert(
     `${SERVICE_NAME_WITH_ICON}: Alert!`,
@@ -303,9 +295,9 @@ const OpenBarcodeTab = async () => await SpreadsheetApp.getActiveSpreadsheet()
 
 
 
-const _akshdjfg = () => {
-  let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = GetRowData(SHEETS.Main, 3);
-  const ar = Array.from(itemBasket.split(`,`));
-  console.info(`Basket --> ${ar}`)
-}
+// const _akshdjfg = () => {
+//   let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = SheetService.GetRowData(SHEETS.Main, 3);
+//   const ar = Array.from(itemBasket.split(`,`));
+//   console.info(`Basket --> ${ar}`)
+// }
 

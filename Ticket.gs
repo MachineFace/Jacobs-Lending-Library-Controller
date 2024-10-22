@@ -152,12 +152,12 @@ class Ticket {
 const FixMissingTickets = () => {
   console.info(`Checking Tickets....`);
 
-  let ticketCells = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.ticket);
+  let ticketCells = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.ticket);
   ticketCells.forEach( async (cell, index) => {
     if(!cell) {
       let thisRow = index + 2;
       console.warn(`Index : ${thisRow} is Missing a Ticket! Creating new Ticket....`);
-      const rowData = GetRowData(SHEETS.Main, thisRow);
+      const rowData = SheetService.GetRowData(SHEETS.Main, thisRow);
       let { tracking, status, issuer, name, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = rowData;
     
       const tick = await new Ticket({

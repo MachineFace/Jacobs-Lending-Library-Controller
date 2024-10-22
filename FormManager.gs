@@ -2,7 +2,7 @@
 
 const EditForm = () => {
   try {
-    let choices = [...GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)]
+    let choices = [...SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)]
       .filter(Boolean);
     console.warn(`Updating Choices....`);
     const form = FormApp.openById(FORM.id);

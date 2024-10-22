@@ -38,7 +38,7 @@
 
       const handleValidateEmail = () => {
         let unsanitaryInput = document.getElementById("email").innerHTML;
-        let test = ValidateEmail(unsanitaryInput);
+        let test = Emailer.ValidateEmail(unsanitaryInput);
         if(test == true) return unsanitaryInput;
         else document.getElementById("email").innerHTML = `Bad Email`
       }

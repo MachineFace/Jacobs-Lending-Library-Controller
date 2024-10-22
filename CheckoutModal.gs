@@ -3,8 +3,8 @@
 const ShowCheckoutModal = async () => {
   const ui = SpreadsheetApp.getUi();
   let template = HtmlService.createTemplateFromFile('checkoutmodal')
-  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
-  template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
       template.evaluate()
@@ -22,7 +22,7 @@ const ProcessCheckoutForm = (formObject) => {
   Object.entries(formObject).forEach( pair => {
     // console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
     if(pair[0] == `name`) name = pair[1] ? TitleCase(pair[1]) : `Unknown Name`;
-    if(pair[0] == `email`) email = ValidateEmail(pair[1]) ? pair[1] : `Unknown Email`;
+    if(pair[0] == `email`) email = Emailer.ValidateEmail(pair[1]) ? pair[1] : `Unknown Email`;
     if(pair[0] ==`sid`) sid = pair[1] ? pair[1] : 0;
     if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
     if(pair[0] == `notes`) notes = pair[1] ? pair[1] : `Notes`;

@@ -30,7 +30,7 @@ class TimeService {
    */
   static TimerStringToMilliseconds (timerString = `0 days, 0:34:18`) {
     try {
-      // timerString = GetByHeader(SHEETS.Main, HEADERNAMES.daysCheckedOut, 3);
+      // timerString = SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.daysCheckedOut, 3);
       let m = timerString.split(`days`);
       let n = m[1].split(`,`);
       let q = n[1].split(`:`);
@@ -175,14 +175,14 @@ class TimeService {
  * @TRIGGERED
  */
 const UpdateTimeToOverdue = () => {
-  let dueDates = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
+  let dueDates = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
   console.warn(`Checking and updating Overdue times....`)
   dueDates.forEach((dueDate, index) => {
     if(dueDate) {
       console.log(`Index: ${index + 2}, ${dueDate}`);
       let remainingTime = TimeService.RemainingTime(dueDate);
       console.log(`REMAINING TIME ----> ${remainingTime}`);
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, remainingTime);
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, remainingTime);
     }
   });
   console.warn(`All countdowns updated.....`)
@@ -194,20 +194,20 @@ const UpdateTimeToOverdue = () => {
  * @TRIGGERED hourly
  */
 const CheckOverdueTimes = () => {
-  const dates = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
+  const dates = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
   if(dates && dates.length > 0) {
     dates.forEach( async (date, index) => {
       let row = index + 2;
       if(date && date < new Date()) {
         await console.info(`OVERDUE ----> Row: ${row}, Date: ${date}.`);
-        await SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.overdue);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.overdue);
       } else if(date && date > new Date()) {
         await console.info(`Checked Out ----> Row: ${row}, Date: ${date}.`);
-        await SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.checkedOut);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.checkedOut);
       } else {
         await console.info(`Checked In ----> Row: ${row}.`);
-        await SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.checkedIn);
-        await SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, row, ``);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.checkedIn);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, row, ``);
       }
     });
   }
@@ -218,14 +218,14 @@ const CheckOverdueTimes = () => {
  * @TRIGGERED once a week
  */
 const CheckOverdueTimesAndEmail = () => {
-  const dates = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
+  const dates = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dueDate);
   dates.forEach( (date, index) => {
     console.info(`Checking Date : ${date}`);
     if(date && date < new Date()) {
       let row = index + 2;
       console.info(`OVERDUE ----> Row: ${row}, Date: ${date}.`);
-      SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.overdue);
-      let data = GetRowData(SHEETS.Main, row);
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status, row, STATUS.overdue);
+      let data = SheetService.GetRowData(SHEETS.Main, row);
       try {
         new Emailer({
           trackingNumber : data.tracking,

@@ -23,9 +23,9 @@ class InventoryManager {
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
       if (row < 2) row = 2;
-      let itemCount = GetByHeader(this.sheet, `Count`, row);
+      let itemCount = SheetService.GetByHeader(this.sheet, `Count`, row);
       if (itemCount <= 0) console.warn(`Out of inventory!`);
-      else SetByHeader(this.sheet, `Count`, row, itemCount - 1);
+      else SheetService.SetByHeader(this.sheet, `Count`, row, itemCount - 1);
     });
     console.warn(`Checkout Complete`);
   }
@@ -41,8 +41,8 @@ class InventoryManager {
       let finder = this.sheet.createTextFinder(item).findNext();
       if (finder != null) row = finder.getRow();
       if(row < 2) row = 2;
-      let itemCount = GetByHeader(this.sheet, `Count`, row);
-      SetByHeader(this.sheet, `Count`, row, itemCount + 1);
+      let itemCount = SheetService.GetByHeader(this.sheet, `Count`, row);
+      SheetService.SetByHeader(this.sheet, `Count`, row, itemCount + 1);
     });
     console.warn(`CheckIn Complete`);
   }
@@ -53,7 +53,7 @@ class InventoryManager {
   ResetInventory() {
     let lastRow = this.sheet.getLastRow();
     for(let i = 2; i <= lastRow; i++) {
-      SetByHeader(this.sheet, `Count`, i, 20);
+      SheetService.SetByHeader(this.sheet, `Count`, i, 20);
     }
     console.warn(`Inventory Reset Complete`);
   }

@@ -25,7 +25,7 @@ const onSubmission = async (e) => {
 
   // Parse variables
   const name = e.namedValues[HEADERNAMES.name] ? TitleCase(e.namedValues[HEADERNAMES.name][0]) : `Unknown Name`;
-  SetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow, name);
+  SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.name, lastRow, name);
   const email = e.namedValues[HEADERNAMES.email] ? e.namedValues[HEADERNAMES.email][0] : `Unknown Email`;
   const sid = e.namedValues[HEADERNAMES.studentId] ? e.namedValues[HEADERNAMES.studentId][0] : `Unknown SID`;
   const timestamp = e.namedValues[HEADERNAMES.timestamp] ? e.namedValues[HEADERNAMES.timestamp][0] : ``;
@@ -33,20 +33,20 @@ const onSubmission = async (e) => {
   
   // Set Requested Status
   const status = STATUS.requested;
-  SetByHeader(SHEETS.Main, HEADERNAMES.status,  lastRow, status); 
+  SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status,  lastRow, status); 
   console.info(`Status set to 'Requested'.`);
   
   // Create Tracking Number
   const trackingNumber = IDService.createId();
-  SetByHeader(SHEETS.Main, HEADERNAMES.tracking, lastRow, trackingNumber);
+  SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.tracking, lastRow, trackingNumber);
 
   // Issuer
   const issuer = `Staff`;
-  SetByHeader(SHEETS.Main, HEADERNAMES.issuer, lastRow, issuer);
+  SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.issuer, lastRow, issuer);
 
   // Notes
   const notes = `No notes yet...`;
-  SetByHeader(SHEETS.Main, HEADERNAMES.notes, lastRow, notes);
+  SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.notes, lastRow, notes);
 
   // Create Ticket
   let ticket;
@@ -65,8 +65,8 @@ const onSubmission = async (e) => {
   }
   try {
     if(!ticket) throw new Error(`Ticket Missing...`);
-    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
-    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
+    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, lastRow, ticket.url);
+    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, lastRow, ticket.barcode.getUrl());
   } catch (err) {
     console.error(`${err}, Whoops: Couldn't write the fucking ticket to the sheet for some reason...` );
   }
@@ -134,7 +134,7 @@ const onChange = async (e) => {
   const now = new Date();
 
   // Get values OR defaults if it fucks up
-  let rowData = GetRowData(SHEETS.Main, thisRow);
+  let rowData = SheetService.GetRowData(SHEETS.Main, thisRow);
   console.info(rowData);
   let { tracking, status, issuer, timestamp, studentEmail, name, studentId, affiliation, itemBasket, dateCheckedOut, dateReturned, ticket, barcode, notes, dueDate, remainingDays, sheetName, row } = rowData;
 
@@ -160,7 +160,7 @@ const onChange = async (e) => {
         break;
       case STATUS.checkedIn:
         Log.Warning(`Tracking Number ${tracking} checked out by ${issuer} to ${name} on ${dateCheckedOut} has now been returned.`);
-        SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, now.toDateString());
 
         // Update Inventory
         new InventoryManager({ basket : itemBasket }).CheckInBasket();
@@ -170,10 +170,10 @@ const onChange = async (e) => {
         break;
       case STATUS.checkedOut:
         Log.Warning(`Tracking Number ${tracking} has been checked out by ${issuer} to ${name} on ${dateCheckedOut}`);
-        SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
-        SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
-        SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
-        SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, thisRow, now.toDateString());
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, thisRow, ``);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dueDate, thisRow, dueDate);
+        SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, thisRow, remainingDays);
 
         // Update Inventory
         new InventoryManager({ basket : itemBasket }).CheckOutBasket();

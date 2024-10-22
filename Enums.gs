@@ -9,6 +9,9 @@ const SERVICE_EMAIL = `jacobs-project-support@berkeley.edu`;
 const CHECKOUT_LENGTH = 14; // How many days a student can hold a headset
 const PICKUP_HOURS = `Monday - Friday: 11am - 1pm & 4pm - 6pm.`;
 
+/**
+ * Colors
+ */
 const COLORS = Object.freeze({
   green_light : `#d9ead3`,
   green : `74d975`, 
@@ -38,6 +41,9 @@ const COLORS = Object.freeze({
   black : `#000000`,
 });
 
+/**
+ * Response Codes
+ */
 const RESPONSECODES = Object.freeze({
 	200 : `OK`,
 	201 : `Created`,
@@ -107,6 +113,9 @@ const RESPONSECODES = Object.freeze({
 	599 : `Network connect timeout error`,
 });
 
+/**
+ * Affilliation
+ */
 const AFFILLIATION = Object.freeze({
   researcher : `Researcher`,
   desinvfaculty : `DES INV Faculty`,
@@ -122,6 +131,9 @@ const AFFILLIATION = Object.freeze({
   generalStudents : `General Students`,
 });
 
+/**
+ * Status
+ */
 const STATUS = Object.freeze({
   requested : `Requested`,
   checkedOut : `Checked Out`,
@@ -131,6 +143,9 @@ const STATUS = Object.freeze({
   missing : `Missing`,
 });
 
+/**
+ * Headernames
+ */
 const HEADERNAMES = Object.freeze({
   tracking: `Tracking Number`,
   status: `Status`,
@@ -151,10 +166,16 @@ const HEADERNAMES = Object.freeze({
   checkedOutCount: `Number of Times Checked Out`,
 });
 
+/**
+ * Sheets
+ */
 const SHEETS = Object.freeze({
   Main : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Main`),
 });
 
+/**
+ * Other Sheets
+ */
 const OTHERSHEETS = Object.freeze({
   Scanner : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Pickup Scanner`),
   Staff : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`StaffList`),
@@ -164,17 +185,24 @@ const OTHERSHEETS = Object.freeze({
   Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
 });
 
+/**
+ * Drive Folders
+ */
 const DRIVEFOLDERS = Object.freeze({
   ticketfolder : PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER`),
 });
 
+/**
+ * Forms
+ */
 const FORM = Object.freeze({
   id : PropertiesService.getScriptProperties().getProperty(`FORM`),
   url : PropertiesService.getScriptProperties().getProperty(`DRIVE_FOLDER_URL`),
 });
 
-
-
+/**
+ * Page Sizes
+ */
 const PAGESIZES = Object.freeze({
   letter: {width: 612.283, height: 790.866},
   tabloid: {width: 790.866,height: 1224.57},

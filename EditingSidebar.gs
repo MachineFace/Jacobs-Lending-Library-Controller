@@ -16,7 +16,7 @@ const EditFromSelected = async () => {
   }
 
   // Get row data
-  const rowData = GetRowData(thisSheet, thisRow);
+  const rowData = SheetService.GetRowData(thisSheet, thisRow);
   console.warn(rowData);
   let { tracking, status, issuer, timestamp, studentEmail, name, studentId, affiliation, itemBasket, dateCheckedOut, dateReturned, ticket, barcode, notes, dueDate, remainingDays, sheetName, row } = rowData;
 
@@ -29,9 +29,9 @@ const EditFromSelected = async () => {
   template.issuer = issuer;
   template.studentEmail = studentEmail;
   template.studentId = studentId;
-  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
   template.itemBasket = itemBasket;
-  template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
       template.evaluate()
@@ -54,9 +54,9 @@ const ShowEditingSidebar = async (rowData) => {
   template.name = name;
   template.studentEmail = studentEmail;
   template.studentId = studentId;
-  template.items = GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
   template.checkedItems = itemBasket;
-  template.staff = GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
   let html = HtmlService
     .createHtmlOutput(
       template.evaluate()
@@ -73,7 +73,7 @@ const ProcessEditForm = (formObject, rowData) => {
   Object.entries(formObject).forEach( pair => {
     console.info(`Key: ${pair[0]}, Value: ${pair[1]}`);
     if(pair[0] == `name`) name = pair[1] ? TitleCase(pair[1]) : `Unknown Name`;
-    if(pair[0] == `email`) email = ValidateEmail(pair[1]) ? pair[1] : `Unknown Email`;
+    if(pair[0] == `email`) email = Emailer.ValidateEmail(pair[1]) ? pair[1] : `Unknown Email`;
     if(pair[0] == `staff`) staff = pair[1] ? pair[1] : `Staff`;
     if(pair[0] == `notes`) notes = pair[1] ? pair[1] : `Notes`;
     // else if(pair[1] == `true`) basket.push(pair[0])

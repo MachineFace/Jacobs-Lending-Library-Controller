@@ -12,7 +12,7 @@ class Calculate {
    */
   static AverageTurnaround() {
     try {
-      const completionTimes = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)]
+      const completionTimes = [...SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)]
         .filter(Boolean)
         .map(time => TimeService.TimerStringToMilliseconds(time));
 
@@ -38,7 +38,7 @@ class Calculate {
    */
   static StatusCounts() {
     try {
-      const statuses = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)];
+      const statuses = [...SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.status)];
       const distribution = [...Calculate.Distribution(statuses)];
       const distSet = new Set(distribution.map(([key, _]) => key));
 
@@ -67,7 +67,7 @@ class Calculate {
    */
   static PrintTopTen() {
     try {
-      let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+      let names = [...SheetService.GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
         .filter(Boolean)
         .filter(x => x[0] != `Testa Fiesta`);
       const distribution = [...Calculate.Distribution(names)]
@@ -111,7 +111,7 @@ class Calculate {
    */
   static CountUniqueUsers() {
     try {
-      let users = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)];
+      let users = [...SheetService.GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)];
       const count = new Set(users).size;
       const values = [
         [ `Number of Unique Users`],
@@ -131,7 +131,7 @@ class Calculate {
    */
   static UserSubmissionStandardDeviation() {
     try {
-      let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+      let names = [...SheetService.GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
         .filter(Boolean);
       const distribution = Calculate.Distribution(names);
       const stdDev = Calculate.StandardDeviation(distribution);
@@ -156,7 +156,7 @@ class Calculate {
    */
   static GetAverageCheckoutsPerUser() {
     try {
-      let emails = [...GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.studentEmail)]
+      let emails = [...SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.studentEmail)]
         .filter(Boolean);
       const distribution = Calculate.Distribution(emails);
       const mean = Calculate.GeometricMean(distribution);
@@ -535,23 +535,23 @@ const Metrics = () => {
  * Testing for Metrics
  */
 const PrintAllTurnarounds = () => {
-  let outs = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut);
-  let returns = GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateReturned);
+  let outs = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut);
+  let returns = SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.dateReturned);
   outs.forEach( async (timeOut, index) => {
     if(timeOut && returns[index]) {
       console.info(index + 2);    
       let time = await TimeService.Duration(timeOut, returns[index]);
-      SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, time);
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, index + 2, time);
     }
   })
 }
 
 const PrintTurnaround = async (row) => {
-  const dateCheckedOut = GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, row);
-  const datecheckedIn = GetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, row);
+  const dateCheckedOut = SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, row);
+  const datecheckedIn = SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, row);
   if(dateCheckedOut && datecheckedIn) {
     const time = await TimeService.Duration(dateCheckedOut, datecheckedIn);
-    await SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, row, time);
+    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.remainingDays, row, time);
   }
 }
 

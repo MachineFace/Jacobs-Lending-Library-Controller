@@ -242,13 +242,13 @@ const _gasTRecordTakerTesting = async () => {
 
   await test(`RecordTaker`, t => {
     const x = new RecordTaker({
-      trackingNumber : GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i + 5),
-      date : GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, i + 5),
-      issuer : GetByHeader(SHEETS.Main, HEADERNAMES.issuer, i + 5),
-      name : GetByHeader(SHEETS.Main, HEADERNAMES.name, i + 5),
-      email : GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, i + 5),
-      basket : GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, i + 5),
-      notes : GetByHeader(SHEETS.Main, HEADERNAMES.notes, i + 5),
+      trackingNumber : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.tracking, i + 5),
+      date : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.dateCheckedOut, i + 5),
+      issuer : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.issuer, i + 5),
+      name : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.name, i + 5),
+      email : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.studentEmail, i + 5),
+      basket : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.itemBasket, i + 5),
+      notes : SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.notes, i + 5),
     });
     t.notThrow(() => x, `RecordTaker SHOULD NOT throw error: ${x}`);
   });
@@ -269,12 +269,12 @@ const _gasTMiscTesting = async () => {
   console.warn(`Testing: ${new Error().stack.split('\n')[1].split(`at `)[1]}`);  // Print Enclosing Function Name
 
   await test(`Search`, (t) => {
-    const x = Search(`Cody`);
+    const x = SheetService.Search(`Cody`);
     t.notEqual(x, undefined || null, `Search should not return undefined or null. ${JSON.stringify(x)}`);
   });
 
   await test(`Search Specific Sheet`, (t) => {
-    const x = SearchSpecificSheet(SHEETS.Fablight,`Cody`);
+    const x = SheetService.SearchSpecificSheet(SHEETS.Fablight,`Cody`);
     t.notEqual(x, undefined || null, `SearchSpecificSheet should not return undefined or null. ${JSON.stringify(x)}`);
   });
 
@@ -284,83 +284,83 @@ const _gasTMiscTesting = async () => {
   });
 
   await test(`GetByHeader`, (t) => {
-    const x = GetByHeader(SHEETS.Fablight, HEADERNAMES.email, 2);
+    const x = SheetService.GetByHeader(SHEETS.Fablight, HEADERNAMES.email, 2);
     t.equal(x, `codyglen@berkeley.edu`, `Should fetch my email from that sheet.`);
 
-    const y = GetByHeader(SHEETS.Laser, `BAD COLUMN NAME`, 2);
+    const y = SheetService.GetByHeader(SHEETS.Laser, `BAD COLUMN NAME`, 2);
     t.equal(y, 1, `GetByHeader SHOULD return "1": ${y}`);
 
-    const z = GetByHeader(`BAD SHEET`, HEADERNAMES.email, 2);
+    const z = SheetService.GetByHeader(`BAD SHEET`, HEADERNAMES.email, 2);
     t.equal(y, 1, `GetByHeader SHOULD return "1": ${y}`);
 
-    const a = GetByHeader(`BAD SHEET`, `BAD COLUMN NAME`, `BAD ROW NUMBER`);
+    const a = SheetService.GetByHeader(`BAD SHEET`, `BAD COLUMN NAME`, `BAD ROW NUMBER`);
     t.equal(a, 1, `GetByHeader SHOULD return "1": ${a}`);
 
   });
 
   await test(`GetColumnDataByHeader`, (t) => {
-    const x = GetColumnDataByHeader(SHEETS.Fablight, HEADERNAMES.email);
+    const x = SheetService.GetColumnDataByHeader(SHEETS.Fablight, HEADERNAMES.email);
     t.notEqual(x, undefined || null, `GetColumnDataByHeader SHOULD NOT return undefined or null: ${x}`);
 
-    const y = GetColumnDataByHeader(SHEETS.Laser, `BAD COLUMN NAME`);
+    const y = SheetService.GetColumnDataByHeader(SHEETS.Laser, `BAD COLUMN NAME`);
     t.equal(y, 1, `GetByHeader SHOULD return "1": ${y}`);
 
-    const z = GetColumnDataByHeader(`BAD SHEET`, `BAD COLUMN NAME`);
+    const z = SheetService.GetColumnDataByHeader(`BAD SHEET`, `BAD COLUMN NAME`);
     t.equal(z, 1, `GetByHeader SHOULD return "1": ${z}`);
 
   });
 
   await test(`GetRowData`, (t) => {
-    const x = GetRowData(SHEETS.Fablight, 2);
+    const x = SheetService.GetRowData(SHEETS.Fablight, 2);
     t.notEqual(x, undefined || null, `GetRowData SHOULD NOT return undefined or null: ${JSON.stringify(x)}`);
 
-    const y = GetRowData(SHEETS.Laser, `BAD COLUMN NAME`);
+    const y = SheetService.GetRowData(SHEETS.Laser, `BAD COLUMN NAME`);
     t.equal(y, 1, `GetRowData SHOULD return "1": ${y}`);
 
-    const z = GetRowData(`BAD SHEET`, `BAD COLUMN NAME`);
+    const z = SheetService.GetRowData(`BAD SHEET`, `BAD COLUMN NAME`);
     t.equal(z, 1, `GetRowData SHOULD return "1": ${z}`);
 
   });
 
   await test(`FindOne`, (t) => {
-    const x = FindOne(`cparsell@berkeley.edu`);
+    const x = SheetService.FindOne(`cparsell@berkeley.edu`);
     t.notEqual(x, undefined || null, `FindOne should not return undefined or null. ${JSON.stringify(x)}`);
 
-    const y = FindOne(`BAD NAME`);
+    const y = SheetService.FindOne(`BAD NAME`);
     t.equal(0, Object.entries(y).length, `FindOne SHOULD return empty object: ${JSON.stringify(y)}`);
   });
 
   await test(`ValidateEmail`, (t) => {
-    const x = ValidateEmail(`cparsell@berkeley.edu`);
+    const x = Emailer.ValidateEmail(`cparsell@berkeley.edu`);
     t.equal(x, true, `ValidateEmail SHOULD return true: ${x}`);
 
-    const y = ValidateEmail(`BAD NAME`);
+    const y = Emailer.ValidateEmail(`BAD NAME`);
     t.equal(y, false, `ValidateEmail SHOULD return false: ${y}`);
 
-    const z = ValidateEmail(`!#$%^%$123@berkeley.edu`);
+    const z = Emailer.ValidateEmail(`!#$%^%$123@berkeley.edu`);
     t.equal(z, false, `ValidateEmail SHOULD return false: ${z}`);
 
-    const a = ValidateEmail(`normalname@!#&^*^&*$%^)$!#$#!`);
+    const a = Emailer.ValidateEmail(`normalname@!#&^*^&*$%^)$!#$#!`);
     t.equal(a, false, `ValidateEmail SHOULD return false: ${a}`);
 
-    const b = ValidateEmail(`12345675645634599293487529384752938745923845293485729348572934875@berkeley.edu`);
+    const b = Emailer.ValidateEmail(`12345675645634599293487529384752938745923845293485729348572934875@berkeley.edu`);
     t.equal(b, true, `ValidateEmail SHOULD return true: ${b}`);
 
   });
 
   await test(`SetByHeader`, (t) => {
-    const x = SetByHeader(OTHERSHEETS.Logger, `Date`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
+    const x = SheetService.SetByHeader(OTHERSHEETS.Logger, `Date`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
     t.notThrow(() => x, `SetByHeader SHOULD NOT throw an error. ${x}`);
     t.equal(x, 0, `SetByHeader SHOULD return "0": Actual: ${x}`);
 
-    const y = SetByHeader(`BAD SHEET`, `Date`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
+    const y = SheetService.SetByHeader(`BAD SHEET`, `Date`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
     t.equal(y, 1, `SetByHeader SHOULD return "1": Actual: ${y}`);
 
-    const z = SetByHeader(OTHERSHEETS.Logger, `BAD TITLE`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
+    const z = SheetService.SetByHeader(OTHERSHEETS.Logger, `BAD TITLE`, OTHERSHEETS.Logger.getLastRow(), `TESTING FUNCTIONALITY....`);
     t.throws(z, `SetByHeader SHOULD throw an error on bad column name: ${z}`)
     t.equal(z, 1, `SetByHeader SHOULD return "1": Actual: ${z}`);
 
-    const a = SetByHeader(OTHERSHEETS.Logger, `Date`, -1, `TESTING FUNCTIONALITY....`);
+    const a = SheetService.SetByHeader(OTHERSHEETS.Logger, `Date`, -1, `TESTING FUNCTIONALITY....`);
     t.throws(a, `SetByHeader SHOULD throw an error on bad row number: ${a}`)
     t.equal(a, 1, `SetByHeader SHOULD return "1": Actual: ${a}`);
 
@@ -403,7 +403,7 @@ const _gasTCalculationTesting = async () => {
   
 
   await test(`Calc Distribution`, (t) => {
-    let names = [...GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
+    let names = [...SheetService.GetColumnDataByHeader(OTHERSHEETS.Record, `Name`)]
       .filter(Boolean);
     const x = Calculate.Distribution(names);
     t.notEqual(x, undefined, `Distribution should not return undefined.`);

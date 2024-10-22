@@ -94,6 +94,17 @@ class Emailer {
       return 1;
     }
   }
+
+  /**
+   * Validate an email string
+   * @param {string} email
+   * @returns {bool} boolean
+   */
+  static ValidateEmail(email = ``) {
+    const regex = new RegExp(/^[a-zA-Z0-9+_.-]+@[berkeley.edu]+$/);
+    let match = regex.test(email);
+    return match;
+  }
 }
 
 /**
@@ -109,10 +120,9 @@ const _testEmailer = () => {
       email : "codyglen@berkeley.edu",
       status : status,
       name : `Dingus Dongus`,
-    })
-  })
+    });
+  });
 }
-
 
 
 

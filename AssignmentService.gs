@@ -64,7 +64,7 @@ class AssignmentService {
         dueDate : returnDate, 
         remainingDays : remainingDays,
       }
-      SetRowData(SHEETS.Main, this.row, rowData);	
+      SheetService.SetRowData(SHEETS.Main, this.row, rowData);	
 
       // Create Ticket
       const newTicket = new Ticket({
@@ -79,8 +79,8 @@ class AssignmentService {
         dueDate : returnDate,
       })
       const ticket = newTicket.CreateTicket();
-      SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.getUrl());
-      SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl());
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.getUrl());
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl());
       
       // Set Inventory
       new InventoryManager({ basket : this.basket, }).CheckOutBasket();
@@ -199,7 +199,7 @@ const ModifyOrder = (rowData) => {
       dueDate : returnDate, 
       remainingDays : remainingDays,
     }
-    SetRowData(SHEETS.Main, this.row, rowData);	
+    SheetService.SetRowData(SHEETS.Main, this.row, rowData);	
 
     // Create a ticket
     const ticket = new Ticket({
@@ -215,8 +215,8 @@ const ModifyOrder = (rowData) => {
     });
     ticket.CreateTicket();
     if(!ticket) throw new Error(`Couldn't generate a ticket.`)
-    SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-    SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
+    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
+    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
 
     // Manage Inventory
     new InventoryManager({basket : this.basket}).CheckOutBasket();

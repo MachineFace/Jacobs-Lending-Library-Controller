@@ -140,11 +140,11 @@ const ReturnByBarcode = () => {
     if (searchRow <= 1) return;
 
     // change status to picked up
-    // SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
-    // SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
+    // SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.status, searchRow, STATUS.checkedIn);
+    // SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.dateReturned, searchRow, date);
     // progress.setValue(`Tracking ID #${number} marked as ${STATUS.checkedIn}. Row: ${searchRow}`);
 
-    const data = GetRowData(SHEETS.Main, searchRow);
+    const data = SheetService.GetRowData(SHEETS.Main, searchRow);
     let { tracking, status, studentEmail, name, dateReturned, remainingDays, } = data;
     ShowReturnModal(data);
 
@@ -181,7 +181,7 @@ const MakeNewBarcode = (row = 2) => {
     b.Barcode;
     const url = b.url
     console.info(url)
-    // SetByHeader(SHEETS.Main, HEADERNAMES.barcode, row, url);
+    // SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, row, url);
     return 0;
   } catch(err) {
     console.error(`"MakeNewBarcode()" failed : ${err}`);
