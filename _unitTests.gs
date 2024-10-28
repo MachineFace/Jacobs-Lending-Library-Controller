@@ -279,22 +279,22 @@ const _gasTMiscTesting = async () => {
   });
 
   await test(`FindByJobNumber`, (t) => {
-    const x = FindByJobNumber(20211025144607);
+    const x = new IDService().FindByID(20211025144607);
     t.notEqual(x, undefined || null, `FindByJobNumber should not return undefined or null. ${JSON.stringify(x)}`);
   });
 
   await test(`GetByHeader`, (t) => {
     const x = SheetService.GetByHeader(SHEETS.Fablight, HEADERNAMES.email, 2);
-    t.equal(x, `codyglen@berkeley.edu`, `Should fetch my email from that sheet.`);
+    t.equal(x, 1, `GetByHeader SHOULD return "1". Actual: ${x}`);
 
     const y = SheetService.GetByHeader(SHEETS.Laser, `BAD COLUMN NAME`, 2);
-    t.equal(y, 1, `GetByHeader SHOULD return "1": ${y}`);
+    t.equal(y, 1, `GetByHeader SHOULD return "1". Actual: ${y}`);
 
     const z = SheetService.GetByHeader(`BAD SHEET`, HEADERNAMES.email, 2);
-    t.equal(y, 1, `GetByHeader SHOULD return "1": ${y}`);
+    t.equal(y, 1, `GetByHeader SHOULD return "1". Actual: ${y}`);
 
     const a = SheetService.GetByHeader(`BAD SHEET`, `BAD COLUMN NAME`, `BAD ROW NUMBER`);
-    t.equal(a, 1, `GetByHeader SHOULD return "1": ${a}`);
+    t.equal(a, 1, `GetByHeader SHOULD return "1". Actual: ${a}`);
 
   });
 

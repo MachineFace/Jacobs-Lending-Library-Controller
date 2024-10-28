@@ -58,7 +58,7 @@ class SheetService {
       sheet.getRange(row, col).setValue(val);
       return 0;
     } catch (err) {
-      console.error(`"SetByHeader()" failed : ${err} @ Sheet: ${sheet} Row: ${row} Col: ${col} Value: ${val}`);
+      console.error(`"SetByHeader()" failed : ${err} @ Sheet: ${sheet} Row: ${row}, Value: ${val}`);
       return 1;
     }
   }
@@ -186,7 +186,7 @@ class SheetService {
       if (col == -1) return false;
       return range.some( row => row[0] === val);
     } catch (err) {
-      console.error(`"SearchColumn()" failed : ${err} @ Sheet: ${sheet} Col Name specified: ${columnName} value: ${val}`);
+      console.error(`"SearchColumn()" failed : ${err} @ Sheet: ${sheet} Col Name: ${columnName} value: ${val}`);
       return false;
     }
   }
@@ -258,8 +258,7 @@ class SheetService {
         const sheetName = sheet.getSheetName();
         const finder = sheet.createTextFinder(value).findAll();
         if (finder != null) {
-          temp = [];
-          finder.forEach(result => temp.push(result.getRow()));
+          let temp = [...finder.map(x => x.getRow())];
           res[sheetName] = temp;
         }
       })

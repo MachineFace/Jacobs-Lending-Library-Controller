@@ -48,10 +48,10 @@ class IDService {
    * @param {string} uuid
    * @returns {object} sheet and row 
    */
-  FindByID(id) {
-    let res = {};
+  FindByID(id = ``) {
     try {
       if (!this.IsValid(id)) throw new Error(`Invalid id supplied...`);
+      let res = {};
       Object.values(SHEETS).forEach(sheet => {
         const finder = sheet.createTextFinder(id).findNext();
         if (finder != null) res[sheet.getName()] = finder.getRow();
@@ -60,6 +60,7 @@ class IDService {
       return res;
     } catch(err) {
       console.error(`"FindByID()" failed: ${err}`);
+      return 1;
     }
   }
 
