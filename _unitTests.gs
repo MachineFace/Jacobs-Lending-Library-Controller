@@ -152,7 +152,7 @@ const _gasTTicketTesting = async () => {
 
   await test(`Ticket`, t => {
 
-    let x = new Ticket({
+    let x = TicketService.CreateTicket({
       trackingNumber : `1000005`,
       status : STATUS.checkedOut, 
       name : `TestName`, 
@@ -162,7 +162,7 @@ const _gasTTicketTesting = async () => {
       basket : ["Tiny mitre saw/mitre box","Hot Glue Gun (+2 full glue sticks)","Breadboard","Sandpaper (one square each of 80, 220, 400)","Roomba","Scissors","Exacto (+3 new blades)"],
       notes : `Notes go here.... `,
       dueDate : TimeService.ReturnDate(new Date()),
-    }).CreateTicket();
+    });
     t.notThrow(() => x, `Ticket SHOULD NOT throw error: ${x}`);
     t.notEqual(x, undefined || null, `Ticket SHOULD NOT yield null. ${x}`);
   });

@@ -17,28 +17,28 @@ class BarcodeService {
    * Generate Barcode
    */
   get Barcode() {
-    const root = 'http://bwipjs-api.metafloor.com/';
-    const rootsec = 'https://bwipjs-api.metafloor.com/';
-    const type = '?bcid=code128';
-    const ts = '&text=';
-    const scale = '&scale=0.75'
-    const postfx = '&includetext';
-    const target = DriveApp.getFolderById(DRIVEFOLDERS.ticketfolder);
-
-    const fixedUUID = IDService.isValid(this.uuid) ? this.uuid : IDService.createId();
-    const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
-
-    //let barcodeLoc = 'http://bwipjs-api.metafloor.com/?bcid=code128&text=1234567890&includetext';  //KNOWN WORKING LOCATION
-    const barcodeLoc = root + type + ts + convertedNumber + scale + postfx  + `&alttext=` + fixedUUID;
-
-    const params = {
-      method : "GET",
-      headers : { "Authorization": "Basic ", "Content-Type" : "image/png" },
-      contentType : "application/json",
-      followRedirects : true,
-      muteHttpExceptions : true,
-    };
     try {
+      const root = 'http://bwipjs-api.metafloor.com/';
+      const rootsec = 'https://bwipjs-api.metafloor.com/';
+      const type = '?bcid=code128';
+      const scale = '&scale=0.75'
+      const postfx = '&includetext';
+      const target = DriveApp.getFolderById(DRIVEFOLDERS.ticketfolder);
+
+      const fixedUUID = IDService.isValid(this.uuid) ? this.uuid : IDService.createId();
+      const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
+
+      //let barcodeLoc = 'http://bwipjs-api.metafloor.com/?bcid=code128&text=1234567890&includetext';  //KNOWN WORKING LOCATION
+      const barcodeLoc = root + type + `&text=` + convertedNumber + scale + postfx  + `&alttext=` + fixedUUID;
+
+      const params = {
+        method : "GET",
+        headers : { "Authorization": "Basic ", "Content-Type" : "image/png" },
+        contentType : "application/json",
+        followRedirects : true,
+        muteHttpExceptions : true,
+      }
+    
       const response = UrlFetchApp.fetch(barcodeLoc, params);
       const responseCode = response.getResponseCode();
       if(responseCode != 200) throw new Error(`Bad Response from server : ${responseCode}, ${RESPONSECODES[responseCode]}`);
@@ -55,8 +55,6 @@ class BarcodeService {
       return 1;
     }
 
-
-    
   }
 
   /**
@@ -108,7 +106,7 @@ class BarcodeService {
    * @private
    */
   _MakeFilename(name) {
-    return `${name}-${Utilities.formatDate(new Date(), "PST", "yyyyMMddHHmmss").toString()}`;
+    return `${name}-${IDService.createId()}`;
   }
   
 }

@@ -167,6 +167,71 @@ const PopupReturnModal = () => {
 }
 
 /**
+ * Checkout Modal
+ */
+const PopupCheckoutModal = () => {
+  const ui = SpreadsheetApp.getUi();
+  let template = HtmlService.createTemplateFromFile('checkoutmodal')
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  let html = HtmlService
+    .createHtmlOutput(
+      template.evaluate()
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+        .getBlob()
+        .setName(`${SERVICE_NAME} Menu`)
+      )
+      .setWidth(800)
+      .setHeight(600)
+  ui.showModalDialog(html, `${SERVICE_NAME}`);
+}
+
+/**
+ * Edit Modal
+ */
+const PopupEditFromSelected = async () => {
+  const ui = SpreadsheetApp.getUi();
+  let thisSheet = SpreadsheetApp.getActiveSheet();
+  let thisRow = thisSheet.getActiveRange().getRow();
+
+  // Is this the correct sheet?
+  if (thisSheet.getSheetName() != SHEETS.Main.getSheetName()) {
+    Browser.msgBox(
+      SERVICE_NAME_WITH_ICON,
+      `Please select 'Form Responses'. Select one cell in the row and an editing sidebar will pop up.`,
+      Browser.Buttons.OK
+    );
+    return;
+  }
+
+  // Get row data
+  const rowData = SheetService.GetRowData(thisSheet, thisRow);
+  console.warn(rowData);
+  let { tracking, status, issuer, timestamp, studentEmail, name, studentId, affiliation, itemBasket, dateCheckedOut, dateReturned, ticket, barcode, notes, dueDate, remainingDays, sheetName, row } = rowData;
+
+  // Pass rowData to Sidebar
+  itemBasket = itemBasket?.split(', ');
+  
+  let template = HtmlService.createTemplateFromFile('editingsidebar');
+  template.rowData = rowData;
+  template.name = name;
+  template.issuer = issuer;
+  template.studentEmail = studentEmail;
+  template.studentId = studentId;
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`);
+  template.itemBasket = itemBasket;
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  let html = HtmlService
+    .createHtmlOutput(
+      template.evaluate()
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+        .getBlob()
+        .setName(`${SERVICE_NAME_WITH_ICON} Menu`)
+      ).setWidth(400)
+  ui.showSidebar(html);
+}
+
+/**
  * Create a pop-up to make a new Jobnumber
  */
 const PopupCreateNewId = () => {
@@ -241,7 +306,7 @@ const PopupCreateTicket = async () => {
   }
   let { tracking, status, issuer, name, email, itemBasket, dateCheckedOut, ticket, notes, dueDate, } = SheetService.GetRowData(thisSheet, thisRow);
 
-  const tick = await new Ticket({
+  const tick = await TicketService.CreateTicket({
     trackingNumber : tracking,
     status : status, 
     name : name, 
@@ -252,7 +317,6 @@ const PopupCreateTicket = async () => {
     notes : notes,
     dueDate : dueDate,
   });
-  tick.CreateTicket();
   const url = tick.url;
   SheetService.SetByHeader(thisSheet, HEADERNAMES.ticket, thisRow, url);
   console.warn(`Ticket Created....`);
@@ -279,9 +343,9 @@ const BarMenu = () => {
     .addSeparator()
     .addSubMenu(
       ui.createMenu(`Checkout`)
-        .addItem(`Manual Checkout for SELECTED User`, `ShowCheckoutModal`)
+        .addItem(`Manual Checkout for SELECTED User`, `PopupCheckoutModal`)
         .addItem(`Manual Return for SELECTED User`, `PopupReturnModal`)
-        .addItem(`Edit Submission for SELECTED User`, `EditFromSelected`)
+        .addItem(`Edit Submission for SELECTED User`, `PopupEditFromSelected`)
         .addItem(`Return Items for SELECTED User`, `PopupReturnByBarcode`)
     )
     .addSeparator()

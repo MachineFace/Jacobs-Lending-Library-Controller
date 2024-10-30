@@ -51,7 +51,7 @@ const onSubmission = async (e) => {
   // Create Ticket
   let ticket;
   try {
-    ticket = new Ticket({
+    ticket = await TicketService.CreateTicket({
       trackingNumber: trackingNumber,
       status: status,
       name: name,
@@ -59,7 +59,6 @@ const onSubmission = async (e) => {
       basket: basket,
       notes : notes,
     });
-    ticket.CreateTicket();
   } catch (err) {
     console.error(`${err}, Whoops: Couldn't create a ticket for some reason...` );
   }

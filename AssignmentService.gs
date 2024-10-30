@@ -39,7 +39,7 @@ class AssignmentService {
   /**
    * Assign
    */
-  Assign() {
+  async Assign() {
     try {
       const now = new Date();
       const returnDate = new Date(TimeService.ReturnDate(now));
@@ -67,7 +67,7 @@ class AssignmentService {
       SheetService.SetRowData(SHEETS.Main, this.row, rowData);	
 
       // Create Ticket
-      const newTicket = new Ticket({
+      const newTicket = await TicketService.CreateTicket({
         trackingNumber : this.trackingNumber,
         status : STATUS.checkedOut, 
         name : this.name, 
@@ -78,9 +78,8 @@ class AssignmentService {
         notes : this.notes,
         dueDate : returnDate,
       });
-      const ticket = newTicket.CreateTicket();
-      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.getUrl());
-      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl());
+      SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, newTicket.getUrl());
+      // SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, newTicket.barcode.getUrl()); // TODO: Fix this
       
       // Set Inventory
       new InventoryManager({ basket : this.basket, }).CheckOutBasket();
@@ -174,7 +173,7 @@ const _testAssign = () => {
 /**
  * Modify Order
  */
-const ModifyOrder = (rowData) => {
+const ModifyOrder = async (rowData = {}) => {
   try {
     const thisRow = rowData?.row;
     const now = new Date();
@@ -202,7 +201,7 @@ const ModifyOrder = (rowData) => {
     SheetService.SetRowData(SHEETS.Main, this.row, rowData);	
 
     // Create a ticket
-    const ticket = new Ticket({
+    const ticket = await TicketService.CreateTicket({
       trackingNumber : this.trackingNumber,
       status : STATUS.checkedOut, 
       name : this.name, 
@@ -213,10 +212,9 @@ const ModifyOrder = (rowData) => {
       notes : this.notes,
       dueDate : returnDate,
     });
-    ticket.CreateTicket();
     if(!ticket) throw new Error(`Couldn't generate a ticket.`)
     SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.ticket, this.row, ticket.url);
-    SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl())
+    // SheetService.SetByHeader(SHEETS.Main, HEADERNAMES.barcode, this.row, ticket.barcode.getUrl()) // TODO: Fix this
 
     // Manage Inventory
     new InventoryManager({basket : this.basket}).CheckOutBasket();
