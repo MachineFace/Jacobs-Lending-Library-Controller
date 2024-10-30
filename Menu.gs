@@ -7,8 +7,8 @@
 /**
  * Count Checked Out Popup
  */
-const PopupCountCheckedOut = async () => {
-  let ui = await SpreadsheetApp.getUi();
+const PopupCountCheckedOut = () => {
+  let ui = SpreadsheetApp.getUi();
   let counts = Calculate.StatusCounts();
   let checkedOut = 0;
   Object.entries(counts).forEach(([key, value], index) => {
@@ -24,8 +24,8 @@ const PopupCountCheckedOut = async () => {
 /**
  * Count Checked In
  */
-const PopupCountCheckedIn = async () => {
-  let ui = await SpreadsheetApp.getUi();
+const PopupCountCheckedIn = () => {
+  let ui = SpreadsheetApp.getUi();
   let counts = Calculate.StatusCounts();
   let checkedIn = 0;
   Object.entries(counts).forEach(([key, value], index) => {
@@ -41,8 +41,8 @@ const PopupCountCheckedIn = async () => {
 /**
  * Count Overdue
  */
-const PopupCountOverdue = async () => {
-  let ui = await SpreadsheetApp.getUi();
+const PopupCountOverdue = () => {
+  let ui = SpreadsheetApp.getUi();
   let counts = Calculate.StatusCounts();
   let overdue = 0;
   Object.entries(counts).forEach(([key, value], index) => {
@@ -58,8 +58,8 @@ const PopupCountOverdue = async () => {
 /**
  * Return by barcode
  */
-const PopupReturnByBarcode = async () => {
-  let ui = await SpreadsheetApp.getUi();
+const PopupReturnByBarcode = () => {
+  let ui = SpreadsheetApp.getUi();
   let result = ui.prompt(
     SERVICE_NAME_WITH_ICON,
     'Please enter the Tracking ID Number:',
@@ -95,7 +95,7 @@ const BuildHTMLHELP = () => {
 
   console.info(html);
   return html;
-};
+}
 
 /**
  * Help Menu
@@ -107,7 +107,7 @@ const PopupHelp = () => {
     .setWidth(640)
     .setHeight(480);
   ui.showModalDialog(htmlOutput, title);
-};
+}
 
 /**
  * Metrics
@@ -120,12 +120,12 @@ const PopupMetrics = () => {
     `Recomputed Statistics`, 
     ui.ButtonSet.OK
   );
-};
+}
 
 /**
  * Calc Turnaround Times
  */
-const PopupCalcTurnaround = async () => {
+const PopupCalcTurnaround = () => {
   let ui = SpreadsheetApp.getUi();
   let thisRow = SpreadsheetApp.getActiveSheet().getActiveRange().getRow();
   let name = SheetService.GetByHeader(SHEETS.Main, HEADERNAMES.name, thisRow);
@@ -135,26 +135,42 @@ const PopupCalcTurnaround = async () => {
     `Recalculated ${name}'s Turnaround Time.`, 
     ui.ButtonSet.OK,
   );
-
-};
+}
 
 /**
  * Return Modal
  */
 const PopupReturnModal = () => {
+  const ui = SpreadsheetApp.getUi();
   const thisSheet = SpreadsheetApp.getActiveSheet();
   if(thisSheet.getSheetName() != SHEETS.Main) return;
   let thisRow = thisSheet.getActiveRange().getRow();
   if (thisRow <= 1) return;
   let data = SheetService.GetRowData(thisRow);
-  ShowReturnModal(data);
+
+  let template = HtmlService.createTemplateFromFile('returnmodal')
+  // const rowData = SheetService.GetRowData(thisSheet, thisRow);
+  template.items = SheetService.GetColumnDataByHeader(OTHERSHEETS.Inventory, `Item Name`)
+  template.staff = SheetService.GetColumnDataByHeader(OTHERSHEETS.Staff, `NAME`).filter(Boolean);
+  template.data = data;
+  let html = HtmlService
+    .createHtmlOutput(
+      template.evaluate()
+        .setSandboxMode(HtmlService.SandboxMode.IFRAME)
+        .getBlob()
+        .setName(`${SERVICE_NAME} Menu`)
+      )
+      .setWidth(800)
+      .setHeight(600)
+  ui.showModalDialog(html, `${SERVICE_NAME}`);
+
 }
 
 /**
  * Create a pop-up to make a new Jobnumber
  */
-const PopupCreateNewId = async () => {
-  const ui = await SpreadsheetApp.getUi();
+const PopupCreateNewId = () => {
+  const ui = SpreadsheetApp.getUi();
   const thisSheet = SpreadsheetApp.getActiveSheet();
   if(!SheetService.IsValidSheet(thisSheet)) {
     ui.alert(
@@ -174,13 +190,13 @@ const PopupCreateNewId = async () => {
     ui.ButtonSet.OK
   );
   if(a === ui.Button.OK) return 0;
-};
+}
 
 /**
  * Create a new Barcode
  */
-const PopupCreateBarcode = async () => {
-  const ui = await SpreadsheetApp.getUi();
+const PopupCreateBarcode = () => {
+  const ui = SpreadsheetApp.getUi();
   const thisSheet = SpreadsheetApp.getActiveSheet();
   const thisRow = thisSheet.getActiveRange().getRow();
 
@@ -300,4 +316,3 @@ const OpenBarcodeTab = async () => await SpreadsheetApp.getActiveSpreadsheet()
 //   const ar = Array.from(itemBasket.split(`,`));
 //   console.info(`Basket --> ${ar}`)
 // }
-

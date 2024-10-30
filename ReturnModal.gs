@@ -1,5 +1,4 @@
 
-
 const ShowReturnModal = async (data) => {
   const ui = SpreadsheetApp.getUi();
   let template = HtmlService.createTemplateFromFile('returnmodal')
@@ -18,6 +17,7 @@ const ShowReturnModal = async (data) => {
       .setHeight(600)
   ui.showModalDialog(html, `${SERVICE_NAME}`);
 }
+
 
 const ProcessReturnForm = (formObject) => {
   let name = ``, email = ``, sid = 0, staff = ``, basket = [], notes = ``; 

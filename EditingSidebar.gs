@@ -1,5 +1,4 @@
 
-
 const EditFromSelected = async () => {
   const ui = SpreadsheetApp.getUi();
   let thisSheet = SpreadsheetApp.getActiveSheet();
@@ -41,6 +40,7 @@ const EditFromSelected = async () => {
       ).setWidth(400)
   ui.showSidebar(html);
 }
+
 
 /** 
  * @NOTIMPLEMENTED
