@@ -361,7 +361,7 @@ const BarMenu = () => {
     .addSeparator()
     .addItem(`Help`, `PopupHelp`)
     .addToUi();
-}; 
+} 
 
 
 /**

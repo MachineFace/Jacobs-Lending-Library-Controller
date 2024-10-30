@@ -82,7 +82,7 @@ class BarcodeService {
       contentType : "application/json",
       followRedirects : true,
       muteHttpExceptions : true,
-    };
+    }
     
     try {
       const response = UrlFetchApp.fetch(barcodeLoc, params);

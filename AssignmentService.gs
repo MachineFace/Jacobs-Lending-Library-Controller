@@ -161,7 +161,7 @@ class AssignmentService {
 
 
 const _testAssign = () => {
-  const a = new AssignUserABasket({
+  const a = new AssignmentService({
     issuer: `Cody`,
     name : `Testa Fiesta`,
     email : `testa@test.com`,

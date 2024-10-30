@@ -92,7 +92,7 @@ class TimeService {
       return 1;
     }
     
-  };
+  }
 
   /**
    * Duration
@@ -126,7 +126,7 @@ class TimeService {
       console.error(`${err} : 'Duration' has failed for some reason....`);
       return 1;
     }
-  };
+  }
 
   /**
    * Calculate the Return Date
