@@ -6,6 +6,9 @@ const SERVICE_NAME = `Jacobs LendingBot`;
 const SERVICE_NAME_WITH_ICON = `🤖 ${SERVICE_NAME}`;
 const SERVICE_EMAIL = `jacobs-project-support@berkeley.edu`;
 
+/** @private */
+const THIS_SPREADSHEET = SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty(`SPREADSHEET_ID`));
+
 const CHECKOUT_LENGTH = 14; // How many days a student can hold a headset
 const PICKUP_HOURS = `Monday - Friday: 11am - 1pm & 4pm - 6pm.`;
 
@@ -170,19 +173,19 @@ const HEADERNAMES = Object.freeze({
  * Sheets
  */
 const SHEETS = Object.freeze({
-  Main : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Main`),
+  Main : THIS_SPREADSHEET.getSheetByName(`Main`),
 });
 
 /**
  * Other Sheets
  */
 const OTHERSHEETS = Object.freeze({
-  Scanner : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Pickup Scanner`),
-  Staff : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`StaffList`),
-  Logger : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Logger`),
-  Metrics : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Metrics`),
-  Record : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`CheckOut Record`),
-  Inventory : SpreadsheetApp.getActiveSpreadsheet().getSheetByName(`Inventory`),
+  Scanner :   THIS_SPREADSHEET.getSheetByName(`Pickup Scanner`),
+  Staff :     THIS_SPREADSHEET.getSheetByName(`StaffList`),
+  Logger :    THIS_SPREADSHEET.getSheetByName(`Logger`),
+  Metrics :   THIS_SPREADSHEET.getSheetByName(`Metrics`),
+  Record :    THIS_SPREADSHEET.getSheetByName(`CheckOut Record`),
+  Inventory : THIS_SPREADSHEET.getSheetByName(`Inventory`),
 });
 
 /**
