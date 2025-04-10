@@ -29,17 +29,20 @@ class BarcodeService {
       const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
 
       //let barcodeLoc = 'http://bwipjs-api.metafloor.com/?bcid=code128&text=1234567890&includetext';  //KNOWN WORKING LOCATION
-      const barcodeLoc = root + type + `&text=` + convertedNumber + scale + postfx  + `&alttext=` + fixedUUID;
+      const url = root + type + `&text=` + convertedNumber + scale + postfx  + `&alttext=` + fixedUUID;
 
       const params = {
-        method : "GET",
-        headers : { "Authorization": "Basic ", "Content-Type" : "image/png" },
-        contentType : "application/json",
-        followRedirects : true,
-        muteHttpExceptions : true,
+        'method' : "GET",
+        'headers' : { 
+          "Authorization": "Basic ", 
+          "Content-Type" : "image/png" 
+        },
+        'contentType' : "application/json",
+        'followRedirects' : true,
+        'muteHttpExceptions' : true,
       }
     
-      const response = UrlFetchApp.fetch(barcodeLoc, params);
+      const response = UrlFetchApp.fetch(url, params);
       const responseCode = response.getResponseCode();
       if(responseCode != 200) throw new Error(`Bad Response from server : ${responseCode}, ${RESPONSECODES[responseCode]}`);
 
@@ -62,30 +65,32 @@ class BarcodeService {
    * @return {blob} barcode
    */
   get BarcodeWithOptions() {
-
-    const root = 'http://bwipjs-api.metafloor.com/';
-    const type = '?bcid=code128';
-    const ts = '&text=';
-    const scaleX = `&scaleX=6`
-    const scaleY = '&scaleY=6';
-    const postfx = '&includetext';
-    const target = DRIVEFOLDERS.barcodeTarget;
-
-    const fixedUUID = IDService.isValid(this.uuid) ? this.uuid : IDService.createId();
-    const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
-
-    const barcodeLoc = root + type + ts + convertedNumber + scaleX + scaleY + postfx  + `&alttext=` + fixedUUID;
-
-    const params = {
-      method : "GET",
-      headers : { "Authorization": "Basic ", "Content-Type" : "image/png" },
-      contentType : "application/json",
-      followRedirects : true,
-      muteHttpExceptions : true,
-    }
-    
     try {
-      const response = UrlFetchApp.fetch(barcodeLoc, params);
+      const root = 'http://bwipjs-api.metafloor.com/';
+      const type = '?bcid=code128';
+      const ts = '&text=';
+      const scaleX = `&scaleX=6`
+      const scaleY = '&scaleY=6';
+      const postfx = '&includetext';
+      const target = DRIVEFOLDERS.barcodeTarget;
+
+      const fixedUUID = IDService.isValid(this.uuid) ? this.uuid : IDService.createId();
+      const convertedNumber = IDService.toDecimal(fixedUUID);  // Convert UUID to Decimal
+
+      const url = root + type + ts + convertedNumber + scaleX + scaleY + postfx  + `&alttext=` + fixedUUID;
+
+      const params = {
+        'method' : "GET",
+        'headers' : { 
+          "Authorization": "Basic ", 
+          "Content-Type" : "image/png" 
+        },
+        'contentType' : "application/json",
+        'followRedirects' : true,
+        'muteHttpExceptions' : true,
+      }
+    
+      const response = UrlFetchApp.fetch(url, params);
       const responseCode = response.getResponseCode();
       if(responseCode != 200) throw new Error(`Bad Response from server : ${responseCode}, ${RESPONSECODES[responseCode]}`);
 
