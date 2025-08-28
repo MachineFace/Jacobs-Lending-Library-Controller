@@ -6,7 +6,7 @@
  * Reserved word: onFormSubmit() cannot be used here because it's reserved for simple triggers.
  * @param {Event} e
  */
-const onSubmission = async (e) => {
+const handleSubmit = async (e) => {
   console.warn(`VALUES ---> ${Object.entries(e.namedValues)}`);
   let lastRow = SHEETS.Main.getLastRow();
 
@@ -113,8 +113,9 @@ const onSubmission = async (e) => {
 /**
  * -----------------------------------------------------------------------------------------------------------------
  * Main OnEdit
+ * (onEdit) and (onChange) are reserved keywords for simple triggers and cannot be used here.
  */
-const onChange = async (e) => {
+const handleChange = async (e) => {
   var thisSheet = e.range.getSheet();
   console.info(`This Sheet : ${thisSheet.getSheetName()}`)
 
