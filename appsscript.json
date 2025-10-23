@@ -1,5 +1,7 @@
 {
   "timeZone": "America/Los_Angeles",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
   "dependencies": {
     "enabledAdvancedServices": [
       {
@@ -31,31 +33,36 @@
     "libraries": [
       {
         "userSymbol": "StatisticsService",
-        "version": "0",
         "libraryId": "1oHi7qNmFxmHkt5UCx-OEOiH6eJiSp4Mk9j6ixlK4M5JRYmIk_1SVEK5N",
+        "version": "0",
         "developmentMode": true
       },
       {
         "userSymbol": "IDService",
-        "version": "0",
         "libraryId": "17ovDw4cwQ_ykMknpWnpha1J5UzAkjniZhFuhnC-UEytNCm9ZtjcUO2H2",
+        "version": "0",
         "developmentMode": true
       },
       {
         "userSymbol": "TimeService",
-        "version": "0",
         "libraryId": "1x4rqwpo0BkrJ5kIuaN4Q4mfxMytwwkWzsZcW9Tz5Av4AmyxB_3zT_FhX",
+        "version": "0",
         "developmentMode": true
       },
       {
         "userSymbol": "Log",
-        "version": "0",
         "libraryId": "1Z1YXYpuN2j2owNQIYk4NeDEgzW9450Sts-y77VMFnnbw7gTMP96b3awX",
+        "version": "0",
+        "developmentMode": true
+      },
+      {
+        "userSymbol": "BarcodeService",
+        "version": "0",
+        "libraryId": "1YX8BYZ_SHCXF-PgSoThB-KvbZboyPuRxtF7pSIvstcZn98j36OMXhktW",
         "developmentMode": true
       }
     ]
   },
-  "exceptionLogging": "STACKDRIVER",
   "oauthScopes": [
     "https://www.googleapis.com/auth/forms",
     "https://www.googleapis.com/auth/spreadsheets",
@@ -66,6 +73,5 @@
     "https://www.googleapis.com/auth/script.container.ui",
     "https://www.googleapis.com/auth/script.scriptapp",
     "https://www.googleapis.com/auth/script.external_request"
-  ],
-  "runtimeVersion": "V8"
+  ]
 }

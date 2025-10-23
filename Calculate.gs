@@ -15,7 +15,6 @@ class Calculate {
       const completionTimes = [...SheetService.GetColumnDataByHeader(SHEETS.Main, HEADERNAMES.remainingDays)]
         .filter(Boolean)
         .map(time => TimeService.TimerStringToMilliseconds(time));
-
       const average = StatisticsService.GeometricMean(completionTimes);
       const time = TimeService.MillisecondsToTimerString(average);
 
